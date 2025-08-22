@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Camera, Utensils, Sparkles, Plus, X } from 'lucide-react';
+import { Search, Camera, Utensils, Sparkles, Plus, X, RefreshCw, Upload } from 'lucide-react';
 
 interface HomePageProps {
   onSearch: (ingredients: string[], cuisine: string) => void;
@@ -9,6 +9,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
   const [ingredientInput, setIngredientInput] = useState('');
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [selectedCuisine, setSelectedCuisine] = useState('all');
+  const [uploadedImage, setUploadedImage] = useState<File | null>(null);
 
   const cuisines = [
     { value: 'all', label: 'All Cuisines' },
@@ -26,6 +27,12 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
     'Pasta', 'Cheese', 'Bell Peppers', 'Mushrooms', 'Eggs', 'Potatoes'
   ];
 
+  const alternativeIngredients = [
+    'Salmon', 'Quinoa', 'Spinach', 'Avocado', 'Lemon', 'Ginger',
+    'Broccoli', 'Sweet Potato', 'Black Beans', 'Coconut Milk', 'Tofu', 'Carrots'
+  ];
+
+  const [currentPopularIngredients, setCurrentPopularIngredients] = useState(popularIngredients);
   const addIngredient = () => {
     if (ingredientInput.trim() && !ingredients.includes(ingredientInput.trim())) {
       setIngredients([...ingredients, ingredientInput.trim()]);
@@ -43,6 +50,22 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
     setIngredients(ingredients.filter(i => i !== ingredient));
   };
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadedImage(file);
+      // Here you would typically send the image to an AI service to extract ingredients
+      // For now, we'll just show a placeholder message
+    }
+  };
+
+  const refreshPopularIngredients = () => {
+    setCurrentPopularIngredients(
+      currentPopularIngredients === popularIngredients 
+        ? alternativeIngredients 
+        : popularIngredients
+    );
+  };
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       addIngredient();
@@ -67,16 +90,19 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
         <h1 className="text-5xl font-bold text-gray-900 mb-4">
           What's in your kitchen?
         </h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+        <h1 className="text-5xl font-bold text-white mb-4">
+          What's in your kitchen?
+        </h1>
+        <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
           Turn your available ingredients into delicious recipes with AI-powered suggestions. 
           Just tell us what you have, and we'll create magic!
         </p>
       </div>
 
       {/* Main Input Section */}
-      <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+      <div className="bg-slate-800 rounded-2xl shadow-xl p-8 mb-8 border border-slate-700">
         <div className="mb-6">
-          <label className="block text-lg font-semibold text-gray-800 mb-3">
+          <label className="block text-lg font-semibold text-white mb-3">
             Add your ingredients
           </label>
           <div className="flex gap-3">
@@ -87,7 +113,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
                 onChange={(e) => setIngredientInput(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Type an ingredient (e.g., chicken, rice, tomatoes)"
-                className="w-full px-4 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:outline-none transition-colors duration-200"
+                className="w-full px-4 py-3 text-lg border-2 border-slate-600 rounded-xl focus:border-orange-400 focus:outline-none transition-colors duration-200 bg-slate-700 text-white placeholder-slate-400"
               />
             </div>
             <button
@@ -102,16 +128,30 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
 
         {/* Upload Photo Option */}
         <div className="mb-6">
-          <button className="w-full py-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-orange-300 hover:bg-orange-50 transition-all duration-200 flex items-center justify-center gap-3 text-gray-600 hover:text-orange-600">
-            <Camera size={24} />
-            <span className="text-lg">Or upload a photo of your ingredients</span>
-          </button>
+          <div className="relative">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              id="image-upload"
+            />
+            <label
+              htmlFor="image-upload"
+              className="w-full py-4 border-2 border-dashed border-slate-600 rounded-xl hover:border-orange-400 hover:bg-slate-700 transition-all duration-200 flex items-center justify-center gap-3 text-slate-300 hover:text-orange-400 cursor-pointer"
+            >
+              {uploadedImage ? <Upload size={24} /> : <Camera size={24} />}
+              <span className="text-lg">
+                {uploadedImage ? `Uploaded: ${uploadedImage.name}` : 'Or upload a photo of your ingredients'}
+              </span>
+            </label>
+          </div>
         </div>
 
         {/* Selected Ingredients */}
         {ingredients.length > 0 && (
           <div className="mb-6">
-            <label className="block text-lg font-semibold text-gray-800 mb-3">
+            <label className="block text-lg font-semibold text-white mb-3">
               Your ingredients ({ingredients.length})
             </label>
             <div className="flex flex-wrap gap-2">
@@ -135,19 +175,28 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
 
         {/* Quick Add Popular Ingredients */}
         <div className="mb-6">
-          <label className="block text-lg font-semibold text-gray-800 mb-3">
-            Quick add popular ingredients
-          </label>
+          <div className="flex items-center justify-between mb-3">
+            <label className="block text-lg font-semibold text-white">
+              Quick add popular ingredients
+            </label>
+            <button
+              onClick={refreshPopularIngredients}
+              className="flex items-center gap-2 px-3 py-1 text-sm text-slate-300 hover:text-orange-400 transition-colors duration-200"
+            >
+              <RefreshCw size={16} />
+              Refresh
+            </button>
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-            {popularIngredients.map((ingredient) => (
+            {currentPopularIngredients.map((ingredient) => (
               <button
                 key={ingredient}
                 onClick={() => addPopularIngredient(ingredient)}
                 disabled={ingredients.includes(ingredient)}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   ingredients.includes(ingredient)
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-gray-100 text-gray-700 hover:bg-orange-100 hover:text-orange-700'
+                    ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
+                    : 'bg-slate-700 text-slate-300 hover:bg-orange-600 hover:text-white'
                 }`}
               >
                 {ingredient}
@@ -158,13 +207,13 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
 
         {/* Cuisine Filter */}
         <div className="mb-8">
-          <label className="block text-lg font-semibold text-gray-800 mb-3">
+          <label className="block text-lg font-semibold text-white mb-3">
             Preferred cuisine (optional)
           </label>
           <select
             value={selectedCuisine}
             onChange={(e) => setSelectedCuisine(e.target.value)}
-            className="w-full px-4 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:outline-none transition-colors duration-200"
+            className="w-full px-4 py-3 text-lg border-2 border-slate-600 rounded-xl focus:border-orange-400 focus:outline-none transition-colors duration-200 bg-slate-700 text-white"
           >
             {cuisines.map((cuisine) => (
               <option key={cuisine.value} value={cuisine.value}>
@@ -191,28 +240,28 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
 
       {/* Features Preview */}
       <div className="grid md:grid-cols-3 gap-6">
-        <div className="text-center p-6 bg-white rounded-xl shadow-md">
-          <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Search size={24} className="text-orange-600" />
+        <div className="text-center p-6 bg-slate-800 rounded-xl shadow-md border border-slate-700">
+          <div className="w-12 h-12 bg-orange-500 bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Search size={24} className="text-orange-400" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-800 mb-2">Smart Matching</h3>
-          <p className="text-gray-600">AI finds the perfect recipes using your available ingredients</p>
+          <h3 className="text-lg font-semibold text-white mb-2">Smart Matching</h3>
+          <p className="text-slate-300">AI finds the perfect recipes using your available ingredients</p>
         </div>
         
-        <div className="text-center p-6 bg-white rounded-xl shadow-md">
-          <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Utensils size={24} className="text-emerald-600" />
+        <div className="text-center p-6 bg-slate-800 rounded-xl shadow-md border border-slate-700">
+          <div className="w-12 h-12 bg-emerald-500 bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Utensils size={24} className="text-emerald-400" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-800 mb-2">Step-by-Step</h3>
-          <p className="text-gray-600">Clear instructions and cooking tips for perfect results</p>
+          <h3 className="text-lg font-semibold text-white mb-2">Step-by-Step</h3>
+          <p className="text-slate-300">Clear instructions and cooking tips for perfect results</p>
         </div>
         
-        <div className="text-center p-6 bg-white rounded-xl shadow-md">
-          <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Sparkles size={24} className="text-blue-600" />
+        <div className="text-center p-6 bg-slate-800 rounded-xl shadow-md border border-slate-700">
+          <div className="w-12 h-12 bg-blue-500 bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Sparkles size={24} className="text-blue-400" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-800 mb-2">Nutrition Info</h3>
-          <p className="text-gray-600">Get detailed nutritional breakdown for every recipe</p>
+          <h3 className="text-lg font-semibold text-white mb-2">Nutrition Info</h3>
+          <p className="text-slate-300">Get detailed nutritional breakdown for every recipe</p>
         </div>
       </div>
     </div>

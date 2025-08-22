@@ -24,7 +24,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSelect }) => {
   return (
     <div
       onClick={onSelect}
-      className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-[1.02] overflow-hidden group"
+      className="bg-slate-800 border border-slate-700 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-[1.02] overflow-hidden group"
     >
       {/* Recipe Image */}
       <div className="relative h-48 overflow-hidden">
@@ -47,12 +47,12 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSelect }) => {
 
       {/* Recipe Content */}
       <div className="p-5">
-        <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-orange-600 transition-colors duration-200">
+        <h3 className="font-bold text-lg text-white mb-2 group-hover:text-orange-400 transition-colors duration-200">
           {recipe.name}
         </h3>
 
         {/* Recipe Stats */}
-        <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
+        <div className="flex items-center justify-between text-sm text-slate-400 mb-3">
           <div className="flex items-center gap-1">
             <Clock size={16} />
             <span>{recipe.cookingTime + recipe.prepTime}min</span>
@@ -70,20 +70,20 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSelect }) => {
         {/* Nutrition Summary */}
         <div className="grid grid-cols-4 gap-2 mb-3">
           <div className="text-center">
-            <div className="text-xs text-gray-500">Protein</div>
-            <div className="text-sm font-semibold text-gray-800">{recipe.nutrition.protein}g</div>
+            <div className="text-xs text-slate-500">Protein</div>
+            <div className="text-sm font-semibold text-white">{recipe.nutrition.protein}g</div>
           </div>
           <div className="text-center">
-            <div className="text-xs text-gray-500">Carbs</div>
-            <div className="text-sm font-semibold text-gray-800">{recipe.nutrition.carbs}g</div>
+            <div className="text-xs text-slate-500">Carbs</div>
+            <div className="text-sm font-semibold text-white">{recipe.nutrition.carbs}g</div>
           </div>
           <div className="text-center">
-            <div className="text-xs text-gray-500">Fat</div>
-            <div className="text-sm font-semibold text-gray-800">{recipe.nutrition.fat}g</div>
+            <div className="text-xs text-slate-500">Fat</div>
+            <div className="text-sm font-semibold text-white">{recipe.nutrition.fat}g</div>
           </div>
           <div className="text-center">
-            <div className="text-xs text-gray-500">Fiber</div>
-            <div className="text-sm font-semibold text-gray-800">{recipe.nutrition.fiber}g</div>
+            <div className="text-xs text-slate-500">Fiber</div>
+            <div className="text-sm font-semibold text-white">{recipe.nutrition.fiber}g</div>
           </div>
         </div>
 
@@ -92,7 +92,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSelect }) => {
           {recipe.tags.slice(0, 3).map((tag, index) => (
             <span
               key={index}
-              className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs"
+              className="px-2 py-1 bg-slate-700 text-slate-300 rounded text-xs"
             >
               {tag}
             </span>
@@ -100,7 +100,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSelect }) => {
         </div>
 
         {/* View Recipe Button */}
-        <button className="w-full py-2 bg-orange-50 text-orange-600 rounded-lg font-medium hover:bg-orange-100 transition-colors duration-200 group-hover:bg-orange-600 group-hover:text-white">
+        <button className="w-full py-2 bg-orange-500 bg-opacity-20 text-orange-400 rounded-lg font-medium hover:bg-orange-500 hover:bg-opacity-30 transition-colors duration-200 group-hover:bg-orange-500 group-hover:text-white">
           View Recipe
         </button>
       </div>
