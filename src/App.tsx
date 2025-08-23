@@ -1,20 +1,93 @@
 import React, { useState } from 'react';
+import AuthPage from './components/AuthPage';
+import PricingPage from './components/PricingPage';
 import Navbar from './components/Navbar';
 import HomePage from './components/HomePage';
 import RecipeList from './components/RecipeList';
 import RecipeDetail from './components/RecipeDetail';
 import { Recipe } from './types/Recipe';
+import { User } from './types/User';
 
-type View = 'home' | 'recipes' | 'detail';
+type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
+  const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [searchIngredients, setSearchIngredients] = useState<string[]>([]);
   const [selectedCuisine, setSelectedCuisine] = useState<string>('all');
 
+  // Mock authentication functions
+  const handleLogin = async (email: string, password: string) => {
+    setAuthLoading(true);
+    setAuthError(null);
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Mock user data
+      const mockUser: User = {
+        id: '1',
+        email,
+        name: email.split('@')[0],
+        plan: 'free',
+        createdAt: new Date(),
+        isAuthenticated: true
+      };
+      
+      setUser(mockUser);
+      setCurrentView('home');
+    } catch (error) {
+      setAuthError('Invalid credentials. Please try again.');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleSignup = async (name: string, email: string, password: string) => {
+    setAuthLoading(true);
+    setAuthError(null);
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Mock user data
+      const mockUser: User = {
+        id: '1',
+        email,
+        name,
+        plan: 'free',
+        createdAt: new Date(),
+        isAuthenticated: true
+      };
+      
+      setUser(mockUser);
+      setCurrentView('home');
+    } catch (error) {
+      setAuthError('Failed to create account. Please try again.');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleSelectPlan = (plan: 'free' | 'pro') => {
+    if (user) {
+      setUser({ ...user, plan });
+      setCurrentView('home');
+    }
+  };
+
   const handleSearch = (ingredients: string[], cuisine: string, aiRecipes?: Recipe[]) => {
+    // Check if user needs to upgrade for legendary recipes
+    if (user?.plan === 'free') {
+      // For free users, limit to beginner recipes only
+    }
+    
     setSearchIngredients(ingredients);
     setSelectedCuisine(cuisine);
     
@@ -39,8 +112,22 @@ function App() {
       setCurrentView('recipes');
     } else if (currentView === 'recipes') {
       setCurrentView('home');
+    } else if (currentView === 'pricing') {
+      setCurrentView('home');
     }
   };
+
+  // Show auth page if user is not authenticated
+  if (!user) {
+    return (
+      <AuthPage
+        onLogin={handleLogin}
+        onSignup={handleSignup}
+        isLoading={authLoading}
+        error={authError}
+      />
+    );
+  }
 
   // Mock AI recipe generation
   const generateRecipes = (ingredients: string[], cuisine: string): Recipe[] => {
@@ -174,11 +261,21 @@ function App() {
         currentView={currentView} 
         onBack={handleBack}
         onHome={() => setCurrentView('home')}
+        user={user}
+        onPricing={() => setCurrentView('pricing')}
+        onLogout={() => setUser(null)}
       />
       
       <main className="container mx-auto px-4 py-8">
         {currentView === 'home' && (
-          <HomePage onSearch={handleSearch} />
+          <HomePage onSearch={handleSearch} user={user} />
+        )}
+        
+        {currentView === 'pricing' && (
+          <PricingPage 
+            onSelectPlan={handleSelectPlan}
+            currentPlan={user.plan}
+          />
         )}
         
         {currentView === 'recipes' && (

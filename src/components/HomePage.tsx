@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Search, Camera, Utensils, Sparkles, Plus, X, RefreshCw, Upload } from 'lucide-react';
 import { generateRecipesWithAI } from '../services/openai';
 import { getRandomIngredientSet, getShuffledIngredients } from '../data/ingredients';
+import { User } from '../types/User';
 
 interface HomePageProps {
   onSearch: (ingredients: string[], cuisine: string) => void;
+  user: User;
 }
 
-const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
+const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
   const [ingredientInput, setIngredientInput] = useState('');
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [selectedCuisine, setSelectedCuisine] = useState('all');
@@ -82,8 +84,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
       try {
         // For legendary level, check if user has pro plan (mock check)
         if (skillLevel === 'legendary') {
-          const hasProPlan = false; // This would be checked against user's subscription
-          if (!hasProPlan) {
+          if (user.plan !== 'pro') {
             alert('Legendary recipes require a Pro Plan subscription. Please upgrade to access master chef level recipes.');
             setIsGenerating(false);
             return;
@@ -117,6 +118,10 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
             <Utensils size={48} className="text-white" />
           </div>
         </div>
+        <div className="mb-4">
+          <span className="text-lg text-slate-400">Welcome back, </span>
+          <span className="text-2xl font-semibold text-orange-400">{user.name}!</span>
+        </div>
         <h1 className="text-5xl font-bold text-gray-900 mb-4">
           What's in your kitchen?
         </h1>
@@ -127,6 +132,13 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
           Turn your available ingredients into delicious recipes with AI-powered suggestions. 
           Just tell us what you have, and we'll create magic!
         </p>
+        {user.plan === 'free' && (
+          <div className="mt-4 p-3 bg-amber-500 bg-opacity-20 border border-amber-500 rounded-lg max-w-md mx-auto">
+            <p className="text-amber-400 text-sm">
+              🆓 Free Plan: Up to 5 recipes per day • Upgrade for unlimited generations
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Main Input Section */}
@@ -222,7 +234,11 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
                 <div className="font-semibold">{level.label}</div>
                 <div className="text-sm opacity-80">{level.description}</div>
                 {level.value === 'legendary' && (
-                  <div className="text-xs mt-1 text-amber-400">⭐ Pro Plan Required</div>
+                  <div className={`text-xs mt-1 ${
+                    user.plan === 'pro' ? 'text-emerald-400' : 'text-amber-400'
+                  }`}>
+                    {user.plan === 'pro' ? '✅ Available' : '⭐ Pro Plan Required'}
+                  </div>
                 )}
               </button>
             ))}
