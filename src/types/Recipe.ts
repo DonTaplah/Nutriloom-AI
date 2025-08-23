@@ -17,4 +17,5 @@ export interface Recipe {
     fiber: number;
   };
   tags: string[];
+  description?: string;
 }

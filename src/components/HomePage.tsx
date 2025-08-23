@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Camera, Utensils, Sparkles, Plus, X, RefreshCw, Upload } from 'lucide-react';
+import { generateRecipesWithAI } from '../services/openai';
+import { getRandomIngredientSet, getShuffledIngredients } from '../data/ingredients';
 
 interface HomePageProps {
   onSearch: (ingredients: string[], cuisine: string) => void;
@@ -10,6 +12,9 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [selectedCuisine, setSelectedCuisine] = useState('all');
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
+  const [skillLevel, setSkillLevel] = useState<'beginner' | 'pro' | 'legendary'>('beginner');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [currentIngredientSet, setCurrentIngredientSet] = useState(getRandomIngredientSet());
 
   const cuisines = [
     { value: 'all', label: 'All Cuisines' },
@@ -22,17 +27,12 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
     { value: 'japanese', label: 'Japanese' }
   ];
 
-  const popularIngredients = [
-    'Chicken', 'Rice', 'Tomatoes', 'Onions', 'Garlic', 'Olive Oil',
-    'Pasta', 'Cheese', 'Bell Peppers', 'Mushrooms', 'Eggs', 'Potatoes'
+  const skillLevels = [
+    { value: 'beginner', label: 'Beginner', description: 'Simple, easy recipes' },
+    { value: 'pro', label: 'Pro', description: 'Advanced techniques' },
+    { value: 'legendary', label: 'Legendary', description: 'Master chef level (Pro Plan)' }
   ];
 
-  const alternativeIngredients = [
-    'Salmon', 'Quinoa', 'Spinach', 'Avocado', 'Lemon', 'Ginger',
-    'Broccoli', 'Sweet Potato', 'Black Beans', 'Coconut Milk', 'Tofu', 'Carrots'
-  ];
-
-  const [currentPopularIngredients, setCurrentPopularIngredients] = useState(popularIngredients);
   const addIngredient = () => {
     if (ingredientInput.trim() && !ingredients.includes(ingredientInput.trim())) {
       setIngredients([...ingredients, ingredientInput.trim()]);
@@ -60,21 +60,51 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
   };
 
   const refreshPopularIngredients = () => {
-    setCurrentPopularIngredients(
-      currentPopularIngredients === popularIngredients 
-        ? alternativeIngredients 
-        : popularIngredients
-    );
+    // Get a completely new random set of ingredients
+    let newSet = getRandomIngredientSet();
+    // Ensure it's different from current set
+    while (JSON.stringify(newSet) === JSON.stringify(currentIngredientSet)) {
+      newSet = getRandomIngredientSet();
+    }
+    // Shuffle the new set for extra randomness
+    setCurrentIngredientSet(getShuffledIngredients(newSet));
   };
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       addIngredient();
     }
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (ingredients.length > 0) {
-      onSearch(ingredients, selectedCuisine);
+      setIsGenerating(true);
+      try {
+        // For legendary level, check if user has pro plan (mock check)
+        if (skillLevel === 'legendary') {
+          const hasProPlan = false; // This would be checked against user's subscription
+          if (!hasProPlan) {
+            alert('Legendary recipes require a Pro Plan subscription. Please upgrade to access master chef level recipes.');
+            setIsGenerating(false);
+            return;
+          }
+        }
+
+        const aiRecipes = await generateRecipesWithAI({
+          ingredients,
+          cuisine: selectedCuisine,
+          skillLevel,
+          servings: 4
+        });
+        
+        // Pass the AI-generated recipes to the parent component
+        onSearch(ingredients, selectedCuisine, aiRecipes);
+      } catch (error) {
+        console.error('Error generating recipes:', error);
+        alert('Failed to generate recipes. Please check your OpenAI API key and try again.');
+      } finally {
+        setIsGenerating(false);
+      }
     }
   };
 
@@ -173,6 +203,32 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
           </div>
         )}
 
+        {/* Skill Level Selection */}
+        <div className="mb-6">
+          <label className="block text-lg font-semibold text-white mb-3">
+            Cooking skill level
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {skillLevels.map((level) => (
+              <button
+                key={level.value}
+                onClick={() => setSkillLevel(level.value as 'beginner' | 'pro' | 'legendary')}
+                className={`p-4 rounded-xl border-2 transition-all duration-200 text-left ${
+                  skillLevel === level.value
+                    ? 'border-orange-400 bg-orange-500 bg-opacity-20 text-orange-400'
+                    : 'border-slate-600 bg-slate-700 text-slate-300 hover:border-orange-400 hover:bg-orange-500 hover:bg-opacity-10'
+                }`}
+              >
+                <div className="font-semibold">{level.label}</div>
+                <div className="text-sm opacity-80">{level.description}</div>
+                {level.value === 'legendary' && (
+                  <div className="text-xs mt-1 text-amber-400">⭐ Pro Plan Required</div>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Quick Add Popular Ingredients */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-3">
@@ -188,7 +244,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
             </button>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-            {currentPopularIngredients.map((ingredient) => (
+            {currentIngredientSet.map((ingredient) => (
               <button
                 key={ingredient}
                 onClick={() => addPopularIngredient(ingredient)}
@@ -226,15 +282,24 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch }) => {
         {/* Generate Recipes Button */}
         <button
           onClick={handleSearch}
-          disabled={ingredients.length === 0}
+          disabled={ingredients.length === 0 || isGenerating}
           className={`w-full py-4 rounded-xl text-lg font-semibold transition-all duration-200 flex items-center justify-center gap-3 ${
-            ingredients.length > 0
+            ingredients.length > 0 && !isGenerating
               ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-600 hover:to-amber-600 shadow-lg hover:shadow-xl transform hover:scale-[1.02]'
               : 'bg-gray-200 text-gray-400 cursor-not-allowed'
           }`}
         >
-          <Sparkles size={24} />
-          Generate Amazing Recipes
+          {isGenerating ? (
+            <>
+              <RefreshCw size={24} className="animate-spin" />
+              Generating Recipes...
+            </>
+          ) : (
+            <>
+              <Sparkles size={24} />
+              Generate Amazing Recipes
+            </>
+          )}
         </button>
       </div>
 

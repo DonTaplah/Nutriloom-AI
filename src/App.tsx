@@ -14,12 +14,18 @@ function App() {
   const [searchIngredients, setSearchIngredients] = useState<string[]>([]);
   const [selectedCuisine, setSelectedCuisine] = useState<string>('all');
 
-  const handleSearch = (ingredients: string[], cuisine: string) => {
+  const handleSearch = (ingredients: string[], cuisine: string, aiRecipes?: Recipe[]) => {
     setSearchIngredients(ingredients);
     setSelectedCuisine(cuisine);
-    // This would normally call your AI API
-    const generatedRecipes = generateRecipes(ingredients, cuisine);
-    setRecipes(generatedRecipes);
+    
+    if (aiRecipes) {
+      // Use AI-generated recipes
+      setRecipes(aiRecipes);
+    } else {
+      // Fallback to mock recipes
+      const generatedRecipes = generateRecipes(ingredients, cuisine);
+      setRecipes(generatedRecipes);
+    }
     setCurrentView('recipes');
   };
 
