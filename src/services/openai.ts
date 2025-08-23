@@ -1,7 +1,14 @@
 import OpenAI from 'openai';
 
+// Check if API key is properly configured
+const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+
+if (!apiKey || apiKey === 'your_actual_openai_api_key_here') {
+  console.error('OpenAI API key is not configured. Please add your API key to the .env file.');
+}
+
 const openai = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+  apiKey: apiKey,
   dangerouslyAllowBrowser: true // Note: In production, use a backend proxy
 });
 
@@ -65,6 +72,11 @@ Format as JSON array with this structure:
 ]`;
 
   try {
+    // Check if API key is configured before making the request
+    if (!apiKey || apiKey === 'your_actual_openai_api_key_here') {
+      throw new Error('OpenAI API key is not configured. Please add your API key to the .env file and restart the development server.');
+    }
+
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [
