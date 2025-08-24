@@ -39,11 +39,13 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin, onSignup, isLoading, error
         {/* Logo and Header */}
         <div className="text-center mb-8">
           <div className="flex justify-center items-center mb-6">
-            <div className="bg-gradient-to-r from-orange-500 to-amber-500 rounded-full p-4">
-              <ChefHat size={48} className="text-white" />
-            </div>
+            <img 
+              src="/An_AI_chef_with_a_spoon_and_a_fork_in_the_background-removebg-preview.png" 
+              alt="Nutriloom AI Chef" 
+              className="w-24 h-24 object-contain"
+            />
           </div>
-          <h1 className="text-4xl font-bold text-white mb-2">Nutriloom</h1>
+          <h1 className="text-4xl font-bold text-white mb-2">Nutriloom AI</h1>
           <p className="text-slate-300">
             {isLogin ? 'Welcome back to your kitchen companion' : 'Join thousands of home chefs'}
           </p>

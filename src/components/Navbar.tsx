@@ -32,7 +32,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
               className="flex items-center space-x-3 text-orange-400 hover:text-orange-300 transition-colors duration-200"
             >
               <ChefHat size={28} />
-              <h1 className="text-xl font-bold hidden sm:block text-white">Nutriloom</h1>
+              <h1 className="text-xl font-bold hidden sm:block text-white">Nutriloom AI</h1>
             </button>
           </div>
           
