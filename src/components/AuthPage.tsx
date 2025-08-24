@@ -223,7 +223,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin, onSignup, isLoading, error
               <div className="text-xs">Happy Users</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-orange-400">50+</div>
+              <div className="text-2xl font-bold text-orange-400">50k+</div>
               <div className="text-xs">Cuisines</div>
             </div>
           </div>
