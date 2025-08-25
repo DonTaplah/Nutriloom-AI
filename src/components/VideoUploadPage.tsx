@@ -444,3 +444,6 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
     </div>
   );
 };
+
+
+export default ScanYourDishPage
