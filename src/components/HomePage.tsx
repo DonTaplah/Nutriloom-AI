@@ -114,17 +114,16 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
       {/* Hero Section */}
       <div className="text-center mb-12">
         <div className="flex justify-center items-center mb-6">
-          <div className="bg-gradient-to-r from-orange-500 to-amber-500 rounded-full p-4">
-            <Utensils size={48} className="text-white" />
-          </div>
+          <img 
+            src="/An_AI_chef_with_a_spoon_and_a_fork_in_the_background-removebg-preview.png" 
+            alt="Nutriloom AI Chef" 
+            className="w-20 h-20 object-contain"
+          />
         </div>
         <div className="mb-4">
           <span className="text-lg text-slate-400">Welcome back, </span>
           <span className="text-2xl font-semibold text-orange-400">{user.name}!</span>
         </div>
-        <h1 className="text-5xl font-bold text-gray-900 mb-4">
-          What's in your kitchen?
-        </h1>
         <h1 className="text-5xl font-bold text-white mb-4">
           What's in your kitchen?
         </h1>
