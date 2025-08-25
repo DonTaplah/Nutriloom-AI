@@ -5,11 +5,11 @@ import Navbar from './components/Navbar';
 import HomePage from './components/HomePage';
 import RecipeList from './components/RecipeList';
 import RecipeDetail from './components/RecipeDetail';
-import VideoUploadPage from './components/VideoUploadPage';
+import ScanYourDishPage from './components/VideoUploadPage';
 import { Recipe } from './types/Recipe';
 import { User } from './types/User';
 
-type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing' | 'video-upload';
+type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing' | 'scan-dish';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
@@ -115,7 +115,7 @@ function App() {
       setCurrentView('home');
     } else if (currentView === 'pricing') {
       setCurrentView('home');
-    } else if (currentView === 'video-upload') {
+    } else if (currentView === 'scan-dish') {
       setCurrentView('home');
     }
   };
@@ -267,7 +267,7 @@ function App() {
         user={user}
         onPricing={() => setCurrentView('pricing')}
         onLogout={() => setUser(null)}
-        onVideoUpload={() => setCurrentView('video-upload')}
+        onVideoUpload={() => setCurrentView('scan-dish')}
       />
       
       <main className="container mx-auto px-4 py-8">
@@ -295,8 +295,8 @@ function App() {
           <RecipeDetail recipe={selectedRecipe} />
         )}
         
-        {currentView === 'video-upload' && (
-          <VideoUploadPage onBack={handleBack} />
+        {currentView === 'scan-dish' && (
+          <ScanYourDishPage onBack={handleBack} />
         )}
       </main>
     </div>

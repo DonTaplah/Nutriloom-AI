@@ -65,10 +65,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
             
             <button
               onClick={onVideoUpload}
-              className="flex items-center space-x-2 text-slate-300 hover:text-orange-400 transition-colors duration-200"
+              className="flex items-center space-x-2 text-slate-300 hover:text-purple-400 transition-colors duration-200"
             >
-              <Video size={20} />
-              <span className="hidden sm:inline">Upload</span>
+              <Scan size={20} />
+              <span className="hidden sm:inline">SYD</span>
             </button>
             
             {/* User Menu */}

@@ -10,6 +10,7 @@
 
 body {
   line-height: 1.6;
+  background: linear-gradient(135deg, #312e81 0%, #7c3aed 50%, #1e40af 100%);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -22,17 +23,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #1e1b4b;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
+  background: #7c3aed;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  background: #8b5cf6;
 }
 
 /* Smooth animations */
