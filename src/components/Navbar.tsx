@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChefHat, ArrowLeft, Home, CreditCard, User, LogOut } from 'lucide-react';
+import { ArrowLeft, Home, CreditCard, User, LogOut, Video } from 'lucide-react';
 import { User as UserType } from '../types/User';
 
 interface NavbarProps {
@@ -9,9 +9,10 @@ interface NavbarProps {
   user: UserType;
   onPricing: () => void;
   onLogout: () => void;
+  onVideoUpload: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPricing, onLogout }) => {
+const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPricing, onLogout, onVideoUpload }) => {
   return (
     <nav className="bg-slate-900 shadow-lg border-b border-slate-700">
       <div className="container mx-auto px-4">
@@ -60,6 +61,14 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
             >
               <CreditCard size={20} />
               <span className="hidden sm:inline">Pricing</span>
+            </button>
+            
+            <button
+              onClick={onVideoUpload}
+              className="flex items-center space-x-2 text-slate-300 hover:text-orange-400 transition-colors duration-200"
+            >
+              <Video size={20} />
+              <span className="hidden sm:inline">Upload</span>
             </button>
             
             {/* User Menu */}

@@ -5,10 +5,11 @@ import Navbar from './components/Navbar';
 import HomePage from './components/HomePage';
 import RecipeList from './components/RecipeList';
 import RecipeDetail from './components/RecipeDetail';
+import VideoUploadPage from './components/VideoUploadPage';
 import { Recipe } from './types/Recipe';
 import { User } from './types/User';
 
-type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing';
+type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing' | 'video-upload';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
@@ -113,6 +114,8 @@ function App() {
     } else if (currentView === 'recipes') {
       setCurrentView('home');
     } else if (currentView === 'pricing') {
+      setCurrentView('home');
+    } else if (currentView === 'video-upload') {
       setCurrentView('home');
     }
   };
@@ -264,6 +267,7 @@ function App() {
         user={user}
         onPricing={() => setCurrentView('pricing')}
         onLogout={() => setUser(null)}
+        onVideoUpload={() => setCurrentView('video-upload')}
       />
       
       <main className="container mx-auto px-4 py-8">
@@ -289,6 +293,10 @@ function App() {
         
         {currentView === 'detail' && selectedRecipe && (
           <RecipeDetail recipe={selectedRecipe} />
+        )}
+        
+        {currentView === 'video-upload' && (
+          <VideoUploadPage onBack={handleBack} />
         )}
       </main>
     </div>
