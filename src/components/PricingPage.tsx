@@ -64,7 +64,7 @@ const PricingPage: React.FC<PricingPageProps> = ({ onSelectPlan, currentPlan }) 
       {/* Header */}
       <div className="text-center mb-12">
         <div className="flex justify-center items-center mb-6">
-          <div className="bg-gradient-to-r from-orange-500 to-amber-500 rounded-full p-4">
+          <div className="bg-gradient-to-r from-indigo-600 to-blue-600 rounded-full p-4">
             <Star size={48} className="text-white" />
           </div>
         </div>
@@ -82,14 +82,15 @@ const PricingPage: React.FC<PricingPageProps> = ({ onSelectPlan, currentPlan }) 
           <div
             key={plan.id}
             className={`relative bg-slate-800 rounded-2xl shadow-xl border-2 transition-all duration-300 hover:scale-[1.02] ${
+            className={`relative bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-xl border-2 transition-all duration-300 hover:scale-[1.02] ${
               plan.popular
-                ? 'border-amber-500 shadow-amber-500/20'
-                : 'border-slate-700 hover:border-orange-400'
+                ? 'border-indigo-500 shadow-indigo-500/20'
+                : 'border-indigo-500/30 hover:border-indigo-400'
             }`}
           >
             {plan.popular && (
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-2 rounded-full text-sm font-semibold flex items-center gap-2">
+                <div className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-6 py-2 rounded-full text-sm font-semibold flex items-center gap-2">
                   <Zap size={16} />
                   Most Popular
                 </div>
@@ -130,18 +131,19 @@ const PricingPage: React.FC<PricingPageProps> = ({ onSelectPlan, currentPlan }) 
                 className={`w-full py-4 rounded-xl text-lg font-semibold transition-all duration-200 ${
                   currentPlan === plan.id
                     ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
+                    ? 'bg-slate-700/80 text-slate-400 cursor-not-allowed'
                     : plan.popular
-                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600 shadow-lg hover:shadow-xl'
-                    : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                  <Star key={i} size={16} className="text-indigo-400 fill-current" />
+                    : 'bg-indigo-600 text-white hover:bg-indigo-700'
                 }`}
               >
                 {plan.buttonText}
               </button>
-
+              <span className="text-2xl font-bold text-indigo-400">50K+</span>
               {plan.id === 'pro' && currentPlan !== 'pro' && (
                 <p className="text-center text-slate-400 text-sm mt-4">
                   Cancel anytime • 7-day money-back guarantee
-                </p>
+              <span className="text-2xl font-bold text-indigo-400">10K+</span>
               )}
             </div>
           </div>
@@ -149,7 +151,7 @@ const PricingPage: React.FC<PricingPageProps> = ({ onSelectPlan, currentPlan }) 
       </div>
 
       {/* FAQ Section */}
-      <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700">
+      <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl p-8 border border-indigo-500/30">
         <h2 className="text-2xl font-bold text-white mb-6 text-center">
           Frequently Asked Questions
         </h2>

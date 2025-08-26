@@ -57,7 +57,7 @@ const RecipeList: React.FC<RecipeListProps> = ({
         </div>
 
         {/* Search Summary */}
-        <div className="bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-700 mb-6">
+        <div className="bg-slate-800/80 backdrop-blur-sm rounded-xl p-4 shadow-sm border border-indigo-500/30 mb-6">
           <div className="flex flex-wrap items-center gap-4">
             <div>
               <span className="text-sm font-medium text-slate-300">Your ingredients:</span>
@@ -65,7 +65,7 @@ const RecipeList: React.FC<RecipeListProps> = ({
                 {searchIngredients.map((ingredient, index) => (
                   <span
                     key={index}
-                    className="inline-block px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs"
+                    className="inline-block px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs"
                   >
                     {ingredient}
                   </span>
@@ -84,14 +84,14 @@ const RecipeList: React.FC<RecipeListProps> = ({
         </div>
 
         {/* Filters and Sorting */}
-        <div className="flex flex-wrap items-center gap-4 p-4 bg-slate-800 rounded-xl shadow-sm border border-slate-700">
+        <div className="flex flex-wrap items-center gap-4 p-4 bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-sm border border-indigo-500/30">
           <div className="flex items-center gap-2">
             <Filter size={20} className="text-slate-400" />
             <span className="font-medium text-slate-300">Sort by:</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'time' | 'difficulty' | 'calories')}
-              className="px-3 py-2 border border-slate-600 rounded-lg focus:outline-none focus:border-orange-400 bg-slate-700 text-white"
+              className="px-3 py-2 border border-slate-600 rounded-lg focus:outline-none focus:border-indigo-400 bg-slate-700/80 text-white"
             >
               <option value="time">Cooking Time</option>
               <option value="difficulty">Difficulty</option>
@@ -104,7 +104,7 @@ const RecipeList: React.FC<RecipeListProps> = ({
             <select
               value={filterDifficulty}
               onChange={(e) => setFilterDifficulty(e.target.value)}
-              className="px-3 py-2 border border-slate-600 rounded-lg focus:outline-none focus:border-orange-400 bg-slate-700 text-white"
+              className="px-3 py-2 border border-slate-600 rounded-lg focus:outline-none focus:border-indigo-400 bg-slate-700/80 text-white"
             >
               <option value="all">All Levels</option>
               <option value="easy">Easy</option>

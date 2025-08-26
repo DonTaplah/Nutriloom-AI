@@ -10,7 +10,7 @@
 
 body {
   line-height: 1.6;
-  background: linear-gradient(135deg, #312e81 0%, #7c3aed 50%, #1e40af 100%);
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e3a8a 100%);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -23,17 +23,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1e1b4b;
+  background: #0f0f23;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #7c3aed;
+  background: #6366f1;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #8b5cf6;
+  background: #818cf8;
 }
 
 /* Smooth animations */

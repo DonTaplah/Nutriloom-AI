@@ -34,7 +34,7 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
   return (
     <div className="max-w-4xl mx-auto">
       {/* Hero Section */}
-      <div className="bg-slate-800 border border-slate-700 rounded-2xl shadow-lg overflow-hidden mb-8">
+      <div className="bg-slate-800/80 backdrop-blur-sm border border-indigo-500/30 rounded-2xl shadow-lg overflow-hidden mb-8">
         <div className="md:flex">
           <div className="md:w-1/2">
             <img
@@ -52,12 +52,12 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
                 <button
                   onClick={() => setIsFavorited(!isFavorited)}
                   className={`p-2 rounded-full transition-colors duration-200 ${
-                    isFavorited ? 'text-red-400 bg-red-500 bg-opacity-20' : 'text-slate-400 bg-slate-700 hover:bg-red-500 hover:bg-opacity-20 hover:text-red-400'
+                    isFavorited ? 'text-red-400 bg-red-500 bg-opacity-20' : 'text-slate-400 bg-slate-700/80 hover:bg-red-500 hover:bg-opacity-20 hover:text-red-400'
                   }`}
                 >
                   <Heart size={20} fill={isFavorited ? 'currentColor' : 'none'} />
                 </button>
-                <button className="p-2 rounded-full text-slate-400 bg-slate-700 hover:bg-blue-500 hover:bg-opacity-20 hover:text-blue-400 transition-colors duration-200">
+                <button className="p-2 rounded-full text-slate-400 bg-slate-700/80 hover:bg-indigo-500 hover:bg-opacity-20 hover:text-indigo-400 transition-colors duration-200">
                   <Share size={20} />
                 </button>
               </div>
@@ -68,7 +68,7 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
 
             <div className="grid grid-cols-2 gap-4 mb-6">
               <div className="flex items-center gap-2">
-                <Clock size={20} className="text-orange-500" />
+                <Clock size={20} className="text-indigo-500" />
                 <div>
                   <div className="text-sm text-slate-400">Total Time</div>
                   <div className="font-semibold text-white">{recipe.cookingTime + recipe.prepTime} min</div>
@@ -102,7 +102,7 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
               {recipe.tags.map((tag, index) => (
                 <span
                   key={index}
-                  className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium"
+                  className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium"
                 >
                   {tag}
                 </span>
@@ -116,12 +116,12 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
         {/* Ingredients & Nutrition */}
         <div className="lg:col-span-1 space-y-6">
           {/* Ingredients */}
-          <div className="bg-slate-800 border border-slate-700 rounded-xl shadow-md p-6">
+          <div className="bg-slate-800/80 backdrop-blur-sm border border-indigo-500/30 rounded-xl shadow-md p-6">
             <h2 className="text-xl font-bold text-white mb-4">Ingredients</h2>
             <ul className="space-y-3">
               {recipe.ingredients.map((ingredient, index) => (
                 <li key={index} className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0"></div>
+                  <div className="w-2 h-2 bg-indigo-500 rounded-full flex-shrink-0"></div>
                   <span className="text-slate-300">{ingredient}</span>
                 </li>
               ))}
@@ -129,7 +129,7 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
           </div>
 
           {/* Nutrition */}
-          <div className="bg-slate-800 border border-slate-700 rounded-xl shadow-md p-6">
+          <div className="bg-slate-800/80 backdrop-blur-sm border border-indigo-500/30 rounded-xl shadow-md p-6">
             <h2 className="text-xl font-bold text-white mb-4">Nutrition (per serving)</h2>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
@@ -158,7 +158,7 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
 
         {/* Instructions */}
         <div className="lg:col-span-2">
-          <div className="bg-slate-800 border border-slate-700 rounded-xl shadow-md p-6">
+          <div className="bg-slate-800/80 backdrop-blur-sm border border-indigo-500/30 rounded-xl shadow-md p-6">
             <h2 className="text-xl font-bold text-white mb-6">Instructions</h2>
             <div className="space-y-4">
               {recipe.instructions.map((instruction, index) => (
@@ -167,7 +167,7 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
                   className={`flex gap-4 p-4 rounded-lg border-2 transition-all duration-200 ${
                     completedSteps.includes(index)
                       ? 'border-green-500 bg-green-500 bg-opacity-10'
-                      : 'border-slate-600 hover:border-orange-400 hover:bg-orange-500 hover:bg-opacity-10'
+                      : 'border-slate-600 hover:border-indigo-400 hover:bg-indigo-500 hover:bg-opacity-10'
                   }`}
                 >
                   <button
@@ -175,7 +175,7 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
                     className={`flex-shrink-0 w-8 h-8 rounded-full border-2 transition-all duration-200 ${
                       completedSteps.includes(index)
                         ? 'border-green-500 bg-green-500 text-white'
-                        : 'border-slate-500 hover:border-orange-400'
+                        : 'border-slate-500 hover:border-indigo-400'
                     }`}
                   >
                     {completedSteps.includes(index) ? (
@@ -186,7 +186,7 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
                   </button>
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="font-semibold text-orange-400">Step {index + 1}</span>
+                      <span className="font-semibold text-indigo-400">Step {index + 1}</span>
                     </div>
                     <p className={`text-slate-300 leading-relaxed ${
                       completedSteps.includes(index) ? 'line-through text-slate-500' : ''

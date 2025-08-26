@@ -34,7 +34,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin, onSignup, isLoading, error
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900 flex items-center justify-center px-4">
       <div className="max-w-md w-full">
         {/* Logo and Header */}
         <div className="text-center mb-8">
@@ -52,14 +52,14 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin, onSignup, isLoading, error
         </div>
 
         {/* Auth Form */}
-        <div className="bg-slate-800 rounded-2xl shadow-xl p-8 border border-slate-700">
+        <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-indigo-500/30">
           <div className="mb-6">
-            <div className="flex bg-slate-700 rounded-lg p-1">
+            <div className="flex bg-slate-700/80 rounded-lg p-1">
               <button
                 onClick={() => setIsLogin(true)}
                 className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
                   isLogin
-                    ? 'bg-orange-500 text-white shadow-md'
+                    ? 'bg-indigo-600 text-white shadow-md'
                     : 'text-slate-300 hover:text-white'
                 }`}
               >
@@ -69,7 +69,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin, onSignup, isLoading, error
                 onClick={() => setIsLogin(false)}
                 className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
                   !isLogin
-                    ? 'bg-orange-500 text-white shadow-md'
+                    ? 'bg-indigo-600 text-white shadow-md'
                     : 'text-slate-300 hover:text-white'
                 }`}
               >
@@ -92,7 +92,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin, onSignup, isLoading, error
                     value={formData.name}
                     onChange={handleInputChange}
                     required={!isLogin}
-                    className="w-full pl-10 pr-4 py-3 bg-slate-700 border border-slate-600 rounded-lg focus:border-orange-400 focus:outline-none transition-colors duration-200 text-white placeholder-slate-400"
+                    className="w-full pl-10 pr-4 py-3 bg-slate-700/80 border border-slate-600 rounded-lg focus:border-indigo-400 focus:outline-none transition-colors duration-200 text-white placeholder-slate-400"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -111,7 +111,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin, onSignup, isLoading, error
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full pl-10 pr-4 py-3 bg-slate-700 border border-slate-600 rounded-lg focus:border-orange-400 focus:outline-none transition-colors duration-200 text-white placeholder-slate-400"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-700/80 border border-slate-600 rounded-lg focus:border-indigo-400 focus:outline-none transition-colors duration-200 text-white placeholder-slate-400"
                   placeholder="Enter your email"
                 />
               </div>
@@ -129,7 +129,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin, onSignup, isLoading, error
                   value={formData.password}
                   onChange={handleInputChange}
                   required
-                  className="w-full pl-10 pr-12 py-3 bg-slate-700 border border-slate-600 rounded-lg focus:border-orange-400 focus:outline-none transition-colors duration-200 text-white placeholder-slate-400"
+                  className="w-full pl-10 pr-12 py-3 bg-slate-700/80 border border-slate-600 rounded-lg focus:border-indigo-400 focus:outline-none transition-colors duration-200 text-white placeholder-slate-400"
                   placeholder="Enter your password"
                 />
                 <button
@@ -151,7 +151,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin, onSignup, isLoading, error
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-lg font-semibold hover:from-orange-600 hover:to-amber-600 focus:outline-none focus:ring-4 focus:ring-orange-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-lg font-semibold hover:from-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
@@ -192,6 +192,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin, onSignup, isLoading, error
           {isLogin && (
             <div className="mt-6 text-center">
               <a href="#" className="text-orange-400 hover:text-orange-300 text-sm">
+              <a href="#" className="text-indigo-400 hover:text-indigo-300 text-sm">
                 Forgot your password?
               </a>
             </div>
@@ -202,7 +203,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin, onSignup, isLoading, error
               {isLogin ? "Don't have an account? " : "Already have an account? "}
               <button
                 onClick={() => setIsLogin(!isLogin)}
-                className="text-orange-400 hover:text-orange-300 font-medium"
+                className="text-indigo-400 hover:text-indigo-300 font-medium"
               >
                 {isLogin ? 'Sign up for free' : 'Sign in here'}
               </button>
@@ -215,15 +216,15 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin, onSignup, isLoading, error
           <p className="text-slate-400 text-sm mb-4">Trusted by thousands of home chefs</p>
           <div className="flex justify-center space-x-8 text-slate-500">
             <div className="text-center">
-              <div className="text-2xl font-bold text-orange-400">100K+</div>
+              <div className="text-2xl font-bold text-indigo-400">100K+</div>
               <div className="text-xs">Recipes Generated</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-orange-400">25K+</div>
+              <div className="text-2xl font-bold text-indigo-400">25K+</div>
               <div className="text-xs">Happy Users</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-orange-400">50k+</div>
+              <div className="text-2xl font-bold text-indigo-400">50k+</div>
               <div className="text-xs">Cuisines</div>
             </div>
           </div>

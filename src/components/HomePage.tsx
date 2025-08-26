@@ -132,8 +132,8 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
           Just tell us what you have, and we'll create magic!
         </p>
         {user.plan === 'free' && (
-          <div className="mt-4 p-3 bg-amber-500 bg-opacity-20 border border-amber-500 rounded-lg max-w-md mx-auto">
-            <p className="text-amber-400 text-sm">
+          <div className="mt-4 p-3 bg-indigo-500 bg-opacity-20 border border-indigo-500 rounded-lg max-w-md mx-auto">
+            <p className="text-indigo-400 text-sm">
               🆓 Free Plan: Up to 5 recipes per day • Upgrade for unlimited generations
             </p>
           </div>
@@ -141,7 +141,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
       </div>
 
       {/* Main Input Section */}
-      <div className="bg-slate-800 rounded-2xl shadow-xl p-8 mb-8 border border-slate-700">
+      <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 mb-8 border border-indigo-500/30">
         <div className="mb-6">
           <label className="block text-lg font-semibold text-white mb-3">
             Add your ingredients
@@ -154,12 +154,12 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
                 onChange={(e) => setIngredientInput(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Type an ingredient (e.g., chicken, rice, tomatoes)"
-                className="w-full px-4 py-3 text-lg border-2 border-slate-600 rounded-xl focus:border-orange-400 focus:outline-none transition-colors duration-200 bg-slate-700 text-white placeholder-slate-400"
+                className="w-full px-4 py-3 text-lg border-2 border-slate-600 rounded-xl focus:border-indigo-400 focus:outline-none transition-colors duration-200 bg-slate-700/80 text-white placeholder-slate-400"
               />
             </div>
             <button
               onClick={addIngredient}
-              className="px-6 py-3 bg-orange-500 text-white rounded-xl hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-200 transition-all duration-200 flex items-center gap-2"
+              className="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 transition-all duration-200 flex items-center gap-2"
             >
               <Plus size={20} />
               <span className="hidden sm:inline">Add</span>
@@ -179,7 +179,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
             />
             <label
               htmlFor="image-upload"
-              className="w-full py-4 border-2 border-dashed border-slate-600 rounded-xl hover:border-orange-400 hover:bg-slate-700 transition-all duration-200 flex items-center justify-center gap-3 text-slate-300 hover:text-orange-400 cursor-pointer"
+              className="w-full py-4 border-2 border-dashed border-slate-600 rounded-xl hover:border-indigo-400 hover:bg-slate-700/50 transition-all duration-200 flex items-center justify-center gap-3 text-slate-300 hover:text-indigo-400 cursor-pointer"
             >
               {uploadedImage ? <Upload size={24} /> : <Camera size={24} />}
               <span className="text-lg">
@@ -226,8 +226,8 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
                 onClick={() => setSkillLevel(level.value as 'beginner' | 'pro' | 'legendary')}
                 className={`p-4 rounded-xl border-2 transition-all duration-200 text-left ${
                   skillLevel === level.value
-                    ? 'border-orange-400 bg-orange-500 bg-opacity-20 text-orange-400'
-                    : 'border-slate-600 bg-slate-700 text-slate-300 hover:border-orange-400 hover:bg-orange-500 hover:bg-opacity-10'
+                    ? 'border-indigo-400 bg-indigo-500 bg-opacity-20 text-indigo-400'
+                    : 'border-slate-600 bg-slate-700/80 text-slate-300 hover:border-indigo-400 hover:bg-indigo-500 hover:bg-opacity-10'
                 }`}
               >
                 <div className="font-semibold">{level.label}</div>
@@ -252,7 +252,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
             </label>
             <button
               onClick={refreshPopularIngredients}
-              className="flex items-center gap-2 px-3 py-1 text-sm text-slate-300 hover:text-orange-400 transition-colors duration-200"
+              className="flex items-center gap-2 px-3 py-1 text-sm text-slate-300 hover:text-indigo-400 transition-colors duration-200"
             >
               <RefreshCw size={16} />
               Refresh
@@ -266,8 +266,8 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
                 disabled={ingredients.includes(ingredient)}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   ingredients.includes(ingredient)
-                    ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
-                    : 'bg-slate-700 text-slate-300 hover:bg-orange-600 hover:text-white'
+                    ? 'bg-slate-700/80 text-slate-500 cursor-not-allowed'
+                    : 'bg-slate-700/80 text-slate-300 hover:bg-indigo-600 hover:text-white'
                 }`}
               >
                 {ingredient}
@@ -284,7 +284,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
           <select
             value={selectedCuisine}
             onChange={(e) => setSelectedCuisine(e.target.value)}
-            className="w-full px-4 py-3 text-lg border-2 border-slate-600 rounded-xl focus:border-orange-400 focus:outline-none transition-colors duration-200 bg-slate-700 text-white"
+            className="w-full px-4 py-3 text-lg border-2 border-slate-600 rounded-xl focus:border-indigo-400 focus:outline-none transition-colors duration-200 bg-slate-700/80 text-white"
           >
             {cuisines.map((cuisine) => (
               <option key={cuisine.value} value={cuisine.value}>
@@ -300,7 +300,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
           disabled={ingredients.length === 0 || isGenerating}
           className={`w-full py-4 rounded-xl text-lg font-semibold transition-all duration-200 flex items-center justify-center gap-3 ${
             ingredients.length > 0 && !isGenerating
-              ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-600 hover:to-amber-600 shadow-lg hover:shadow-xl transform hover:scale-[1.02]'
+              ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:from-indigo-700 hover:to-blue-700 shadow-lg hover:shadow-xl transform hover:scale-[1.02]'
               : 'bg-gray-200 text-gray-400 cursor-not-allowed'
           }`}
         >
@@ -320,15 +320,15 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
 
       {/* Features Preview */}
       <div className="grid md:grid-cols-3 gap-6">
-        <div className="text-center p-6 bg-slate-800 rounded-xl shadow-md border border-slate-700">
-          <div className="w-12 h-12 bg-orange-500 bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Search size={24} className="text-orange-400" />
+        <div className="text-center p-6 bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-md border border-indigo-500/30">
+          <div className="w-12 h-12 bg-indigo-500 bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Search size={24} className="text-indigo-400" />
           </div>
           <h3 className="text-lg font-semibold text-white mb-2">Smart Matching</h3>
           <p className="text-slate-300">AI finds the perfect recipes using your available ingredients</p>
         </div>
         
-        <div className="text-center p-6 bg-slate-800 rounded-xl shadow-md border border-slate-700">
+        <div className="text-center p-6 bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-md border border-indigo-500/30">
           <div className="w-12 h-12 bg-emerald-500 bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
             <Utensils size={24} className="text-emerald-400" />
           </div>
@@ -336,7 +336,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
           <p className="text-slate-300">Clear instructions and cooking tips for perfect results</p>
         </div>
         
-        <div className="text-center p-6 bg-slate-800 rounded-xl shadow-md border border-slate-700">
+        <div className="text-center p-6 bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-md border border-indigo-500/30">
           <div className="w-12 h-12 bg-blue-500 bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
             <Sparkles size={24} className="text-blue-400" />
           </div>

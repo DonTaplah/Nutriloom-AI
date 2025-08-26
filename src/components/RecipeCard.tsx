@@ -24,7 +24,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSelect }) => {
   return (
     <div
       onClick={onSelect}
-      className="bg-slate-800 border border-slate-700 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-[1.02] overflow-hidden group"
+      className="bg-slate-800/80 backdrop-blur-sm border border-indigo-500/30 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-[1.02] overflow-hidden group"
     >
       {/* Recipe Image */}
       <div className="relative h-48 overflow-hidden">
@@ -48,6 +48,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSelect }) => {
       {/* Recipe Content */}
       <div className="p-5">
         <h3 className="font-bold text-lg text-white mb-2 group-hover:text-orange-400 transition-colors duration-200">
+        <h3 className="font-bold text-lg text-white mb-2 group-hover:text-indigo-400 transition-colors duration-200">
           {recipe.name}
         </h3>
 
@@ -100,7 +101,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSelect }) => {
         </div>
 
         {/* View Recipe Button */}
-        <button className="w-full py-2 bg-orange-500 bg-opacity-20 text-orange-400 rounded-lg font-medium hover:bg-orange-500 hover:bg-opacity-30 transition-colors duration-200 group-hover:bg-orange-500 group-hover:text-white">
+        <button className="w-full py-2 bg-indigo-500 bg-opacity-20 text-indigo-400 rounded-lg font-medium hover:bg-indigo-500 hover:bg-opacity-30 transition-colors duration-200 group-hover:bg-indigo-500 group-hover:text-white">
           View Recipe
         </button>
       </div>
