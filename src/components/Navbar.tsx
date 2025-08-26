@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, Home, CreditCard, User, LogOut, Video } from 'lucide-react';
+import { ArrowLeft, Home, CreditCard, User, LogOut, Video, Scan } from 'lucide-react';
 import { User as UserType } from '../types/User';
 
 interface NavbarProps {
