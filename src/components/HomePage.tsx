@@ -114,19 +114,17 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
       {/* Hero Section */}
       <div className="text-center mb-12">
         <div className="flex justify-center items-center mb-6">
-          <img 
-            src="/An_AI_chef_with_a_spoon_and_a_fork_in_the_background-removebg-preview.png" 
-            alt="Nutriloom AI Chef" 
-            className="w-20 h-20 object-contain"
-          />
+          <div className="flex items-center gap-4">
+            <img 
+              src="/An_AI_chef_with_a_spoon_and_a_fork_in_the_background-removebg-preview.png" 
+              alt="Nutriloom AI Chef" 
+              className="w-16 h-16 object-contain"
+            />
+            <h1 className="text-5xl font-bold text-white">
+              What's in your kitchen?
+            </h1>
+          </div>
         </div>
-        <div className="mb-4">
-          <span className="text-lg text-slate-400">Welcome back, </span>
-          <span className="text-2xl font-semibold text-orange-400">{user.name}!</span>
-        </div>
-        <h1 className="text-5xl font-bold text-white mb-4">
-          What's in your kitchen?
-        </h1>
         <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
           Turn your available ingredients into delicious recipes with AI-powered suggestions. 
           Just tell us what you have, and we'll create magic!

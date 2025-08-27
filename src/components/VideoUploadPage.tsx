@@ -335,12 +335,12 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
                     <div className="bg-gradient-to-r from-green-500 to-emerald-500 bg-opacity-20 border border-green-500 rounded-xl p-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="text-green-400 font-semibold text-lg">Health Score</h3>
-                          <p className="text-green-300 text-sm">Based on nutritional balance and ingredients</p>
+                          <h3 className="text-green-400 font-semibold text-lg">AI Health Score</h3>
+                          <p className="text-green-300 text-sm">Intelligent analysis of nutritional balance and ingredients</p>
                         </div>
                         <div className="text-right">
                           <div className="text-4xl font-bold text-green-400">{scanResults.healthScore}/10</div>
-                          <div className="text-green-300 text-sm">Excellent!</div>
+                          <div className="text-green-300 text-sm">AI Rated: Excellent!</div>
                         </div>
                       </div>
                     </div>
@@ -372,7 +372,7 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
                           : 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white hover:from-purple-600 hover:to-indigo-600 shadow-lg hover:shadow-xl'
                       }`}
                     >
-                      {isUploading ? 'Analyzing...' : 'Scan My Dish'}
+                      {isUploading ? 'AI Analyzing...' : 'Start AI Analysis'}
                     </button>
                   )}
                   
@@ -388,7 +388,7 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
                       onClick={removeImage}
                       className="flex-1 py-3 px-6 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition-all duration-200"
                     >
-                      Scan Another Dish
+                      Analyze Another Dish
                     </button>
                   )}
                 </div>
@@ -398,7 +398,7 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
 
           {/* Scan Guidelines */}
           <div className="mt-8 bg-slate-800 rounded-xl p-6 border border-purple-500 border-opacity-30">
-            <h2 className="text-xl font-bold text-white mb-4">Scanning Guidelines</h2>
+            <h2 className="text-xl font-bold text-white mb-4">AI Analysis Guidelines</h2>
             <div className="grid md:grid-cols-2 gap-6 text-sm">
               <div>
                 <h3 className="font-semibold text-purple-400 mb-2">Supported Formats</h3>
@@ -429,12 +429,12 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
               </div>
               
               <div>
-                <h3 className="font-semibold text-purple-400 mb-2">What We Analyze</h3>
+                <h3 className="font-semibold text-purple-400 mb-2">AI Analysis Features</h3>
                 <ul className="text-slate-300 space-y-1">
-                  <li>• Food classification</li>
-                  <li>• Nutritional breakdown</li>
-                  <li>• Ingredient identification</li>
-                  <li>• Health score rating</li>
+                  <li>• Smart food classification</li>
+                  <li>• AI nutritional breakdown</li>
+                  <li>• Intelligent ingredient ID</li>
+                  <li>• AI health score rating</li>
                 </ul>
               </div>
             </div>

@@ -33,13 +33,15 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error }: AuthPa
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900 flex items-center justify-center p-4">
       <div className="bg-slate-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-md border border-indigo-500/30">
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-2">
-            <img 
-              src="https://images.pexels.com/photos/8629131/pexels-photo-8629131.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop" 
-              alt="Nutriloom AI" 
-              className="w-12 h-12 rounded-full mr-2"
-            />
-            <h1 className="text-2xl font-bold text-white">Nutriloom AI</h1>
+          <div className="flex items-center justify-center mb-4">
+            <div className="flex items-center gap-3">
+              <img 
+                src="/An_AI_chef_with_a_spoon_and_a_fork_in_the_background-removebg-preview.png" 
+                alt="Nutriloom AI Chef" 
+                className="w-12 h-12 object-contain"
+              />
+              <h1 className="text-2xl font-bold text-white">Nutriloom AI</h1>
+            </div>
           </div>
           <p className="text-slate-300 text-sm">Weaving nutrition into every meal</p>
         </div>
