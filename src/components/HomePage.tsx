@@ -79,7 +79,13 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
   };
 
   const handleSearch = async () => {
-    if (ingredients.length > 0) {
+    if (ingredientInput.trim()) {
+      // Convert textarea input to ingredients array
+      const ingredientsArray = ingredientInput
+        .split(/[,\n]/)
+        .map(item => item.trim())
+        .filter(item => item.length > 0);
+      
       setIsGenerating(true);
       try {
         // For legendary level, check if user has pro plan (mock check)
@@ -92,14 +98,14 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
         }
 
         const aiRecipes = await generateRecipesWithAI({
-          ingredients,
+          ingredients: ingredientsArray,
           cuisine: selectedCuisine,
           skillLevel,
           servings: 4
         });
         
         // Pass the AI-generated recipes to the parent component
-        onSearch(ingredients, selectedCuisine, aiRecipes);
+        onSearch(ingredientsArray, selectedCuisine, aiRecipes);
       } catch (error) {
         console.error('Error generating recipes:', error);
         alert('Failed to generate recipes. Please check your OpenAI API key and try again.');
@@ -140,164 +146,121 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
 
       {/* Main Input Section */}
       <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 mb-8 border border-indigo-500/30">
-        <div className="mb-6">
-          <label className="block text-lg font-semibold text-white mb-3">
-            Add your ingredients
-          </label>
-          <div className="flex gap-3">
-            <div className="flex-1 relative">
-              <input
-                type="text"
-                value={ingredientInput}
-                onChange={(e) => setIngredientInput(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Type an ingredient (e.g., chicken, rice, tomatoes)"
-                className="w-full px-4 py-3 text-lg border-2 border-slate-600 rounded-xl focus:border-indigo-400 focus:outline-none transition-colors duration-200 bg-slate-700/80 text-white placeholder-slate-400"
-              />
-            </div>
-            <button
-              onClick={addIngredient}
-              className="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 transition-all duration-200 flex items-center gap-2"
-            >
-              <Plus size={20} />
-              <span className="hidden sm:inline">Add</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Upload Photo Option */}
-        <div className="mb-6">
-          <div className="relative">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              id="image-upload"
-            />
-            <label
-              htmlFor="image-upload"
-              className="w-full py-4 border-2 border-dashed border-slate-600 rounded-xl hover:border-indigo-400 hover:bg-slate-700/50 transition-all duration-200 flex items-center justify-center gap-3 text-slate-300 hover:text-indigo-400 cursor-pointer"
-            >
-              {uploadedImage ? <Upload size={24} /> : <Camera size={24} />}
-              <span className="text-lg">
-                {uploadedImage ? `Uploaded: ${uploadedImage.name}` : 'Or upload a photo of your ingredients'}
-              </span>
-            </label>
-          </div>
-        </div>
-
-        {/* Selected Ingredients */}
-        {ingredients.length > 0 && (
-          <div className="mb-6">
-            <label className="block text-lg font-semibold text-white mb-3">
-              Your ingredients ({ingredients.length})
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {ingredients.map((ingredient, index) => (
-                <span
-                  key={index}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-medium"
-                >
-                  {ingredient}
-                  <button
-                    onClick={() => removeIngredient(ingredient)}
-                    className="text-emerald-600 hover:text-emerald-800 transition-colors"
-                  >
-                    <X size={16} />
-                  </button>
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Skill Level Selection */}
-        <div className="mb-6">
-          <label className="block text-lg font-semibold text-white mb-3">
-            Cooking skill level
-          </label>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {skillLevels.map((level) => (
-              <button
-                key={level.value}
-                onClick={() => setSkillLevel(level.value as 'beginner' | 'pro' | 'legendary')}
-                className={`p-4 rounded-xl border-2 transition-all duration-200 text-left ${
-                  skillLevel === level.value
-                    ? 'border-indigo-400 bg-indigo-500 bg-opacity-20 text-indigo-400'
-                    : 'border-slate-600 bg-slate-700/80 text-slate-300 hover:border-indigo-400 hover:bg-indigo-500 hover:bg-opacity-10'
-                }`}
-              >
-                <div className="font-semibold">{level.label}</div>
-                <div className="text-sm opacity-80">{level.description}</div>
-                {level.value === 'legendary' && (
-                  <div className={`text-xs mt-1 ${
-                    user.plan === 'pro' ? 'text-emerald-400' : 'text-amber-400'
-                  }`}>
-                    {user.plan === 'pro' ? '✅ Available' : '⭐ Pro Plan Required'}
-                  </div>
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Quick Add Popular Ingredients */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <label className="block text-lg font-semibold text-white">
-              Quick add popular ingredients
-            </label>
-            <button
-              onClick={refreshPopularIngredients}
-              className="flex items-center gap-2 px-3 py-1 text-sm text-slate-300 hover:text-indigo-400 transition-colors duration-200"
-            >
-              <RefreshCw size={16} />
-              Refresh
-            </button>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-            {currentIngredientSet.map((ingredient) => (
-              <button
-                key={ingredient}
-                onClick={() => addPopularIngredient(ingredient)}
-                disabled={ingredients.includes(ingredient)}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  ingredients.includes(ingredient)
-                    ? 'bg-slate-700/80 text-slate-500 cursor-not-allowed'
-                    : 'bg-slate-700/80 text-slate-300 hover:bg-indigo-600 hover:text-white'
-                }`}
-              >
-                {ingredient}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Cuisine Filter */}
+        {/* Header */}
         <div className="mb-8">
+          <h2 className="text-2xl font-bold text-white mb-2">
+            Ingredient Inventory & Preferences
+          </h2>
+          <p className="text-slate-300 mb-4">
+            List your ingredients, optionally specify cuisine, skill level, and dish type, and our AI will design a bespoke recipe.
+          </p>
+          <div className="flex items-center gap-2 text-sm text-slate-400">
+            <span>Log in or Sign up to use the Recipe AI generator.</span>
+          </div>
+        </div>
+
+        {/* Available Ingredients */}
+        <div className="mb-6">
           <label className="block text-lg font-semibold text-white mb-3">
-            Preferred cuisine (optional)
+            Available Ingredients
+          </label>
+          <textarea
+            value={ingredientInput}
+            onChange={(e) => setIngredientInput(e.target.value)}
+            placeholder="e.g., chicken breast, wild mushrooms, truffle oil, arborio rice, fresh thyme"
+            className="w-full px-4 py-4 text-base border-2 border-slate-600 rounded-xl focus:border-indigo-400 focus:outline-none transition-colors duration-200 bg-slate-700/80 text-white placeholder-slate-400 min-h-[100px] resize-none"
+          />
+          <p className="text-sm text-slate-400 mt-2">
+            Separate ingredients by commas or new lines.
+          </p>
+        </div>
+
+        {/* Two Column Layout */}
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+          {/* Cuisine Culture */}
+          <div>
+            <label className="block text-lg font-semibold text-white mb-3">
+              Optional: Cuisine Culture
+            </label>
+            <input
+              type="text"
+              placeholder="e.g., Italian, Thai"
+              className="w-full px-4 py-3 text-base border-2 border-slate-600 rounded-xl focus:border-indigo-400 focus:outline-none transition-colors duration-200 bg-slate-700/80 text-white placeholder-slate-400"
+            />
+            <p className="text-sm text-slate-400 mt-2">
+              Leave blank for AI to decide.
+            </p>
+          </div>
+
+          {/* Dish Type */}
+          <div>
+            <label className="block text-lg font-semibold text-white mb-3">
+              Optional: Dish Type
+            </label>
+            <select
+              value={selectedCuisine}
+              onChange={(e) => setSelectedCuisine(e.target.value)}
+              className="w-full px-4 py-3 text-base border-2 border-slate-600 rounded-xl focus:border-indigo-400 focus:outline-none transition-colors duration-200 bg-slate-700/80 text-white"
+            >
+              <option value="all">Any (Let AI Decide)</option>
+              <option value="appetizer">Appetizer</option>
+              <option value="main">Main Course</option>
+              <option value="dessert">Dessert</option>
+              <option value="soup">Soup</option>
+              <option value="salad">Salad</option>
+            </select>
+            <p className="text-sm text-slate-400 mt-2">
+              Select a desired dish category.
+            </p>
+          </div>
+        </div>
+
+        {/* Recipe Skill Level */}
+        <div className="mb-6">
+          <label className="block text-lg font-semibold text-white mb-3">
+            Recipe Skill Level
           </label>
           <select
-            value={selectedCuisine}
-            onChange={(e) => setSelectedCuisine(e.target.value)}
-            className="w-full px-4 py-3 text-lg border-2 border-slate-600 rounded-xl focus:border-indigo-400 focus:outline-none transition-colors duration-200 bg-slate-700/80 text-white"
+            value={skillLevel}
+            onChange={(e) => setSkillLevel(e.target.value as 'beginner' | 'pro' | 'legendary')}
+            className="w-full px-4 py-3 text-base border-2 border-slate-600 rounded-xl focus:border-indigo-400 focus:outline-none transition-colors duration-200 bg-slate-700/80 text-white"
           >
-            {cuisines.map((cuisine) => (
-              <option key={cuisine.value} value={cuisine.value}>
-                {cuisine.label}
-              </option>
-            ))}
+            <option value="beginner">Amateur (Default)</option>
+            <option value="pro">Professional</option>
+            <option value="legendary">Legendary</option>
           </select>
+          <p className="text-sm text-slate-400 mt-2">
+            Choose the complexity of the recipe.
+          </p>
+        </div>
+
+        {/* Premium Recipe Checkbox */}
+        <div className="mb-8">
+          <div className="flex items-start gap-3">
+            <input
+              type="checkbox"
+              id="premium-recipe"
+              className="mt-1 w-4 h-4 text-indigo-600 bg-slate-700 border-slate-600 rounded focus:ring-indigo-500"
+            />
+            <div>
+              <label htmlFor="premium-recipe" className="text-white font-medium flex items-center gap-2">
+                <Sparkles size={16} className="text-yellow-400" />
+                Generate Premium (Legendary) Recipe
+                <span className="text-blue-400 text-sm">(Pro Only - Login Required)</span>
+              </label>
+              <p className="text-slate-400 text-sm mt-1">
+                Unlock "Five Stars Diner" level recipes. Login or Sign Up to access Pro.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Generate Recipes Button */}
         <button
           onClick={handleSearch}
-          disabled={ingredients.length === 0 || isGenerating}
+          disabled={!ingredientInput.trim() || isGenerating}
           className={`w-full py-4 rounded-xl text-lg font-semibold transition-all duration-200 flex items-center justify-center gap-3 ${
-            ingredients.length > 0 && !isGenerating
+            ingredientInput.trim() && !isGenerating
               ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:from-indigo-700 hover:to-blue-700 shadow-lg hover:shadow-xl transform hover:scale-[1.02]'
               : 'bg-gray-200 text-gray-400 cursor-not-allowed'
           }`}
@@ -305,12 +268,12 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
           {isGenerating ? (
             <>
               <RefreshCw size={24} className="animate-spin" />
-              Generating Recipes...
+              Generating Amateur Recipe...
             </>
           ) : (
             <>
-              <Sparkles size={24} />
-              Generate Amazing Recipes
+              <Search size={24} />
+              Generate Amateur Recipe
             </>
           )}
         </button>
