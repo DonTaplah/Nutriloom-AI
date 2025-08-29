@@ -192,31 +192,86 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
 
         {/* Unlock Premium Experience Section */}
         <div className="mt-32">
-          <div className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 backdrop-blur-sm rounded-3xl p-12 border border-indigo-500/30">
-            <div className="text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-8">
-                <Crown size={40} className="text-white" />
+          <div className="bg-gradient-to-r from-slate-800/60 to-slate-900/80 backdrop-blur-sm rounded-3xl overflow-hidden border border-indigo-500/30">
+            <div className="flex flex-col lg:flex-row">
+              {/* Left Content */}
+              <div className="lg:w-1/2 p-12">
+                {/* Premium Experience Badge */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600/20 border border-indigo-500/30 rounded-full mb-8">
+                  <Crown size={16} className="text-indigo-400" />
+                  <span className="text-indigo-300 text-sm font-medium">Premium Experience</span>
+                </div>
+
+                <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+                  Unlock Premium<br />
+                  Recipe Creation
+                </h2>
+                
+                <p className="text-xl text-slate-300 mb-8 leading-relaxed">
+                  Premium users enjoy recipes that are 3x more detailed, 
+                  with complex flavor development, advanced cooking 
+                  techniques, and sophisticated culinary artistry 
+                  that elevate your cooking skills.
+                </p>
+
+                {/* Premium Benefits List */}
+                <div className="space-y-4 mb-8">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                    <span className="text-slate-300">Legendary complexity recipes with restaurant-quality techniques</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                    <span className="text-slate-300">Advanced flavor profiling and sophisticated ingredient combinations</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                    <span className="text-slate-300">Professional cooking techniques and plating presentations</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                    <span className="text-slate-300">Unlimited recipe generation with no daily limits</span>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <button
+                    onClick={() => {/* Navigate to pricing */}}
+                    className="flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                  >
+                    <Crown size={20} />
+                    Get Premium Forever
+                  </button>
+                  <button
+                    onClick={() => {/* Show free version */}}
+                    className="px-8 py-4 bg-slate-700/60 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-600/60 hover:text-white transition-all duration-200"
+                  >
+                    Try Free Version
+                  </button>
+                </div>
               </div>
-              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-                Unlock Premium <span className="text-purple-400">Experience</span>
-              </h2>
-              <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8 leading-relaxed">
-                Take your culinary journey to the next level with unlimited AI-powered recipe generation, 
-                legendary complexity levels, and exclusive premium features designed for passionate food lovers.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button
-                  onClick={() => {/* Navigate to pricing */}}
-                  className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
-                >
-                  Upgrade to Premium
-                </button>
-                <button
-                  onClick={() => {/* Show features */}}
-                  className="px-8 py-4 bg-slate-800/60 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-700/60 hover:text-white transition-all duration-200"
-                >
-                  View Features
-                </button>
+
+              {/* Right Image */}
+              <div className="lg:w-1/2 relative">
+                <div className="h-full min-h-[500px] relative overflow-hidden rounded-r-3xl">
+                  <img
+                    src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800"
+                    alt="Premium recipe creation experience"
+                    className="w-full h-full object-cover"
+                  />
+                  
+                  {/* Premium Badge Overlay */}
+                  <div className="absolute top-6 right-6">
+                    <div className="flex items-center gap-2 px-4 py-2 bg-slate-900/80 backdrop-blur-sm border border-indigo-500/30 rounded-full">
+                      <Crown size={16} className="text-indigo-400" />
+                      <span className="text-white text-sm font-medium">Premium</span>
+                    </div>
+                  </div>
+                  
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+                </div>
               </div>
             </div>
           </div>
