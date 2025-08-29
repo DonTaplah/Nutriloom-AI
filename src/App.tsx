@@ -5,11 +5,12 @@ import Navbar from './components/Navbar';
 import HomePage from './components/HomePage';
 import RecipeList from './components/RecipeList';
 import RecipeDetail from './components/RecipeDetail';
+import RecipeGenerator from './components/RecipeGenerator';
 import ScanYourDishPage from './components/VideoUploadPage';
 import { Recipe } from './types/Recipe';
 import { User } from './types/User';
 
-type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing' | 'scan-dish';
+type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing' | 'scan-dish' | 'generator';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
@@ -112,6 +113,8 @@ function App() {
     if (currentView === 'detail') {
       setCurrentView('recipes');
     } else if (currentView === 'recipes') {
+      setCurrentView('generator');
+    } else if (currentView === 'generator') {
       setCurrentView('home');
     } else if (currentView === 'pricing') {
       setCurrentView('home');
@@ -268,11 +271,19 @@ function App() {
         onPricing={() => setCurrentView('pricing')}
         onLogout={() => setUser(null)}
         onVideoUpload={() => setCurrentView('scan-dish')}
+        onRecipeGenerator={() => setCurrentView('generator')}
       />
       
       <main className="container mx-auto px-4 py-8">
         {currentView === 'home' && (
           <HomePage onSearch={handleSearch} user={user} />
+        )}
+        
+        {currentView === 'generator' && (
+          <RecipeGenerator 
+            onRecipesGenerated={handleSearch}
+            user={user}
+          />
         )}
         
         {currentView === 'pricing' && (

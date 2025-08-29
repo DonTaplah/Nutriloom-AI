@@ -47,7 +47,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               <button
-                onClick={() => onSearch([], 'all')}
+                onClick={() => {/* Navigate to recipe generator */}}
                 className="flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 <Edit3 size={20} />
@@ -371,7 +371,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <button
-              onClick={() => onSearch([], 'all')}
+              onClick={() => {/* Navigate to recipe generator */}}
               className="flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               <Sparkles size={20} />
