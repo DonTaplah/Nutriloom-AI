@@ -354,40 +354,6 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
                   <h4 className="text-white font-semibold">Lisa K.</h4>
                   <p className="text-slate-400 text-sm">Culinary instructor</p>
                 </div>
-              </div>
-              {/* 5 Star Rating */}
-              <div className="flex justify-center mb-6">
-                <div className="flex text-indigo-400">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={20} fill="currentColor" />
-                  ))}
-                </div>
-              </div>
-              
-              <p className="text-slate-300 leading-relaxed mb-6 text-center">
-                "I'm a culinary instructor and I use NUTRILOOM AI recipes in my cooking classes. The nutritional themes are perfectly woven into engaging cooking techniques. My students are always excited for recipe time!"
-              </p>
-              
-              <div className="text-center">
-                <div className="text-white font-semibold">Lisa K.</div>
-                <div className="text-slate-400 text-sm">Culinary instructor</div>
-              </div>
-            </div>
-          </div>
-        </div>
-                  <h4 className="text-white font-semibold">Emily K.</h4>
-                  <div className="flex text-yellow-400">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={16} fill="currentColor" />
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <p className="text-slate-300 leading-relaxed">
-                "I've tried many recipe apps, but nothing comes close to this. The legendary recipes are truly restaurant-quality. Worth every penny!"
-              </p>
-            </div>
-          </div>
         </div>
 
         {/* Start Creating Section */}
