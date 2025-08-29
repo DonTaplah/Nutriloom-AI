@@ -6,6 +6,8 @@ interface HomePageProps {
   onSearch: (ingredients: string[], cuisine: string) => void;
   user: User;
   onRecipeGenerator: () => void;
+  onScanDish: () => void;
+  onPricing: () => void;
 }
 
 const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, onScanDish, onPricing }) => {
