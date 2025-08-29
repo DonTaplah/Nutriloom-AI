@@ -11,9 +11,10 @@ interface NavbarProps {
   onLogout: () => void;
   onVideoUpload: () => void;
   onRecipeGenerator: () => void;
+  setUser: (user: User | null) => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPricing, onLogout, onVideoUpload, onRecipeGenerator }) => {
+const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPricing, onLogout, onVideoUpload, onRecipeGenerator, setUser }) => {
   return (
     <nav className="bg-slate-900/95 backdrop-blur-sm shadow-lg border-b border-indigo-500/20">
       <div className="container mx-auto px-4">
@@ -62,23 +63,27 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
             
             <button
               onClick={onPricing}
-              className="hidden sm:block px-4 py-2 gradient-text-slate hover:text-white transition-colors duration-200 font-medium"
+              className="hidden sm:block px-4 py-2 gradient-text-slate hover:gradient-text-white transition-colors duration-200 font-medium"
             >
               Pricing
             </button>
             
             <button
-              onClick={onVideoUpload}
-              className="px-3 py-2 gradient-text-slate hover:text-white transition-colors duration-200 font-medium text-sm sm:text-base"
+              onClick={user.plan === 'pro' ? onVideoUpload : onPricing}
+              className={`px-3 py-2 transition-colors duration-200 font-medium text-sm sm:text-base ${
+                user.plan === 'pro' 
+                  ? 'gradient-text-slate hover:gradient-text-white' 
+                  : 'gradient-text-slate hover:gradient-text-purple cursor-pointer'
+              }`}
             >
-              Sign In
+              SYD {user.plan !== 'pro' && '(Pro)'}
             </button>
             
             <button
-              onClick={() => {/* Handle Sign Up */}}
+              onClick={() => setUser(null)}
               className="px-4 sm:px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 gradient-text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"
             >
-              Sign Up
+              Sign Out
             </button>
           </div>
         </div>

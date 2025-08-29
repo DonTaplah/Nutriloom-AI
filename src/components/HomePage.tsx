@@ -8,9 +8,10 @@ interface HomePageProps {
   onRecipeGenerator: () => void;
   onScanDish: () => void;
   onPricing: () => void;
+  onAuth: () => void;
 }
 
-const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, onScanDish, onPricing }) => {
+const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, onScanDish, onPricing, onAuth }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900 relative overflow-hidden">
       {/* Decorative dots */}
@@ -61,12 +62,12 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
                 className={`flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 ${
                   user.plan === 'pro' 
                     ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700' 
-                    : 'bg-slate-600 text-slate-400 cursor-not-allowed'
+                    : 'bg-slate-600 gradient-text-slate cursor-not-allowed'
                 }`}
                 disabled={user.plan !== 'pro'}
               >
                 <Scan size={20} />
-                {user.plan === 'pro' ? 'Scan Your Dish' : 'Scan Your Dish (Pro Only)'}
+                {user.plan === 'pro' ? 'SYD - Scan Your Dish' : 'SYD - Scan Your Dish (Pro Only)'}
               </button>
               
               <button

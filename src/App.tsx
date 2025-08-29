@@ -267,6 +267,7 @@ function App() {
         onLogout={() => setUser(null)}
         onVideoUpload={() => setCurrentView('scan-dish')}
         onRecipeGenerator={() => setCurrentView('generator')}
+        setUser={setUser}
       />
       
       <main className="container mx-auto px-4 py-8">
@@ -277,6 +278,7 @@ function App() {
             onRecipeGenerator={() => setCurrentView('generator')}
             onScanDish={() => setCurrentView('scan-dish')}
             onPricing={() => setCurrentView('pricing')}
+            onAuth={() => setCurrentView('auth')}
           />
         )}
         
@@ -313,6 +315,15 @@ function App() {
             onBack={handleBack} 
             user={user}
             onPricing={() => setCurrentView('pricing')}
+          />
+        )}
+        
+        {currentView === 'auth' && (
+          <AuthPage
+            onLogin={handleLogin}
+            onSignup={handleSignup}
+            isLoading={authLoading}
+            error={authError}
           />
         )}
       </main>
