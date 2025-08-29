@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Instagram, Twitter, Mail } from 'lucide-react';
 import AuthPage from './components/AuthPage';
 import PricingPage from './components/PricingPage';
 import Navbar from './components/Navbar';
@@ -334,6 +335,30 @@ function App() {
           <p className="text-slate-400 text-sm">
             Nutriloom AI @2025🖤🤍RT
           </p>
+          <div className="flex items-center justify-center gap-4 mt-3">
+            <a 
+              href="https://instagram.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-slate-400 hover:text-pink-400 transition-colors duration-200"
+            >
+              <Instagram size={20} />
+            </a>
+            <a 
+              href="https://twitter.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-slate-400 hover:text-blue-400 transition-colors duration-200"
+            >
+              <Twitter size={20} />
+            </a>
+            <a 
+              href="mailto:contact@nutriloom.ai" 
+              className="text-slate-400 hover:text-red-400 transition-colors duration-200"
+            >
+              <Mail size={20} />
+            </a>
+          </div>
         </div>
       </footer>
     </div>
