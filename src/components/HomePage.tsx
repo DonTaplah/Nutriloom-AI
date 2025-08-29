@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Edit3, Crown, Star, Sparkles } from 'lucide-react';
+import { Edit3, Crown, Star, Sparkles, BookOpen, Shield, Archive } from 'lucide-react';
 import { User } from '../types/User';
 
 interface HomePageProps {
@@ -107,42 +107,84 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
         {/* Why Choose Nutriloom AI Section */}
         <div className="mt-32">
           <div className="text-center mb-16">
+            {/* Advanced AI Technology Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600/20 border border-indigo-500/30 rounded-full mb-8">
+              <Sparkles size={16} className="text-indigo-400" />
+              <span className="text-indigo-300 text-sm font-medium">Advanced AI Technology</span>
+            </div>
+            
             <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-              Why Choose <span className="text-blue-400">Nutriloom AI</span>?
+              Why Food Lovers Choose <span className="text-blue-400">NUTRILOOM AI</span>
             </h2>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-              Experience the future of cooking with our advanced AI technology
+              Our cutting-edge AI creates personalized recipes that adapt to your taste preferences, dietary needs, and cooking skill level, making every meal a unique culinary adventure.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-indigo-500/30 hover:border-indigo-400/50 transition-all duration-300">
-              <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mb-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* AI-Powered Personalization */}
+            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-all duration-300">
+              <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
                 <Sparkles size={32} className="text-blue-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">AI-Powered Intelligence</h3>
+              <h3 className="text-2xl font-bold text-white mb-4">AI-Powered Personalization</h3>
               <p className="text-slate-300 leading-relaxed">
-                Our advanced AI understands your taste preferences and creates personalized recipes that match your exact cooking style and dietary needs.
+                Our advanced AI creates unique recipes tailored to your taste preferences, dietary restrictions, and cooking skill level, ensuring every recipe feels personally crafted.
               </p>
             </div>
 
-            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300">
-              <div className="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center mb-6">
-                <Star size={32} className="text-purple-400" />
+            {/* Premium Recipe Quality */}
+            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-all duration-300">
+              <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+                <Crown size={32} className="text-blue-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Premium Quality</h3>
+              <h3 className="text-2xl font-bold text-white mb-4">Premium Recipe Quality</h3>
               <p className="text-slate-300 leading-relaxed">
-                Every recipe is crafted with professional chef-level expertise, ensuring restaurant-quality results in your home kitchen.
+                Premium subscribers enjoy longer, more detailed recipes with advanced cooking techniques and richer flavor development for restaurant-quality results.
               </p>
             </div>
 
-            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-emerald-500/30 hover:border-emerald-400/50 transition-all duration-300">
-              <div className="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-6">
-                <Crown size={32} className="text-emerald-400" />
+            {/* Interactive Cooking Guide */}
+            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-all duration-300 lg:border-indigo-500/50">
+              <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+                <Star size={32} className="text-blue-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Endless Creativity</h3>
+              <h3 className="text-2xl font-bold text-white mb-4">Interactive Cooking Guide</h3>
               <p className="text-slate-300 leading-relaxed">
-                Never run out of meal ideas. Our AI generates unlimited unique recipes based on your available ingredients and preferences.
+                Built-in step-by-step guidance with cooking tips makes meal preparation magical, even when you're busy or trying new techniques.
+              </p>
+            </div>
+
+            {/* Smart Ingredient Management */}
+            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-all duration-300">
+              <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+                <BookOpen size={32} className="text-blue-400" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">Smart Ingredient Management</h3>
+              <p className="text-slate-300 leading-relaxed">
+                Our AI analyzes your available ingredients and suggests creative recipes, reducing food waste while maximizing flavor combinations.
+              </p>
+            </div>
+
+            {/* Safe & Secure */}
+            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-all duration-300">
+              <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+                <Shield size={32} className="text-blue-400" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">Safe & Secure</h3>
+              <p className="text-slate-300 leading-relaxed">
+                Your dietary preferences and cooking data are protected with enterprise-grade security, ensuring your culinary journey remains private.
+              </p>
+            </div>
+
+            {/* Recipe Library */}
+            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-all duration-300">
+              <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+                <Archive size={32} className="text-blue-400" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">Recipe Library</h3>
+              <p className="text-slate-300 leading-relaxed">
+                Access thousands of AI-generated recipes across all cuisines and dietary preferences, with new recipes added daily to inspire your cooking.
               </p>
             </div>
           </div>
