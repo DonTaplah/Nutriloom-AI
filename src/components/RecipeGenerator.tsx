@@ -404,12 +404,12 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
             <div className="w-16 h-16 bg-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Crown size={32} className="text-white" />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-2">Unlock Legendary Recipes</h3>
-            <p className="text-purple-200 mb-6">
+            <h3 className="text-2xl font-bold gradient-text-white mb-2">Unlock Legendary Recipes</h3>
+            <p className="gradient-text-purple mb-6">
               Upgrade to Pro for advanced culinary techniques, sophisticated flavor profiles, 
               and restaurant-quality presentations.
             </p>
-            <button className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all duration-200">
+            <button className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 gradient-text-white rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all duration-200">
               Upgrade to Pro
             </button>
           </div>

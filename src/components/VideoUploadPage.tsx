@@ -139,7 +139,7 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
             <h1 className="text-5xl font-bold text-white mb-4">
               <span className="gradient-text-primary">SYD</span> - <span className="gradient-text-secondary">Scan Your Dish</span>
             </h1>
-            <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl gradient-text-slate max-w-2xl mx-auto leading-relaxed">
               Discover the nutritional breakdown of your meals. Upload a photo of your dish and let AI analyze its food classes and nutritional content.
             </p>
           </div>
@@ -176,13 +176,13 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
                   </div>
                   
                   <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">
+                    <h3 className="text-2xl font-bold gradient-text-white mb-2">
                       Drop your dish photo here
                     </h3>
-                    <p className="text-slate-300 mb-4">
+                    <p className="gradient-text-slate mb-4">
                       or click to browse your files
                     </p>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm gradient-text-slate">
                       Supports JPG, PNG, and WebP formats • Max size: 10MB
                     </p>
                   </div>
@@ -219,28 +219,28 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
                     </div>
                     
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-semibold text-white mb-2 truncate">
+                      <h3 className="text-lg font-semibold gradient-text-white mb-2 truncate">
                         {uploadedImage.name}
                       </h3>
                       
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
                         <div>
-                          <span className="text-slate-400">Size:</span>
-                          <div className="text-white font-medium">
+                          <span className="gradient-text-slate">Size:</span>
+                          <div className="gradient-text-white font-medium">
                             {formatFileSize(uploadedImage.size)}
                           </div>
                         </div>
                         
                         <div>
-                          <span className="text-slate-400">Type:</span>
-                          <div className="text-white font-medium">
+                          <span className="gradient-text-slate">Type:</span>
+                          <div className="gradient-text-white font-medium">
                             {uploadedImage.type}
                           </div>
                         </div>
                         
                         <div>
-                          <span className="text-slate-400">Modified:</span>
-                          <div className="text-white font-medium">
+                          <span className="gradient-text-slate">Modified:</span>
+                          <div className="gradient-text-white font-medium">
                             {new Date(uploadedImage.lastModified).toLocaleDateString()}
                           </div>
                         </div>
@@ -253,8 +253,8 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
                 {uploadStatus === 'uploading' && (
                   <div className="bg-slate-700 rounded-xl p-6">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-white font-medium">Analyzing dish...</span>
-                      <span className="text-purple-400 font-medium">{Math.round(uploadProgress)}%</span>
+                      <span className="gradient-text-white font-medium">Analyzing dish...</span>
+                      <span className="gradient-text-purple font-medium">{Math.round(uploadProgress)}%</span>
                     </div>
                     <div className="w-full bg-slate-600 rounded-full h-2">
                       <div
@@ -273,22 +273,22 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
                       <div className="flex items-center gap-3 mb-4">
                         <Eye size={24} className="text-purple-400" />
                         <div>
-                          <h3 className="text-purple-400 font-semibold text-lg">Dish Identified!</h3>
-                          <p className="text-white text-xl font-bold">{scanResults.dishName}</p>
-                          <p className="text-purple-300 text-sm">Confidence: {scanResults.confidence}%</p>
+                          <h3 className="gradient-text-purple font-semibold text-lg">Dish Identified!</h3>
+                          <p className="gradient-text-white text-xl font-bold">{scanResults.dishName}</p>
+                          <p className="gradient-text-purple text-sm">Confidence: {scanResults.confidence}%</p>
                         </div>
                       </div>
                     </div>
 
                     {/* Food Classes */}
                     <div className="bg-slate-700 rounded-xl p-6">
-                      <h3 className="text-white font-semibold text-lg mb-4">Food Classification</h3>
+                      <h3 className="gradient-text-white font-semibold text-lg mb-4">Food Classification</h3>
                       <div className="space-y-3">
                         {scanResults.foodClasses.map((foodClass: any, index: number) => (
                           <div key={index} className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                               <div className={`w-4 h-4 rounded-full ${foodClass.color}`}></div>
-                              <span className="text-white font-medium">{foodClass.name}</span>
+                              <span className="gradient-text-white font-medium">{foodClass.name}</span>
                             </div>
                             <div className="flex items-center gap-3">
                               <div className="w-32 bg-slate-600 rounded-full h-2">
@@ -297,7 +297,7 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
                                   style={{ width: `${foodClass.percentage}%` }}
                                 ></div>
                               </div>
-                              <span className="text-slate-300 text-sm w-12 text-right">{foodClass.percentage}%</span>
+                              <span className="gradient-text-slate text-sm w-12 text-right">{foodClass.percentage}%</span>
                             </div>
                           </div>
                         ))}
@@ -306,27 +306,27 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
 
                     {/* Nutrition Breakdown */}
                     <div className="bg-slate-700 rounded-xl p-6">
-                      <h3 className="text-white font-semibold text-lg mb-4">Nutritional Analysis</h3>
+                      <h3 className="gradient-text-white font-semibold text-lg mb-4">Nutritional Analysis</h3>
                       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                         <div className="text-center">
-                          <div className="text-2xl font-bold text-purple-400">{scanResults.nutrition.calories}</div>
-                          <div className="text-slate-400 text-sm">Calories</div>
+                          <div className="text-2xl font-bold gradient-text-purple">{scanResults.nutrition.calories}</div>
+                          <div className="gradient-text-slate text-sm">Calories</div>
                         </div>
                         <div className="text-center">
-                          <div className="text-2xl font-bold text-red-400">{scanResults.nutrition.protein}g</div>
-                          <div className="text-slate-400 text-sm">Protein</div>
+                          <div className="text-2xl font-bold gradient-text-red">{scanResults.nutrition.protein}g</div>
+                          <div className="gradient-text-slate text-sm">Protein</div>
                         </div>
                         <div className="text-center">
-                          <div className="text-2xl font-bold text-yellow-400">{scanResults.nutrition.carbs}g</div>
-                          <div className="text-slate-400 text-sm">Carbs</div>
+                          <div className="text-2xl font-bold gradient-text-yellow">{scanResults.nutrition.carbs}g</div>
+                          <div className="gradient-text-slate text-sm">Carbs</div>
                         </div>
                         <div className="text-center">
-                          <div className="text-2xl font-bold text-orange-400">{scanResults.nutrition.fat}g</div>
-                          <div className="text-slate-400 text-sm">Fat</div>
+                          <div className="text-2xl font-bold gradient-text-orange">{scanResults.nutrition.fat}g</div>
+                          <div className="gradient-text-slate text-sm">Fat</div>
                         </div>
                         <div className="text-center">
-                          <div className="text-2xl font-bold text-green-400">{scanResults.nutrition.fiber}g</div>
-                          <div className="text-slate-400 text-sm">Fiber</div>
+                          <div className="text-2xl font-bold gradient-text-green">{scanResults.nutrition.fiber}g</div>
+                          <div className="gradient-text-slate text-sm">Fiber</div>
                         </div>
                       </div>
                     </div>
@@ -335,12 +335,12 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
                     <div className="bg-gradient-to-r from-green-500 to-emerald-500 bg-opacity-20 border border-green-500 rounded-xl p-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="text-green-400 font-semibold text-lg">AI Health Score</h3>
-                          <p className="text-green-300 text-sm">Intelligent analysis of nutritional balance and ingredients</p>
+                          <h3 className="gradient-text-green font-semibold text-lg">AI Health Score</h3>
+                          <p className="gradient-text-green text-sm">Intelligent analysis of nutritional balance and ingredients</p>
                         </div>
                         <div className="text-right">
-                          <div className="text-4xl font-bold text-green-400">{scanResults.healthScore}/10</div>
-                          <div className="text-green-300 text-sm">AI Rated: Excellent!</div>
+                          <div className="text-4xl font-bold gradient-text-green">{scanResults.healthScore}/10</div>
+                          <div className="gradient-text-green text-sm">AI Rated: Excellent!</div>
                         </div>
                       </div>
                     </div>
@@ -398,11 +398,11 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
 
           {/* Scan Guidelines */}
           <div className="mt-8 bg-slate-800 rounded-xl p-6 border border-purple-500 border-opacity-30">
-            <h2 className="text-xl font-bold text-white mb-4">AI Analysis Guidelines</h2>
+            <h2 className="text-xl font-bold gradient-text-white mb-4">AI Analysis Guidelines</h2>
             <div className="grid md:grid-cols-2 gap-6 text-sm">
               <div>
-                <h3 className="font-semibold text-purple-400 mb-2">Supported Formats</h3>
-                <ul className="text-slate-300 space-y-1">
+                <h3 className="font-semibold gradient-text-purple mb-2">Supported Formats</h3>
+                <ul className="gradient-text-slate space-y-1">
                   <li>• JPG/JPEG (recommended)</li>
                   <li>• PNG</li>
                   <li>• WebP</li>
@@ -410,8 +410,8 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
               </div>
               
               <div>
-                <h3 className="font-semibold text-purple-400 mb-2">Requirements</h3>
-                <ul className="text-slate-300 space-y-1">
+                <h3 className="font-semibold gradient-text-purple mb-2">Requirements</h3>
+                <ul className="gradient-text-slate space-y-1">
                   <li>• Maximum file size: 10MB</li>
                   <li>• Minimum resolution: 480p</li>
                   <li>• Clear, well-lit photos</li>
@@ -419,8 +419,8 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
               </div>
               
               <div>
-                <h3 className="font-semibold text-purple-400 mb-2">Best Practices</h3>
-                <ul className="text-slate-300 space-y-1">
+                <h3 className="font-semibold gradient-text-purple mb-2">Best Practices</h3>
+                <ul className="gradient-text-slate space-y-1">
                   <li>• Take photos from above</li>
                   <li>• Ensure good lighting</li>
                   <li>• Show the complete dish</li>
@@ -429,8 +429,8 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
               </div>
               
               <div>
-                <h3 className="font-semibold text-purple-400 mb-2">AI Analysis Features</h3>
-                <ul className="text-slate-300 space-y-1">
+                <h3 className="font-semibold gradient-text-purple mb-2">AI Analysis Features</h3>
+                <ul className="gradient-text-slate space-y-1">
                   <li>• Smart food classification</li>
                   <li>• AI nutritional breakdown</li>
                   <li>• Intelligent ingredient ID</li>

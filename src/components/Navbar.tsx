@@ -31,7 +31,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
             
             <button
               onClick={onHome}
-              className="flex items-center space-x-3 text-white hover:text-indigo-300 transition-colors duration-200"
+              className="flex items-center space-x-3 gradient-text-white hover:text-indigo-300 transition-colors duration-200"
             >
               <h1 className="text-xl font-bold gradient-text-primary">NUTRILOOM AI</h1>
             </button>
@@ -41,42 +41,42 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
             {/* Navigation Links */}
             <button
               onClick={onHome}
-              className="px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
+              className="px-4 py-2 gradient-text-slate hover:text-white transition-colors duration-200 font-medium"
             >
               Home
             </button>
             
             <button
               onClick={onRecipeGenerator}
-              className="hidden sm:block px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
+              className="hidden sm:block px-4 py-2 gradient-text-slate hover:text-white transition-colors duration-200 font-medium"
             >
               Recipe Generator
             </button>
             
             <button
               onClick={() => {/* Navigate to My Recipes */}}
-              className="hidden sm:block px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
+              className="hidden sm:block px-4 py-2 gradient-text-slate hover:text-white transition-colors duration-200 font-medium"
             >
               My Recipes
             </button>
             
             <button
               onClick={onPricing}
-              className="hidden sm:block px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
+              className="hidden sm:block px-4 py-2 gradient-text-slate hover:text-white transition-colors duration-200 font-medium"
             >
               Pricing
             </button>
             
             <button
               onClick={onVideoUpload}
-              className="px-3 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium text-sm sm:text-base"
+              className="px-3 py-2 gradient-text-slate hover:text-white transition-colors duration-200 font-medium text-sm sm:text-base"
             >
               Sign In
             </button>
             
             <button
               onClick={() => {/* Handle Sign Up */}}
-              className="px-4 sm:px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"
+              className="px-4 sm:px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 gradient-text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"
             >
               Sign Up
             </button>

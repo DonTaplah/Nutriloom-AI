@@ -100,20 +100,20 @@ export default function PricingPage({ onSelectPlan, currentPlan }: PricingPagePr
           {/* Pro Plan */}
           <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border-2 border-blue-500/50 relative">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-3xl font-bold text-blue-400">Pro</h3>
+              <h3 className="text-3xl font-bold gradient-text-blue">Pro</h3>
               <div className="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
                 <Zap className="w-6 h-6 text-blue-400" />
               </div>
             </div>
             
-            <p className="text-slate-300 mb-8 text-lg">
+            <p className="gradient-text-slate mb-8 text-lg">
               For the passionate cook seeking unlimited creativity and advanced features.
             </p>
             
             <div className="mb-8">
               <div className="flex items-baseline gap-2">
-                <span className="text-6xl font-bold text-blue-400">$3</span>
-                <span className="text-slate-400 text-xl">/month</span>
+                <span className="text-6xl font-bold gradient-text-blue">$3</span>
+                <span className="gradient-text-slate text-xl">/month</span>
               </div>
             </div>
 
@@ -179,16 +179,16 @@ export default function PricingPage({ onSelectPlan, currentPlan }: PricingPagePr
         {/* Stats Section */}
         <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           <div className="space-y-2">
-            <div className="text-5xl font-bold text-white">10K+</div>
-            <div className="text-slate-400 text-lg">Recipes Created</div>
+            <div className="text-5xl font-bold gradient-text-white">10K+</div>
+            <div className="gradient-text-slate text-lg">Recipes Created</div>
           </div>
           <div className="space-y-2">
-            <div className="text-5xl font-bold text-white">5K+</div>
-            <div className="text-slate-400 text-lg">Happy Families</div>
+            <div className="text-5xl font-bold gradient-text-white">5K+</div>
+            <div className="gradient-text-slate text-lg">Happy Families</div>
           </div>
           <div className="space-y-2">
-            <div className="text-5xl font-bold text-white">4.9★</div>
-            <div className="text-slate-400 text-lg">Parent Rating</div>
+            <div className="text-5xl font-bold gradient-text-white">4.9★</div>
+            <div className="gradient-text-slate text-lg">Parent Rating</div>
           </div>
         </div>
       </div>

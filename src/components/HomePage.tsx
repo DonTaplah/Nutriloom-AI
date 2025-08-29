@@ -30,7 +30,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
 
             {/* Main Heading */}
             <div className="space-y-6">
-              <h1 className="text-6xl lg:text-7xl font-bold leading-tight">
+              <h1 className="text-6xl lg:text-7xl font-bold leading-tight gradient-text-white">
                 <span className="text-white">Weaving </span>
                 <span className="text-blue-400">Nutrition</span>
                 <br />
@@ -39,7 +39,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
                 <span className="text-blue-400">Meal</span>
               </h1>
 
-              <p className="text-xl text-slate-300 leading-relaxed max-w-lg">
+              <p className="text-xl gradient-text-slate leading-relaxed max-w-lg">
                 Create personalized, delicious recipes that spark culinary creativity and bring joy to your kitchen. Our advanced AI crafts unique dishes tailored to your taste preferences and cooking style.
               </p>
             </div>
@@ -99,16 +99,16 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
         {/* Stats Section */}
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           <div className="space-y-2">
-            <div className="text-4xl font-bold text-white">10K+</div>
-            <div className="text-slate-400">Recipes Created</div>
+            <div className="text-4xl font-bold gradient-text-white">10K+</div>
+            <div className="gradient-text-slate">Recipes Created</div>
           </div>
           <div className="space-y-2">
-            <div className="text-4xl font-bold text-white">5K+</div>
-            <div className="text-slate-400">Happy Cooks</div>
+            <div className="text-4xl font-bold gradient-text-white">5K+</div>
+            <div className="gradient-text-slate">Happy Cooks</div>
           </div>
           <div className="space-y-2">
-            <div className="text-4xl font-bold text-white">4.9★</div>
-            <div className="text-slate-400">User Rating</div>
+            <div className="text-4xl font-bold gradient-text-white">4.9★</div>
+            <div className="gradient-text-slate">User Rating</div>
           </div>
         </div>
 
@@ -121,10 +121,10 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
               <span className="text-indigo-300 text-sm font-medium">Advanced AI Technology</span>
             </div>
             
-            <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+            <h2 className="text-4xl lg:text-5xl font-bold gradient-text-white mb-6">
               Why Food Lovers Choose <span className="gradient-text-primary">NUTRILOOM AI</span>
             </h2>
-            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+            <p className="text-xl gradient-text-slate max-w-3xl mx-auto">
               Our cutting-edge AI creates personalized recipes that adapt to your taste preferences, dietary needs, and cooking skill level, making every meal a unique culinary adventure.
             </p>
           </div>
@@ -146,8 +146,8 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
               <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
                 <Crown size={32} className="text-blue-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Premium Recipe Quality</h3>
-              <p className="text-slate-300 leading-relaxed">
+              <h3 className="text-2xl font-bold gradient-text-white mb-4">Premium Recipe Quality</h3>
+              <p className="gradient-text-slate leading-relaxed">
                 Premium subscribers enjoy longer, more detailed recipes with advanced cooking techniques and richer flavor development for <span className="gradient-text-warm">restaurant-quality results</span>.
               </p>
             </div>
@@ -157,8 +157,8 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
               <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
                 <Star size={32} className="text-blue-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Interactive Cooking Guide</h3>
-              <p className="text-slate-300 leading-relaxed">
+              <h3 className="text-2xl font-bold gradient-text-white mb-4">Interactive Cooking Guide</h3>
+              <p className="gradient-text-slate leading-relaxed">
                 Built-in step-by-step guidance with cooking tips makes meal preparation magical, even when you're busy or trying new techniques.
               </p>
             </div>
@@ -168,8 +168,8 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
               <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
                 <BookOpen size={32} className="text-blue-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Smart Ingredient Management</h3>
-              <p className="text-slate-300 leading-relaxed">
+              <h3 className="text-2xl font-bold gradient-text-white mb-4">Smart Ingredient Management</h3>
+              <p className="gradient-text-slate leading-relaxed">
                 Our AI analyzes your available ingredients and suggests creative recipes, reducing food waste while maximizing flavor combinations.
               </p>
             </div>
@@ -190,8 +190,8 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
               <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
                 <Archive size={32} className="text-blue-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Recipe Library</h3>
-              <p className="text-slate-300 leading-relaxed">
+              <h3 className="text-2xl font-bold gradient-text-white mb-4">Recipe Library</h3>
+              <p className="gradient-text-slate leading-relaxed">
                 Access thousands of AI-generated recipes across all cuisines and dietary preferences, with new recipes added daily to inspire your cooking.
               </p>
             </div>
@@ -215,7 +215,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
                   <span className="gradient-text-secondary">Recipe Creation</span>
                 </h2>
                 
-                <p className="text-xl text-slate-300 mb-8 leading-relaxed">
+                <p className="text-xl gradient-text-slate mb-8 leading-relaxed">
                   Premium users enjoy recipes that are 3x more detailed, 
                   with complex flavor development, advanced cooking 
                   techniques, and sophisticated culinary artistry 
@@ -226,19 +226,19 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
                 <div className="space-y-4 mb-8">
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
-                    <span className="text-slate-300">Legendary complexity recipes with restaurant-quality techniques</span>
+                    <span className="gradient-text-slate">Legendary complexity recipes with restaurant-quality techniques</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
-                    <span className="text-slate-300">Advanced flavor profiling and sophisticated ingredient combinations</span>
+                    <span className="gradient-text-slate">Advanced flavor profiling and sophisticated ingredient combinations</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
-                    <span className="text-slate-300">Professional cooking techniques and plating presentations</span>
+                    <span className="gradient-text-slate">Professional cooking techniques and plating presentations</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
-                    <span className="text-slate-300">Unlimited recipe generation with no daily limits</span>
+                    <span className="gradient-text-slate">Unlimited recipe generation with no daily limits</span>
                   </div>
                 </div>
 
@@ -293,10 +293,10 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
               <span className="text-indigo-300 text-sm font-medium">💜 Loved by Food Lovers</span>
             </div>
             
-            <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+            <h2 className="text-4xl lg:text-5xl font-bold gradient-text-white mb-6">
               What Food Lovers Are Saying
             </h2>
-            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+            <p className="text-xl gradient-text-slate max-w-3xl mx-auto">
               Join thousands of home cooks who have made cooking magical with NUTRILOOM AI recipes.
             </p>
           </div>
@@ -332,14 +332,14 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
                 ))}
               </div>
               
-              <p className="text-slate-300 leading-relaxed mb-6 text-lg">
+              <p className="gradient-text-slate leading-relaxed mb-6 text-lg">
                 "As a busy home cook, NUTRILOOM AI has been a lifesaver. The AI creates such personalized recipes that my family thinks I wrote them myself. The cooking guidance is perfect for weeknight dinners!"
               </p>
               
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-white font-semibold">James T.</h4>
-                  <p className="text-slate-400 text-sm">Father of three</p>
+                  <h4 className="gradient-text-white font-semibold">James T.</h4>
+                  <p className="gradient-text-slate text-sm">Father of three</p>
                 </div>
               </div>
             </div>
@@ -353,14 +353,14 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
                 ))}
               </div>
               
-              <p className="text-slate-300 leading-relaxed mb-6 text-lg">
+              <p className="gradient-text-slate leading-relaxed mb-6 text-lg">
                 "I'm a culinary instructor and I use NUTRILOOM AI recipes in my cooking classes. The educational themes are perfectly woven into engaging culinary experiences. My students are always excited for cooking time!"
               </p>
               
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-white font-semibold">Lisa K.</h4>
-                  <p className="text-slate-400 text-sm">Culinary instructor</p>
+                  <h4 className="gradient-text-white font-semibold">Lisa K.</h4>
+                  <p className="gradient-text-slate text-sm">Culinary instructor</p>
                 </div>
               </div>
             </div>
@@ -394,7 +394,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
             </button>
           </div>
           
-          <p className="text-sm text-slate-400 px-4">
+          <p className="text-sm gradient-text-slate px-4">
             No credit card required for free recipes • Upgrade anytime
           </p>
         </div>
