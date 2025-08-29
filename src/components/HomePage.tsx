@@ -34,7 +34,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
                 <span className="text-white">Weaving </span>
                 <span className="text-blue-400">Nutrition</span>
                 <br />
-                <span className="text-white">InTo </span>
+                <span className="text-white">Into </span>
                 <span className="text-purple-400">Every</span>
                 <span className="text-blue-400">Meal</span>
               </h1>
