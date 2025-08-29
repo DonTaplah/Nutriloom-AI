@@ -103,6 +103,189 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
             <div className="text-slate-400">User Rating</div>
           </div>
         </div>
+
+        {/* Why Choose Nutriloom AI Section */}
+        <div className="mt-32">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+              Why Choose <span className="text-blue-400">Nutriloom AI</span>?
+            </h2>
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+              Experience the future of cooking with our advanced AI technology
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-indigo-500/30 hover:border-indigo-400/50 transition-all duration-300">
+              <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mb-6">
+                <Sparkles size={32} className="text-blue-400" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">AI-Powered Intelligence</h3>
+              <p className="text-slate-300 leading-relaxed">
+                Our advanced AI understands your taste preferences and creates personalized recipes that match your exact cooking style and dietary needs.
+              </p>
+            </div>
+
+            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300">
+              <div className="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center mb-6">
+                <Star size={32} className="text-purple-400" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">Premium Quality</h3>
+              <p className="text-slate-300 leading-relaxed">
+                Every recipe is crafted with professional chef-level expertise, ensuring restaurant-quality results in your home kitchen.
+              </p>
+            </div>
+
+            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-emerald-500/30 hover:border-emerald-400/50 transition-all duration-300">
+              <div className="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-6">
+                <Crown size={32} className="text-emerald-400" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">Endless Creativity</h3>
+              <p className="text-slate-300 leading-relaxed">
+                Never run out of meal ideas. Our AI generates unlimited unique recipes based on your available ingredients and preferences.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Unlock Premium Experience Section */}
+        <div className="mt-32">
+          <div className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 backdrop-blur-sm rounded-3xl p-12 border border-indigo-500/30">
+            <div className="text-center">
+              <div className="w-20 h-20 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-8">
+                <Crown size={40} className="text-white" />
+              </div>
+              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+                Unlock Premium <span className="text-purple-400">Experience</span>
+              </h2>
+              <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8 leading-relaxed">
+                Take your culinary journey to the next level with unlimited AI-powered recipe generation, 
+                legendary complexity levels, and exclusive premium features designed for passionate food lovers.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                  onClick={() => {/* Navigate to pricing */}}
+                  className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                  Upgrade to Premium
+                </button>
+                <button
+                  onClick={() => {/* Show features */}}
+                  className="px-8 py-4 bg-slate-800/60 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-700/60 hover:text-white transition-all duration-200"
+                >
+                  View Features
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Testimonials Section */}
+        <div className="mt-32">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+              What Our <span className="text-emerald-400">Chefs</span> Say
+            </h2>
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+              Join thousands of home cooks who've transformed their kitchens with Nutriloom AI
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-slate-600/50">
+              <div className="flex items-center mb-6">
+                <img
+                  src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100"
+                  alt="Sarah M."
+                  className="w-12 h-12 rounded-full object-cover mr-4"
+                />
+                <div>
+                  <h4 className="text-white font-semibold">Sarah M.</h4>
+                  <div className="flex text-yellow-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={16} fill="currentColor" />
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <p className="text-slate-300 leading-relaxed">
+                "Nutriloom AI has completely transformed my cooking! The recipes are always perfect and use exactly what I have in my fridge. It's like having a personal chef."
+              </p>
+            </div>
+
+            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-slate-600/50">
+              <div className="flex items-center mb-6">
+                <img
+                  src="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=100"
+                  alt="Michael R."
+                  className="w-12 h-12 rounded-full object-cover mr-4"
+                />
+                <div>
+                  <h4 className="text-white font-semibold">Michael R.</h4>
+                  <div className="flex text-yellow-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={16} fill="currentColor" />
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <p className="text-slate-300 leading-relaxed">
+                "The AI understands my dietary restrictions perfectly. Every recipe suggestion is not only delicious but also fits my health goals. Absolutely amazing!"
+              </p>
+            </div>
+
+            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-slate-600/50">
+              <div className="flex items-center mb-6">
+                <img
+                  src="https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=100"
+                  alt="Emily K."
+                  className="w-12 h-12 rounded-full object-cover mr-4"
+                />
+                <div>
+                  <h4 className="text-white font-semibold">Emily K.</h4>
+                  <div className="flex text-yellow-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={16} fill="currentColor" />
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <p className="text-slate-300 leading-relaxed">
+                "I've tried many recipe apps, but nothing comes close to this. The legendary recipes are truly restaurant-quality. Worth every penny!"
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Start Creating Section */}
+        <div className="mt-32 mb-16">
+          <div className="bg-gradient-to-r from-blue-600/20 to-indigo-600/20 backdrop-blur-sm rounded-3xl p-12 border border-blue-500/30 text-center">
+            <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-8">
+              <Edit3 size={40} className="text-white" />
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+              Start Creating <span className="text-blue-400">Today</span>
+            </h2>
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8 leading-relaxed">
+              Join thousands of home cooks who've discovered the joy of AI-powered recipe creation. 
+              Transform your kitchen into a culinary playground with personalized recipes that inspire.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => onSearch([], 'all')}
+                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                Create Your First Recipe
+              </button>
+              <button
+                onClick={() => {/* Navigate to examples */}}
+                className="px-8 py-4 bg-slate-800/60 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-700/60 hover:text-white transition-all duration-200"
+              >
+                View Recipe Examples
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
