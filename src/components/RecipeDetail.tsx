@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock, Users, ChefHat, Flame, Heart, Share, CheckCircle2, Circle } from 'lucide-react';
+import { Clock, Users, ChefHat, Flame, Heart, Share, CheckCircle2, Circle, Volume2, VolumeX, Play, Pause } from 'lucide-react';
 import { Recipe } from '../types/Recipe';
 
 interface RecipeDetailProps {
@@ -9,6 +9,16 @@ interface RecipeDetailProps {
 const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [isFavorited, setIsFavorited] = useState(false);
+  const [isReading, setIsReading] = useState(false);
+  const [currentStep, setCurrentStep] = useState<number>(-1);
+  const [speechSynthesis, setSpeechSynthesis] = useState<SpeechSynthesis | null>(null);
+  const [currentUtterance, setCurrentUtterance] = useState<SpeechSynthesisUtterance | null>(null);
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      setSpeechSynthesis(window.speechSynthesis);
+    }
+  }, []);
 
   const toggleStep = (stepIndex: number) => {
     if (completedSteps.includes(stepIndex)) {
@@ -16,6 +26,65 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
     } else {
       setCompletedSteps([...completedSteps, stepIndex]);
     }
+  };
+
+  const speakText = (text: string, stepIndex?: number) => {
+    if (!speechSynthesis) return;
+
+    // Stop any current speech
+    speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.8;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    utterance.onstart = () => {
+      setIsReading(true);
+      if (stepIndex !== undefined) {
+        setCurrentStep(stepIndex);
+      }
+    };
+
+    utterance.onend = () => {
+      setIsReading(false);
+      setCurrentStep(-1);
+    };
+
+    utterance.onerror = () => {
+      setIsReading(false);
+      setCurrentStep(-1);
+    };
+
+    setCurrentUtterance(utterance);
+    speechSynthesis.speak(utterance);
+  };
+
+  const stopSpeaking = () => {
+    if (speechSynthesis) {
+      speechSynthesis.cancel();
+      setIsReading(false);
+      setCurrentStep(-1);
+    }
+  };
+
+  const readFullRecipe = () => {
+    const fullText = `
+      Recipe: ${recipe.name}. 
+      This ${recipe.cuisine} dish serves ${recipe.servings} people and takes ${recipe.cookingTime + recipe.prepTime} minutes total.
+      
+      Ingredients: ${recipe.ingredients.join(', ')}.
+      
+      Instructions: ${recipe.instructions.map((instruction, index) => `Step ${index + 1}: ${instruction}`).join('. ')}
+      
+      Enjoy your cooking!
+    `;
+    speakText(fullText);
+  };
+
+  const readStep = (stepIndex: number) => {
+    const stepText = `Step ${stepIndex + 1}: ${recipe.instructions[stepIndex]}`;
+    speakText(stepText, stepIndex);
   };
 
   const getDifficultyColor = (difficulty: string) => {
@@ -49,6 +118,18 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
                 {recipe.difficulty}
               </span>
               <div className="flex gap-2">
+                {/* Voice Assistant Controls */}
+                <button
+                  onClick={isReading ? stopSpeaking : readFullRecipe}
+                  className={`p-2 rounded-full transition-colors duration-200 ${
+                    isReading 
+                      ? 'text-red-400 bg-red-500 bg-opacity-20' 
+                      : 'text-slate-400 bg-slate-700/80 hover:bg-blue-500 hover:bg-opacity-20 hover:text-blue-400'
+                  }`}
+                  title={isReading ? 'Stop reading' : 'Read recipe aloud'}
+                >
+                  {isReading ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                </button>
                 <button
                   onClick={() => setIsFavorited(!isFavorited)}
                   className={`p-2 rounded-full transition-colors duration-200 ${
@@ -117,7 +198,16 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
         <div className="lg:col-span-1 space-y-6">
           {/* Ingredients */}
           <div className="bg-slate-800/80 backdrop-blur-sm border border-indigo-500/30 rounded-xl shadow-md p-6">
-            <h2 className="text-xl font-bold text-white mb-4">Ingredients</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-white">Ingredients</h2>
+              <button
+                onClick={() => speakText(`Ingredients: ${recipe.ingredients.join(', ')}`)}
+                className="p-2 rounded-full text-slate-400 bg-slate-700/80 hover:bg-blue-500 hover:bg-opacity-20 hover:text-blue-400 transition-colors duration-200"
+                title="Read ingredients aloud"
+              >
+                <Volume2 size={16} />
+              </button>
+            </div>
             <ul className="space-y-3">
               {recipe.ingredients.map((ingredient, index) => (
                 <li key={index} className="flex items-center gap-3">
@@ -159,7 +249,31 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
         {/* Instructions */}
         <div className="lg:col-span-2">
           <div className="bg-slate-800/80 backdrop-blur-sm border border-indigo-500/30 rounded-xl shadow-md p-6">
-            <h2 className="text-xl font-bold text-white mb-6">Instructions</h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-white">Instructions</h2>
+              <div className="flex gap-2">
+                <button
+                  onClick={isReading ? stopSpeaking : readFullRecipe}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                    isReading 
+                      ? 'bg-red-500/20 text-red-400 border border-red-500/30' 
+                      : 'bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500/30'
+                  }`}
+                >
+                  {isReading ? (
+                    <>
+                      <VolumeX size={16} className="inline mr-2" />
+                      Stop Reading
+                    </>
+                  ) : (
+                    <>
+                      <Volume2 size={16} className="inline mr-2" />
+                      Read Recipe
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
             <div className="space-y-4">
               {recipe.instructions.map((instruction, index) => (
                 <div
@@ -167,6 +281,8 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
                   className={`flex gap-4 p-4 rounded-lg border-2 transition-all duration-200 ${
                     completedSteps.includes(index)
                       ? 'border-green-500 bg-green-500 bg-opacity-10'
+                      : currentStep === index
+                      ? 'border-blue-500 bg-blue-500 bg-opacity-10'
                       : 'border-slate-600 hover:border-indigo-400 hover:bg-indigo-500 hover:bg-opacity-10'
                   }`}
                 >
@@ -186,7 +302,16 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe }) => {
                   </button>
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="font-semibold text-indigo-400">Step {index + 1}</span>
+                      <span className={`font-semibold ${currentStep === index ? 'text-blue-400' : 'text-indigo-400'}`}>
+                        Step {index + 1}
+                      </span>
+                      <button
+                        onClick={() => readStep(index)}
+                        className="p-1 rounded text-slate-400 hover:text-blue-400 transition-colors duration-200"
+                        title="Read this step aloud"
+                      >
+                        <Volume2 size={14} />
+                      </button>
                     </div>
                     <p className={`text-slate-300 leading-relaxed ${
                       completedSteps.includes(index) ? 'line-through text-slate-500' : ''

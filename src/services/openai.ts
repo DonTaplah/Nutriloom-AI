@@ -15,12 +15,13 @@ const openai = new OpenAI({
 export interface RecipeGenerationParams {
   ingredients: string[];
   cuisine: string;
+  dishType?: string;
   skillLevel: 'beginner' | 'pro' | 'legendary';
   servings?: number;
 }
 
 export const generateRecipesWithAI = async (params: RecipeGenerationParams) => {
-  const { ingredients, cuisine, skillLevel, servings = 4 } = params;
+  const { ingredients, cuisine, dishType, skillLevel, servings = 4 } = params;
   
   const skillLevelPrompts = {
     beginner: "Create simple, easy-to-follow recipes with basic cooking techniques. Use common ingredients and straightforward methods. Perfect for cooking novices.",
@@ -29,26 +30,37 @@ export const generateRecipesWithAI = async (params: RecipeGenerationParams) => {
   };
 
   const cuisineFilter = cuisine === 'all' ? '' : `Focus on ${cuisine} cuisine.`;
+  const dishTypeFilter = dishType && dishType !== 'any' ? `Create ${dishType} recipes.` : '';
   
   const prompt = `You are a professional chef and recipe developer. ${skillLevelPrompts[skillLevel]}
 
-Available ingredients: ${ingredients.join(', ')}
+MANDATORY REQUIREMENTS - ALL recipes must include these specifications:
+- Available ingredients: ${ingredients.join(', ')}
+- Skill level: ${skillLevel}
+- Servings: ${servings} people
 ${cuisineFilter}
-Servings: ${servings}
+${dishTypeFilter}
 
-Generate 12-15 unique and diverse recipes using ONLY the provided ingredients plus common pantry staples (salt, pepper, oil, basic spices, flour, sugar, etc.). 
+Generate 12-15 unique and diverse recipes that MUST:
+1. Use PRIMARILY the provided ingredients: ${ingredients.join(', ')}
+2. Match the ${skillLevel} skill level exactly
+3. Serve exactly ${servings} people
+4. ${cuisineFilter ? `Follow ${cuisine} cuisine style` : 'Use diverse cuisine styles'}
+5. ${dishTypeFilter ? `Be ${dishType} type dishes` : 'Include various dish types'}
+6. Include common pantry staples (salt, pepper, oil, basic spices, flour, sugar, etc.) as needed
 
 Make sure each recipe is distinctly different in:
 - Cooking method (baking, frying, grilling, steaming, etc.)
 - Flavor profile (spicy, sweet, savory, tangy, etc.)
 - Meal type (breakfast, lunch, dinner, snack, dessert)
-- Cuisine style when possible
-- Difficulty level appropriate to skill level
+- Cuisine style (${cuisine !== 'all' ? cuisine : 'varied'})
+- Difficulty level (${skillLevel})
+
 For each recipe, provide:
 1. Creative recipe name
-2. Difficulty level (Easy/Medium/Hard based on skill level)
+2. Difficulty level (Easy/Medium/Hard matching ${skillLevel} level)
 3. Prep time and cooking time
-4. Complete ingredient list with measurements
+4. Complete ingredient list with measurements (featuring the selected ingredients: ${ingredients.join(', ')})
 5. Step-by-step instructions
 6. Estimated nutrition per serving (calories, protein, carbs, fat, fiber)
 7. 3-4 relevant tags
