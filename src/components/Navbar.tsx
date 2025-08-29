@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, Home, CreditCard, User, LogOut, Video, Scan } from 'lucide-react';
+import { ArrowLeft, Home, CreditCard, User, LogOut, Scan, BookOpen } from 'lucide-react';
 import { User as UserType } from '../types/User';
 
 interface NavbarProps {
@@ -14,7 +14,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPricing, onLogout, onVideoUpload }) => {
   return (
-    <nav className="bg-slate-900/95 backdrop-blur-sm shadow-lg border-b border-indigo-500/30">
+    <nav className="bg-slate-900/95 backdrop-blur-sm shadow-lg border-b border-indigo-500/20">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-4">
@@ -30,59 +30,59 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
             
             <button
               onClick={onHome}
-              className="flex items-center space-x-3 text-indigo-400 hover:text-indigo-300 transition-colors duration-200"
+              className="flex items-center space-x-3 text-white hover:text-indigo-300 transition-colors duration-200"
             >
-              <h1 className="text-xl font-bold hidden sm:block text-white">Nutriloom AI</h1>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                  <BookOpen size={20} className="text-white" />
+                </div>
+                <h1 className="text-xl font-bold text-white">NUTRILOOM AI</h1>
+              </div>
             </button>
           </div>
           
           <div className="flex items-center space-x-4">
-            {/* User Plan Badge */}
-            <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
-              user.plan === 'pro' 
-                ? 'bg-indigo-500 bg-opacity-20 text-indigo-400 border border-indigo-500' 
-                : 'bg-blue-500 bg-opacity-20 text-blue-400 border border-blue-500'
-            }`}>
-              {user.plan === 'pro' ? '⭐ Pro' : '🆓 Free'}
-            </div>
-            
             {/* Navigation Links */}
             <button
               onClick={onHome}
-              className="flex items-center space-x-2 text-slate-300 hover:text-indigo-400 transition-colors duration-200"
+              className="px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
             >
-              <Home size={20} />
-              <span className="hidden sm:inline">Home</span>
+              Home
+            </button>
+            
+            <button
+              onClick={() => {/* Navigate to Story Generator */}}
+              className="px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
+            >
+              Recipe Generator
+            </button>
+            
+            <button
+              onClick={() => {/* Navigate to My Recipes */}}
+              className="px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
+            >
+              My Recipes
             </button>
             
             <button
               onClick={onPricing}
-              className="flex items-center space-x-2 text-slate-300 hover:text-indigo-400 transition-colors duration-200"
+              className="px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
             >
-              <CreditCard size={20} />
-              <span className="hidden sm:inline">Pricing</span>
+              Pricing
             </button>
             
             <button
               onClick={onVideoUpload}
-              className="flex items-center space-x-2 text-slate-300 hover:text-indigo-400 transition-colors duration-200"
+              className="px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
             >
-              <Scan size={20} />
-              <span className="hidden sm:inline">SYD</span>
+              Sign In
             </button>
             
-            {/* User Menu */}
-            <div className="flex items-center space-x-2 text-slate-300">
-              <User size={20} />
-              <span className="hidden sm:inline">{user.name}</span>
-            </div>
-            
             <button
-              onClick={onLogout}
-              className="flex items-center space-x-2 text-slate-300 hover:text-red-400 transition-colors duration-200"
+              onClick={() => {/* Handle Sign Up */}}
+              className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200"
             >
-              <LogOut size={20} />
-              <span className="hidden sm:inline">Logout</span>
+              Sign Up
             </button>
           </div>
         </div>

@@ -12,11 +12,11 @@ export default function PricingPage({ onSelectPlan, currentPlan }: PricingPagePr
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl lg:text-6xl font-bold text-blue-400 mb-6">
+          <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">
             Find Your Perfect Plan
           </h1>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-            Unlock the full potential of Recipe AI. Choose the plan that fits your culinary aspirations.
+            Unlock the full potential of Nutriloom AI. Choose the plan that fits your culinary aspirations and cooking journey.
           </p>
         </div>
 
