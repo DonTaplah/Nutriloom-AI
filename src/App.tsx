@@ -327,6 +327,15 @@ function App() {
           />
         )}
       </main>
+      
+      {/* Footer */}
+      <footer className="bg-slate-900/95 backdrop-blur-sm border-t border-indigo-500/20 py-4">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-slate-400 text-sm">
+            Nutriloom AI @2025🖤🤍RT
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
