@@ -31,13 +31,13 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
             {/* Main Heading */}
             <div className="space-y-6">
               <h1 className="text-6xl lg:text-7xl font-bold leading-tight">
-                <span className="text-white">Magical </span>
-                <span className="text-blue-400">Recipes</span>
+                <span className="text-white">Weaving </span>
+                <span className="text-blue-400">Nutrition</span>
                 <br />
-                <span className="text-white">for </span>
-                <span className="text-purple-400">Food</span>
+                <span className="text-white">In To </span>
+                <span className="text-purple-400">Every</span>
                 <br />
-                <span className="text-blue-400">Lovers</span>
+                <span className="text-blue-400">Meal</span>
               </h1>
 
               <p className="text-xl text-slate-300 leading-relaxed max-w-lg">
