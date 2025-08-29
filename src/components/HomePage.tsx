@@ -99,15 +99,15 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
         {/* Stats Section */}
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           <div className="space-y-2">
-            <div className="text-4xl font-bold gradient-text-white">10K+</div>
+            <div className="text-4xl font-bold gradient-text-white">1M+</div>
             <div className="gradient-text-slate">Recipes Created</div>
           </div>
           <div className="space-y-2">
-            <div className="text-4xl font-bold gradient-text-white">5K+</div>
-            <div className="gradient-text-slate">Happy Cooks</div>
+            <div className="text-4xl font-bold gradient-text-white">100K+</div>
+            <div className="gradient-text-slate">Happy Chef</div>
           </div>
           <div className="space-y-2">
-            <div className="text-4xl font-bold gradient-text-white">4.9★</div>
+            <div className="text-4xl font-bold gradient-text-white">4.2★</div>
             <div className="gradient-text-slate">User Rating</div>
           </div>
         </div>
