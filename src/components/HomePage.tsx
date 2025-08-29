@@ -278,67 +278,103 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
         </div>
 
         {/* Testimonials Section */}
-        <div className="mt-32">
+        <div className="mt-32 py-20">
           <div className="text-center mb-16">
+            {/* Loved by Food Lovers Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600/20 border border-indigo-500/30 rounded-full mb-8">
+              <span className="text-indigo-300 text-sm font-medium">💜 Loved by Food Lovers</span>
+            </div>
+            
             <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-              What Our <span className="text-emerald-400">Chefs</span> Say
+              What Food Lovers Are Saying
             </h2>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-              Join thousands of home cooks who've transformed their kitchens with Nutriloom AI
+              Join thousands of home cooks who have made cooking magical with NUTRILOOM AI recipes.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-slate-600/50">
-              <div className="flex items-center mb-6">
-                <img
-                  src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100"
-                  alt="Sarah M."
-                  className="w-12 h-12 rounded-full object-cover mr-4"
-                />
+            {/* Testimonial 1 */}
+            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50">
+              {/* 5 Star Rating */}
+              <div className="flex text-indigo-400 mb-6">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={20} fill="currentColor" />
+                ))}
+              </div>
+              
+              <p className="text-slate-300 leading-relaxed mb-6 text-lg">
+                "The premium recipes are absolutely incredible! My family is captivated by the detailed cooking techniques, and I'm amazed by how educational they are. Worth every penny!"
+              </p>
+              
+              <div className="flex items-center justify-between">
                 <div>
                   <h4 className="text-white font-semibold">Sarah M.</h4>
-                  <div className="flex text-yellow-400">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={16} fill="currentColor" />
-                    ))}
-                  </div>
+                  <p className="text-slate-400 text-sm">Premium subscriber</p>
                 </div>
               </div>
-              <p className="text-slate-300 leading-relaxed">
-                "Nutriloom AI has completely transformed my cooking! The recipes are always perfect and use exactly what I have in my fridge. It's like having a personal chef."
-              </p>
             </div>
 
-            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-slate-600/50">
-              <div className="flex items-center mb-6">
-                <img
-                  src="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=100"
-                  alt="Michael R."
-                  className="w-12 h-12 rounded-full object-cover mr-4"
-                />
+            {/* Testimonial 2 */}
+            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50">
+              {/* 5 Star Rating */}
+              <div className="flex text-indigo-400 mb-6">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={20} fill="currentColor" />
+                ))}
+              </div>
+              
+              <p className="text-slate-300 leading-relaxed mb-6 text-lg">
+                "As a busy home cook, NUTRILOOM AI has been a lifesaver. The AI creates such personalized recipes that my family thinks I wrote them myself. The cooking guidance is perfect for weeknight dinners!"
+              </p>
+              
+              <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-white font-semibold">Michael R.</h4>
-                  <div className="flex text-yellow-400">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={16} fill="currentColor" />
-                    ))}
-                  </div>
+                  <h4 className="text-white font-semibold">James T.</h4>
+                  <p className="text-slate-400 text-sm">Father of three</p>
                 </div>
               </div>
-              <p className="text-slate-300 leading-relaxed">
-                "The AI understands my dietary restrictions perfectly. Every recipe suggestion is not only delicious but also fits my health goals. Absolutely amazing!"
-              </p>
             </div>
 
-            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-slate-600/50">
-              <div className="flex items-center mb-6">
-                <img
-                  src="https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=100"
-                  alt="Emily K."
-                  className="w-12 h-12 rounded-full object-cover mr-4"
-                />
+            {/* Testimonial 3 */}
+            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50">
+              {/* 5 Star Rating */}
+              <div className="flex text-indigo-400 mb-6">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={20} fill="currentColor" />
+                ))}
+              </div>
+              
+              <p className="text-slate-300 leading-relaxed mb-6 text-lg">
+                "I'm a culinary instructor and I use NUTRILOOM AI recipes in my cooking classes. The educational themes are perfectly woven into engaging culinary experiences. My students are always excited for cooking time!"
+              </p>
+              
+              <div className="flex items-center justify-between">
                 <div>
+                  <h4 className="text-white font-semibold">Lisa K.</h4>
+                  <p className="text-slate-400 text-sm">Culinary instructor</p>
+                </div>
+              </div>
+              {/* 5 Star Rating */}
+              <div className="flex justify-center mb-6">
+                <div className="flex text-indigo-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={20} fill="currentColor" />
+                  ))}
+                </div>
+              </div>
+              
+              <p className="text-slate-300 leading-relaxed mb-6 text-center">
+                "I'm a culinary instructor and I use NUTRILOOM AI recipes in my cooking classes. The nutritional themes are perfectly woven into engaging cooking techniques. My students are always excited for recipe time!"
+              </p>
+              
+              <div className="text-center">
+                <div className="text-white font-semibold">Lisa K.</div>
+                <div className="text-slate-400 text-sm">Culinary instructor</div>
+              </div>
+            </div>
+          </div>
+        </div>
                   <h4 className="text-white font-semibold">Emily K.</h4>
                   <div className="flex text-yellow-400">
                     {[...Array(5)].map((_, i) => (
