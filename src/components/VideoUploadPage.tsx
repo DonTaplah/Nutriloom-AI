@@ -137,7 +137,7 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
               </div>
             </div>
             <h1 className="text-5xl font-bold text-white mb-4">
-              SYD - Scan Your Dish
+              <span className="gradient-text-primary">SYD</span> - <span className="gradient-text-secondary">Scan Your Dish</span>
             </h1>
             <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
               Discover the nutritional breakdown of your meals. Upload a photo of your dish and let AI analyze its food classes and nutritional content.

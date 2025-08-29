@@ -123,7 +123,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
             </div>
             
             <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-              Why Food Lovers Choose <span className="text-blue-400">NUTRILOOM AI</span>
+              Why Food Lovers Choose <span className="gradient-text-primary">NUTRILOOM AI</span>
             </h2>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto">
               Our cutting-edge AI creates personalized recipes that adapt to your taste preferences, dietary needs, and cooking skill level, making every meal a unique culinary adventure.
@@ -149,7 +149,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
               </div>
               <h3 className="text-2xl font-bold text-white mb-4">Premium Recipe Quality</h3>
               <p className="text-slate-300 leading-relaxed">
-                Premium subscribers enjoy longer, more detailed recipes with advanced cooking techniques and richer flavor development for restaurant-quality results.
+                Premium subscribers enjoy longer, more detailed recipes with advanced cooking techniques and richer flavor development for <span className="gradient-text-warm">restaurant-quality results</span>.
               </p>
             </div>
 
@@ -212,8 +212,8 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
                 </div>
 
                 <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-                  Unlock Premium<br />
-                  Recipe Creation
+                  <span className="gradient-text-primary">Unlock Premium</span><br />
+                  <span className="gradient-text-secondary">Recipe Creation</span>
                 </h2>
                 
                 <p className="text-xl text-slate-300 mb-8 leading-relaxed">
@@ -371,7 +371,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
         {/* Start Creating Section */}
         <div className="mt-32 mb-16 text-center px-4">
           <h2 className="text-5xl lg:text-6xl font-bold text-white mb-6">
-            Start Creating Magic Tonight
+            <span className="gradient-text-primary">Start Creating</span> <span className="gradient-text-secondary">Magic Tonight</span>
           </h2>
           <p className="text-lg sm:text-xl text-slate-300 max-w-4xl mx-auto mb-12 leading-relaxed px-4">
             Join thousands of families who have transformed cooking into an 

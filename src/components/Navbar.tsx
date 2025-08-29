@@ -33,7 +33,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
               onClick={onHome}
               className="flex items-center space-x-3 text-white hover:text-indigo-300 transition-colors duration-200"
             >
-              <h1 className="text-xl font-bold text-white">NUTRILOOM AI</h1>
+              <h1 className="text-xl font-bold gradient-text-primary">NUTRILOOM AI</h1>
             </button>
           </div>
           

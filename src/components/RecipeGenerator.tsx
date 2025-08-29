@@ -162,7 +162,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
         </div>
         
         <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white mb-6">
-          Create Your Perfect Recipe
+          <span className="gradient-text-primary">Create Your</span> <span className="gradient-text-secondary">Perfect Recipe</span>
         </h1>
         <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed px-4">
           Select your ingredients, choose your cuisine, and let our AI create personalized recipes 
