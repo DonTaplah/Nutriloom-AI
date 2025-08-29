@@ -11,10 +11,31 @@
 body {
   line-height: 1.6;
   background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e3a8a 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
+}
+
+/* Ensure consistent viewport behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 768px) {
+  body {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+  }
+  
+  /* Prevent horizontal scroll on mobile */
+  .container {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
 }
 
 /* Custom scrollbar */

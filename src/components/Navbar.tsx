@@ -48,35 +48,35 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
             
             <button
               onClick={onRecipeGenerator}
-              className="px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
+              className="hidden sm:block px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
             >
               Recipe Generator
             </button>
             
             <button
               onClick={() => {/* Navigate to My Recipes */}}
-              className="px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
+              className="hidden sm:block px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
             >
               My Recipes
             </button>
             
             <button
               onClick={onPricing}
-              className="px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
+              className="hidden sm:block px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
             >
               Pricing
             </button>
             
             <button
               onClick={onVideoUpload}
-              className="px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
+              className="px-3 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium text-sm sm:text-base"
             >
               Sign In
             </button>
             
             <button
               onClick={() => {/* Handle Sign Up */}}
-              className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200"
+              className="px-4 sm:px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"
             >
               Sign Up
             </button>

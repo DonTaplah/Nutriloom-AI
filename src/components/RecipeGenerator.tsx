@@ -97,7 +97,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
   };
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto px-4">
       {/* Header */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600/20 border border-indigo-500/30 rounded-full mb-6">
@@ -105,37 +105,37 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
           <span className="text-indigo-300 text-sm font-medium">AI Recipe Generator</span>
         </div>
         
-        <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">
+        <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white mb-6">
           Create Your Perfect Recipe
         </h1>
-        <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed px-4">
           Select your ingredients, choose your cuisine, and let our AI create personalized recipes 
           tailored to your taste and cooking skill level.
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
         {/* Left Column - Ingredients */}
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-2 space-y-6 lg:space-y-8">
           {/* Ingredients Selection */}
           <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl p-8 border border-indigo-500/30">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">Select Ingredients</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">Select Ingredients</h2>
               <button
                 onClick={refreshIngredients}
-                className="flex items-center gap-2 px-4 py-2 bg-slate-700/80 text-slate-300 rounded-lg hover:bg-slate-600/80 hover:text-white transition-all duration-200"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-slate-700/80 text-slate-300 rounded-lg hover:bg-slate-600/80 hover:text-white transition-all duration-200 text-sm sm:text-base"
               >
                 <RefreshCw size={16} />
-                <span>Refresh</span>
+                <span className="hidden sm:inline">Refresh</span>
               </button>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
               {availableIngredients.map((ingredient, index) => (
                 <button
                   key={index}
                   onClick={() => toggleIngredient(ingredient)}
-                  className={`p-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                  className={`p-2 sm:p-3 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 ${
                     selectedIngredients.includes(ingredient)
                       ? 'bg-indigo-600 text-white shadow-lg'
                       : 'bg-slate-700/80 text-slate-300 hover:bg-slate-600/80 hover:text-white'
