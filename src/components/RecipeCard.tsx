@@ -1,18 +1,6 @@
 import React from 'react';
 import { Clock, Users, Star } from 'lucide-react';
-
-interface Recipe {
-  id: string;
-  title: string;
-  description: string;
-  cookTime: number;
-  servings: number;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  rating: number;
-  image: string;
-  tags: string[];
-  calories: number;
-}
+import { Recipe } from '../types/Recipe';
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -41,7 +29,7 @@ export default function RecipeCard({ recipe, onSelect }: RecipeCardProps) {
       <div className="relative">
         <img
           src={recipe.image}
-          alt={recipe.title}
+          alt={recipe.name}
           className="w-full h-48 object-cover"
         />
         <div className="absolute top-3 right-3">
@@ -51,33 +39,29 @@ export default function RecipeCard({ recipe, onSelect }: RecipeCardProps) {
         </div>
         <div className="absolute bottom-3 left-3">
           <span className="bg-slate-900/80 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium">
-            {recipe.calories} cal
+            {recipe.nutrition.calories} cal
           </span>
         </div>
       </div>
 
       <div className="p-6">
         <h3 className="text-xl font-semibold text-white mb-2 line-clamp-2">
-          {recipe.title}
+          {recipe.name}
         </h3>
         
         <p className="text-slate-300 text-sm mb-4 line-clamp-2">
-          {recipe.description}
+          A delicious {recipe.cuisine} dish that serves {recipe.servings} people
         </p>
 
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-4 text-slate-400 text-sm">
             <div className="flex items-center">
               <Clock className="w-4 h-4 mr-1" />
-              <span>{recipe.cookTime}m</span>
+              <span>{recipe.cookingTime + recipe.prepTime}m</span>
             </div>
             <div className="flex items-center">
               <Users className="w-4 h-4 mr-1" />
               <span>{recipe.servings}</span>
-            </div>
-            <div className="flex items-center">
-              <Star className="w-4 h-4 mr-1 text-yellow-400" />
-              <span>{recipe.rating}</span>
             </div>
           </div>
         </div>

@@ -276,7 +276,11 @@ function App() {
       
       <main className="container mx-auto px-4 py-8">
         {currentView === 'home' && (
-          <HomePage onSearch={handleSearch} user={user} />
+          <HomePage 
+            onSearch={handleSearch} 
+            user={user} 
+            onRecipeGenerator={() => setCurrentView('generator')}
+          />
         )}
         
         {currentView === 'generator' && (

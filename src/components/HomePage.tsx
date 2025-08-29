@@ -5,9 +5,10 @@ import { User } from '../types/User';
 interface HomePageProps {
   onSearch: (ingredients: string[], cuisine: string) => void;
   user: User;
+  onRecipeGenerator: () => void;
 }
 
-const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
+const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900 relative overflow-hidden">
       {/* Decorative dots */}
@@ -47,7 +48,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               <button
-                onClick={() => {/* Navigate to recipe generator */}}
+                onClick={onRecipeGenerator}
                 className="flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 <Edit3 size={20} />
@@ -371,7 +372,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <button
-              onClick={() => {/* Navigate to recipe generator */}}
+              onClick={onRecipeGenerator}
               className="flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               <Sparkles size={20} />

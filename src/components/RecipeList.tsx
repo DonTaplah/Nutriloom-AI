@@ -19,7 +19,7 @@ const RecipeList: React.FC<RecipeListProps> = ({
   const [sortBy, setSortBy] = useState<'time' | 'difficulty' | 'calories'>('time');
   const [filterDifficulty, setFilterDifficulty] = useState<string>('all');
 
-  const sortedAndFilteredRecipes = recipes
+  const sortedAndFilteredRecipes = Array.isArray(recipes) ? recipes
     .filter(recipe => 
       filterDifficulty === 'all' || recipe.difficulty.toLowerCase() === filterDifficulty
     )
@@ -35,7 +35,7 @@ const RecipeList: React.FC<RecipeListProps> = ({
         default:
           return 0;
       }
-    });
+    }) : [];
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -47,7 +47,7 @@ const RecipeList: React.FC<RecipeListProps> = ({
               Recipe Suggestions
             </h1>
             <p className="text-slate-300">
-              Found {recipes.length} recipes using your ingredients
+              Found {Array.isArray(recipes) ? recipes.length : 0} recipes using your ingredients
             </p>
           </div>
           <div className="flex items-center gap-2 text-sm text-slate-400">
