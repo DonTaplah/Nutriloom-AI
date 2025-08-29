@@ -58,10 +58,15 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
               
               <button
                 onClick={onScanDish}
-                className="flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                className={`flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 ${
+                  user.plan === 'pro' 
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700' 
+                    : 'bg-slate-600 text-slate-400 cursor-not-allowed'
+                }`}
+                disabled={user.plan !== 'pro'}
               >
                 <Scan size={20} />
-                Scan Your Dish
+                {user.plan === 'pro' ? 'Scan Your Dish' : 'Scan Your Dish (Pro Only)'}
               </button>
               
               <button

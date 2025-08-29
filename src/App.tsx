@@ -85,11 +85,6 @@ function App() {
   };
 
   const handleSearch = (ingredients: string[], cuisine: string, aiRecipes?: Recipe[]) => {
-    // Check if user needs to upgrade for legendary recipes
-    if (user?.plan === 'free') {
-      // For free users, limit to beginner recipes only
-    }
-    
     setSearchIngredients(ingredients);
     setSelectedCuisine(cuisine);
     
@@ -289,6 +284,7 @@ function App() {
           <RecipeGenerator 
             onRecipesGenerated={handleSearch}
             user={user}
+            onPricing={() => setCurrentView('pricing')}
           />
         )}
         
@@ -313,7 +309,11 @@ function App() {
         )}
         
         {currentView === 'scan-dish' && (
-          <ScanYourDishPage onBack={handleBack} />
+          <ScanYourDishPage 
+            onBack={handleBack} 
+            user={user}
+            onPricing={() => setCurrentView('pricing')}
+          />
         )}
       </main>
     </div>

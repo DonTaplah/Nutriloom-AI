@@ -8,9 +8,10 @@ import { User } from '../types/User';
 interface RecipeGeneratorProps {
   onRecipesGenerated: (recipes: Recipe[], ingredients: string[], cuisine: string) => void;
   user: User;
+  onPricing: () => void;
 }
 
-const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, user }) => {
+const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, user, onPricing }) => {
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [customIngredient, setCustomIngredient] = useState<string>('');
   const [availableIngredients, setAvailableIngredients] = useState<string[]>(
@@ -101,7 +102,6 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
   const refreshIngredients = () => {
     const newIngredients = getShuffledIngredients(getRandomIngredientSet());
     setAvailableIngredients(newIngredients);
-    setSelectedIngredients([]);
   };
 
   const handleSkillLevelChange = (level: 'beginner' | 'pro' | 'legendary') => {
@@ -190,17 +190,24 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-white mb-3">Add Custom Ingredient</h3>
               <div className="flex gap-2">
-                <input
+          {(user.plan === 'free' || skillLevel === 'legendary') && (
                   type="text"
                   value={customIngredient}
                   onChange={(e) => setCustomIngredient(e.target.value)}
                   onKeyPress={handleCustomIngredientKeyPress}
                   placeholder="Enter ingredient name..."
-                  className="flex-1 px-4 py-2 bg-slate-700/80 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-indigo-400"
+                <h3 className="text-2xl font-bold gradient-text-white mb-2">
+                  {user.plan === 'free' ? 'Unlock Premium Features' : 'Unlock Legendary Recipes'}
+                </h3>
                 />
-                <button
-                  onClick={addCustomIngredient}
+                  {user.plan === 'free' 
+                    ? 'Upgrade to Pro for Legendary recipes, SYD dish scanning, unlimited generations, and advanced culinary techniques.'
+                    : 'Upgrade to Pro for advanced culinary techniques, sophisticated flavor profiles, and restaurant-quality presentations.'
+                  }
                   className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+                <button 
+                  onClick={onPricing}
+                  className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 gradient-text-white rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all duration-200"
                 >
                   Add
                 </button>

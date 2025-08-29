@@ -1,12 +1,15 @@
 import React, { useState, useRef } from 'react';
 import { Upload, Camera, X, CheckCircle, AlertCircle, Scan, Image, Eye, Brain, Zap, TrendingUp, Award } from 'lucide-react';
+import { User } from '../types/User';
 import { analyzeImage, DishAnalysisResult, getNutritionGradeColor, getHealthScoreColor } from '../services/imageAnalysis';
 
 interface VideoUploadPageProps {
   onBack: () => void;
+  user: User;
+  onPricing: () => void;
 }
 
-const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
+const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack, user, onPricing }) => {
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -116,6 +119,88 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
   };
 
   return (
+    <>
+      {user.plan !== 'pro' ? (
+        // Pro-only access gate
+        <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 flex items-center justify-center">
+          <div className="max-w-2xl mx-auto px-4 text-center">
+            <button
+              onClick={onBack}
+              className="flex items-center gap-2 text-slate-300 hover:text-purple-400 transition-colors duration-200 mb-8"
+            >
+              <X size={20} />
+              <span>Back</span>
+            </button>
+            
+            <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl p-12 border border-purple-500/30">
+              <div className="w-24 h-24 bg-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Scan size={48} className="text-white" />
+              </div>
+              
+              <h1 className="text-4xl font-bold gradient-text-white mb-4">
+                <span className="gradient-text-primary">SYD</span> - <span className="gradient-text-secondary">Scan Your Dish</span>
+              </h1>
+              
+              <div className="w-16 h-16 bg-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Crown size={32} className="text-white" />
+              </div>
+              
+              <h2 className="text-2xl font-bold gradient-text-purple mb-4">Pro Feature</h2>
+              
+              <p className="gradient-text-slate text-lg mb-8 leading-relaxed">
+                SYD (Scan Your Dish) is an advanced AI-powered feature that analyzes your food photos to provide:
+              </p>
+              
+              <div className="grid md:grid-cols-2 gap-4 mb-8 text-left">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                    <span className="gradient-text-slate">Complete nutritional breakdown</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                    <span className="gradient-text-slate">Ingredient identification</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                    <span className="gradient-text-slate">Health scoring & grading</span>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                    <span className="gradient-text-slate">Cooking method analysis</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                    <span className="gradient-text-slate">Dietary flags & allergens</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                    <span className="gradient-text-slate">AI recommendations</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                  onClick={onPricing}
+                  className="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  Upgrade to Pro
+                </button>
+                <button
+                  onClick={onBack}
+                  className="px-8 py-4 bg-slate-700/60 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-600/60 hover:text-white transition-all duration-200"
+                >
+                  Back to Home
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        // Original SYD functionality for Pro users
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
@@ -642,6 +727,8 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack }) => {
         </div>
       </div>
     </div>
+      )}
+    </>
   );
 };
 
