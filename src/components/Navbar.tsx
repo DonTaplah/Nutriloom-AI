@@ -32,14 +32,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
               onClick={onHome}
               className="flex items-center space-x-3 text-white hover:text-indigo-300 transition-colors duration-200"
             >
-              <div className="flex items-center gap-2">
-                <img 
-                  src="/An_AI_chef_with_a_spoon_and_a_fork_in_the_background-removebg-preview.png" 
-                  alt="Nutriloom AI Chef" 
-                  className="w-8 h-8 object-contain"
-                />
-                <h1 className="text-xl font-bold text-white">NUTRILOOM AI</h1>
-              </div>
+              <h1 className="text-xl font-bold text-white">NUTRILOOM AI</h1>
             </button>
           </div>
           
@@ -53,7 +46,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
             </button>
             
             <button
-              onClick={() => {/* Navigate to Story Generator */}}
+              onClick={() => onHome()}
               className="px-4 py-2 text-slate-300 hover:text-white transition-colors duration-200 font-medium"
             >
               Recipe Generator
