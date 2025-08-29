@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Upload, Camera, X, CheckCircle, AlertCircle, Scan, Image, Eye, Brain, Zap, TrendingUp, Award } from 'lucide-react';
+import { Upload, Camera, X, CheckCircle, AlertCircle, Scan, Image, Eye, Brain, Zap, TrendingUp, Award, Crown } from 'lucide-react';
 import { User } from '../types/User';
 import { analyzeImage, DishAnalysisResult, getNutritionGradeColor, getHealthScoreColor } from '../services/imageAnalysis';
 
@@ -732,5 +732,4 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack, user, onPric
   );
 };
 
-
-export default ScanYourDishPage
+export default ScanYourDishPage;
