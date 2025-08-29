@@ -163,8 +163,16 @@ FORMAT AS JSON:
       throw new Error('No analysis received from OpenAI');
     }
 
+    // Extract JSON from markdown code block if present
+    let jsonString = analysisText.trim();
+    if (jsonString.startsWith('```json')) {
+      jsonString = jsonString.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+    } else if (jsonString.startsWith('```')) {
+      jsonString = jsonString.replace(/^```\s*/, '').replace(/\s*```$/, '');
+    }
+
     // Parse the JSON response
-    const analysis = JSON.parse(analysisText);
+    const analysis = JSON.parse(jsonString);
     
     // Validate and return the analysis
     return {
