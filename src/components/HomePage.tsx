@@ -360,33 +360,35 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
         </div>
 
         {/* Start Creating Section */}
-        <div className="mt-32 mb-16">
-          <div className="bg-gradient-to-r from-blue-600/20 to-indigo-600/20 backdrop-blur-sm rounded-3xl p-12 border border-blue-500/30 text-center">
-            <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-8">
-              <Edit3 size={40} className="text-white" />
-            </div>
-            <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-              Start Creating <span className="text-blue-400">Today</span>
-            </h2>
-            <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8 leading-relaxed">
-              Join thousands of home cooks who've discovered the joy of AI-powered recipe creation. 
-              Transform your kitchen into a culinary playground with personalized recipes that inspire.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={() => onSearch([], 'all')}
-                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
-              >
-                Create Your First Recipe
-              </button>
-              <button
-                onClick={() => {/* Navigate to examples */}}
-                className="px-8 py-4 bg-slate-800/60 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-700/60 hover:text-white transition-all duration-200"
-              >
-                View Recipe Examples
-              </button>
-            </div>
+        <div className="mt-32 mb-16 text-center">
+          <h2 className="text-5xl lg:text-6xl font-bold text-white mb-6">
+            Start Creating Magic Tonight
+          </h2>
+          <p className="text-xl text-slate-300 max-w-4xl mx-auto mb-12 leading-relaxed">
+            Join thousands of families who have transformed cooking into an 
+            adventure. Create your first personalized recipe in minutes.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <button
+              onClick={() => onSearch([], 'all')}
+              className="flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <Sparkles size={20} />
+              Create Free Recipe
+            </button>
+            <button
+              onClick={() => {/* Navigate to premium */}}
+              className="flex items-center justify-center gap-2 px-8 py-4 bg-slate-800/60 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-700/60 hover:text-white transition-all duration-200"
+            >
+              <Crown size={20} />
+              Explore Premium
+            </button>
           </div>
+          
+          <p className="text-sm text-slate-400">
+            No credit card required for free recipes • Upgrade anytime
+          </p>
         </div>
       </div>
     </div>
