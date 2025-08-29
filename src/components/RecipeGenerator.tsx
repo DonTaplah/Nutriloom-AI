@@ -12,10 +12,12 @@ interface RecipeGeneratorProps {
 
 const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, user }) => {
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+  const [customIngredient, setCustomIngredient] = useState<string>('');
   const [availableIngredients, setAvailableIngredients] = useState<string[]>(
     getShuffledIngredients(getRandomIngredientSet())
   );
   const [selectedCuisine, setSelectedCuisine] = useState<string>('all');
+  const [selectedDishType, setSelectedDishType] = useState<string>('any');
   const [skillLevel, setSkillLevel] = useState<'beginner' | 'pro' | 'legendary'>('beginner');
   const [servings, setServings] = useState<number>(4);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -23,16 +25,56 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
 
   const cuisines = [
     { value: 'all', label: 'All Cuisines' },
+    { value: 'american', label: 'American' },
+    { value: 'argentinian', label: 'Argentinian' },
     { value: 'italian', label: 'Italian' },
     { value: 'mexican', label: 'Mexican' },
     { value: 'asian', label: 'Asian' },
-    { value: 'mediterranean', label: 'Mediterranean' },
-    { value: 'indian', label: 'Indian' },
-    { value: 'american', label: 'American' },
-    { value: 'french', label: 'French' },
-    { value: 'thai', label: 'Thai' },
+    { value: 'chinese', label: 'Chinese' },
     { value: 'japanese', label: 'Japanese' },
-    { value: 'middle-eastern', label: 'Middle Eastern' }
+    { value: 'korean', label: 'Korean' },
+    { value: 'thai', label: 'Thai' },
+    { value: 'vietnamese', label: 'Vietnamese' },
+    { value: 'mediterranean', label: 'Mediterranean' },
+    { value: 'greek', label: 'Greek' },
+    { value: 'turkish', label: 'Turkish' },
+    { value: 'indian', label: 'Indian' },
+    { value: 'french', label: 'French' },
+    { value: 'spanish', label: 'Spanish' },
+    { value: 'german', label: 'German' },
+    { value: 'british', label: 'British' },
+    { value: 'russian', label: 'Russian' },
+    { value: 'middle-eastern', label: 'Middle Eastern' },
+    { value: 'moroccan', label: 'Moroccan' },
+    { value: 'ethiopian', label: 'Ethiopian' },
+    { value: 'brazilian', label: 'Brazilian' },
+    { value: 'peruvian', label: 'Peruvian' },
+    { value: 'caribbean', label: 'Caribbean' },
+    { value: 'african', label: 'African' },
+    { value: 'scandinavian', label: 'Scandinavian' },
+    { value: 'eastern-european', label: 'Eastern European' }
+  ];
+
+  const dishTypes = [
+    { value: 'any', label: 'Any Dish' },
+    { value: 'appetizer', label: 'Appetizer' },
+    { value: 'soup', label: 'Soup' },
+    { value: 'salad', label: 'Salad' },
+    { value: 'main-course', label: 'Main Course' },
+    { value: 'side-dish', label: 'Side Dish' },
+    { value: 'pasta', label: 'Pasta' },
+    { value: 'rice-dish', label: 'Rice Dish' },
+    { value: 'stir-fry', label: 'Stir Fry' },
+    { value: 'casserole', label: 'Casserole' },
+    { value: 'sandwich', label: 'Sandwich' },
+    { value: 'pizza', label: 'Pizza' },
+    { value: 'burger', label: 'Burger' },
+    { value: 'breakfast', label: 'Breakfast' },
+    { value: 'brunch', label: 'Brunch' },
+    { value: 'dessert', label: 'Dessert' },
+    { value: 'snack', label: 'Snack' },
+    { value: 'smoothie', label: 'Smoothie' },
+    { value: 'beverage', label: 'Beverage' }
   ];
 
   const toggleIngredient = (ingredient: string) => {
@@ -40,6 +82,19 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
       setSelectedIngredients(selectedIngredients.filter(i => i !== ingredient));
     } else {
       setSelectedIngredients([...selectedIngredients, ingredient]);
+    }
+  };
+
+  const addCustomIngredient = () => {
+    if (customIngredient.trim() && !selectedIngredients.includes(customIngredient.trim())) {
+      setSelectedIngredients([...selectedIngredients, customIngredient.trim()]);
+      setCustomIngredient('');
+    }
+  };
+
+  const handleCustomIngredientKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      addCustomIngredient();
     }
   };
 
@@ -70,12 +125,13 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
       const params: RecipeGenerationParams = {
         ingredients: selectedIngredients,
         cuisine: selectedCuisine,
+        dishType: selectedDishType,
         skillLevel: skillLevel,
         servings: servings
       };
 
       const recipes = await generateRecipesWithAI(params);
-      onRecipesGenerated(recipes, selectedIngredients, selectedCuisine);
+      onRecipesGenerated(selectedIngredients, selectedCuisine, recipes);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate recipes');
     } finally {
@@ -130,6 +186,26 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
               </button>
             </div>
 
+            {/* Custom Ingredient Input */}
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold text-white mb-3">Add Custom Ingredient</h3>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={customIngredient}
+                  onChange={(e) => setCustomIngredient(e.target.value)}
+                  onKeyPress={handleCustomIngredientKeyPress}
+                  placeholder="Enter ingredient name..."
+                  className="flex-1 px-4 py-2 bg-slate-700/80 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-indigo-400"
+                />
+                <button
+                  onClick={addCustomIngredient}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
               {availableIngredients.map((ingredient, index) => (
                 <button
@@ -166,7 +242,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
           {/* Cuisine Selection */}
           <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl p-8 border border-indigo-500/30">
             <h2 className="text-2xl font-bold text-white mb-6">Choose Cuisine</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-64 overflow-y-auto">
               {cuisines.map((cuisine) => (
                 <button
                   key={cuisine.value}
@@ -178,6 +254,26 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                   }`}
                 >
                   {cuisine.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Dish Type Selection */}
+          <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl p-8 border border-indigo-500/30">
+            <h2 className="text-2xl font-bold text-white mb-6">Dish Type</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-48 overflow-y-auto">
+              {dishTypes.map((dishType) => (
+                <button
+                  key={dishType.value}
+                  onClick={() => setSelectedDishType(dishType.value)}
+                  className={`p-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                    selectedDishType === dishType.value
+                      ? 'bg-orange-600 text-white shadow-lg'
+                      : 'bg-slate-700/80 text-slate-300 hover:bg-slate-600/80 hover:text-white'
+                  }`}
+                >
+                  {dishType.label}
                 </button>
               ))}
             </div>
