@@ -354,6 +354,9 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user }) => {
                   <h4 className="text-white font-semibold">Lisa K.</h4>
                   <p className="text-slate-400 text-sm">Culinary instructor</p>
                 </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Start Creating Section */}
