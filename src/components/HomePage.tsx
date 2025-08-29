@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Edit3, Crown, Star, Sparkles, BookOpen, Shield, Archive } from 'lucide-react';
+import { Edit3, Crown, Star, Sparkles, BookOpen, Shield, Archive, Scan } from 'lucide-react';
 import { User } from '../types/User';
 
 interface HomePageProps {
@@ -8,7 +8,7 @@ interface HomePageProps {
   onRecipeGenerator: () => void;
 }
 
-const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator }) => {
+const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, onScanDish, onPricing }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900 relative overflow-hidden">
       {/* Decorative dots */}
@@ -56,7 +56,15 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator }
               </button>
               
               <button
-                onClick={() => {/* Navigate to premium */}}
+                onClick={onScanDish}
+                className="flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                <Scan size={20} />
+                Scan Your Dish
+              </button>
+              
+              <button
+                onClick={onPricing}
                 className="flex items-center justify-center gap-3 px-8 py-4 bg-slate-800/60 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-700/60 hover:text-white transition-all duration-200"
               >
                 <Crown size={20} />
@@ -238,14 +246,14 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator }
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
-                    onClick={() => {/* Navigate to pricing */}}
+                    onClick={onPricing}
                     className="flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
                     <Crown size={20} />
                     Get Premium Forever
                   </button>
                   <button
-                    onClick={() => {/* Show free version */}}
+                    onClick={onRecipeGenerator}
                     className="px-8 py-4 bg-slate-700/60 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-600/60 hover:text-white transition-all duration-200"
                   >
                     Try Free Version
@@ -379,7 +387,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator }
               Create Free Recipe
             </button>
             <button
-              onClick={() => {/* Navigate to premium */}}
+              onClick={onPricing}
               className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-slate-800/60 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-700/60 hover:text-white transition-all duration-200"
             >
               <Crown size={20} />

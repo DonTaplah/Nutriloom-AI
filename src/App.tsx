@@ -280,6 +280,8 @@ function App() {
             onSearch={handleSearch} 
             user={user} 
             onRecipeGenerator={() => setCurrentView('generator')}
+            onScanDish={() => setCurrentView('scan-dish')}
+            onPricing={() => setCurrentView('pricing')}
           />
         )}
         
