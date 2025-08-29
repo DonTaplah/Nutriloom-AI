@@ -8,9 +8,10 @@ import { User } from '../types/User';
 interface RecipeGeneratorProps {
   onRecipesGenerated: (recipes: Recipe[], ingredients: string[], cuisine: string) => void;
   user: User;
+  onPricing: () => void;
 }
 
-const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, user }) => {
+const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, user, onPricing }) => {
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [customIngredient, setCustomIngredient] = useState<string>('');
   const [availableIngredients, setAvailableIngredients] = useState<string[]>(
@@ -197,7 +198,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                   placeholder="Enter ingredient name..."
                   className="flex-1 px-4 py-2 bg-slate-700/80 text-white rounded-lg border border-slate-600 focus:border-indigo-500 focus:outline-none"
                 />
-                <button
+                <button 
                   onClick={addCustomIngredient}
                   className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200"
                 >
@@ -339,6 +340,26 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                 <p className="text-sm opacity-90">{getSkillLevelDescription('legendary')}</p>
               </button>
             </div>
+
+            {user.plan === 'free' && skillLevel === 'legendary' && (
+              <div className="mt-6 p-4 bg-purple-500/20 border border-purple-500/30 rounded-xl">
+                <h3 className="text-2xl font-bold gradient-text-white mb-2">
+                  {user.plan === 'free' ? 'Unlock Premium Features' : 'Unlock Legendary Recipes'}
+                </h3>
+                <p className="text-purple-300 mb-4">
+                  {user.plan === 'free' 
+                    ? 'Upgrade to Pro for Legendary recipes, SYD dish scanning, unlimited generations, and advanced culinary techniques.'
+                    : 'Upgrade to Pro for advanced culinary techniques, sophisticated flavor profiles, and restaurant-quality presentations.'
+                  }
+                </p>
+                <button 
+                  onClick={onPricing}
+                  className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 gradient-text-white rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all duration-200"
+                >
+                  Upgrade Now
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Servings */}
@@ -409,7 +430,10 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
               Upgrade to Pro for advanced culinary techniques, sophisticated flavor profiles, 
               and restaurant-quality presentations.
             </p>
-            <button className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 gradient-text-white rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all duration-200">
+            <button 
+              onClick={onPricing}
+              className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 gradient-text-white rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all duration-200"
+            >
               Upgrade to Pro
             </button>
           </div>
