@@ -20,16 +20,6 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-4">
-            {currentView !== 'home' && (
-              <button
-                onClick={onBack}
-                className="flex items-center space-x-2 text-slate-300 hover:text-indigo-400 transition-colors duration-200"
-              >
-                <ArrowLeft size={20} />
-                <span className="hidden sm:inline">Back</span>
-              </button>
-            )}
-            
             <button
               onClick={onHome}
               className="flex items-center space-x-3 gradient-text-white hover:text-indigo-300 transition-colors duration-200"
