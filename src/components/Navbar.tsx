@@ -33,9 +33,11 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
               className="flex items-center space-x-3 text-white hover:text-indigo-300 transition-colors duration-200"
             >
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-                  <BookOpen size={20} className="text-white" />
-                </div>
+                <img 
+                  src="/An_AI_chef_with_a_spoon_and_a_fork_in_the_background-removebg-preview.png" 
+                  alt="Nutriloom AI Chef" 
+                  className="w-8 h-8 object-contain"
+                />
                 <h1 className="text-xl font-bold text-white">NUTRILOOM AI</h1>
               </div>
             </button>
