@@ -68,7 +68,7 @@ export const analyzeImage = async (imageFile: File): Promise<DishAnalysisResult>
     const base64Image = await convertToBase64(imageFile);
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4-vision-preview",
+      model: "gpt-4o",
       messages: [
         {
           role: "system",
