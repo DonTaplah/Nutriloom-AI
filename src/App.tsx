@@ -30,17 +30,13 @@ function App() {
 
   // Authentication handlers
   const handleLogin = async (email: string, password: string) => {
+    setAuthError(null);
     await signIn(email, password);
-    if (!authError) {
-      setCurrentView('home');
-    }
   };
 
   const handleSignup = async (email: string, password: string, name: string) => {
+    setAuthError(null);
     await signUp(email, password, name);
-    if (!authError) {
-      setCurrentView('home');
-    }
   };
 
   const handleSelectPlan = (plan: 'free' | 'pro') => {

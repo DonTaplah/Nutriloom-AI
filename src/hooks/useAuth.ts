@@ -35,11 +35,13 @@ export const useAuth = () => {
       if (event === 'SIGNED_IN' && session?.user) {
         await loadUserProfile(session.user)
         setLoading(false)
+        setError(null)
       } else if (event === 'TOKEN_REFRESHED' && session?.user) {
         await loadUserProfile(session.user)
       } else if (event === 'SIGNED_OUT') {
         setUser(null)
         setLoading(false)
+        setError(null)
       } else if (event === 'INITIAL_SESSION' && session?.user) {
         await loadUserProfile(session.user)
         setLoading(false)
@@ -159,17 +161,18 @@ export const useAuth = () => {
         email,
         password,
         options: {
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: {
-            name: name
+            name: name,
+            full_name: name
           }
         }
       })
       
       if (error) throw error
       
-      // For development, we'll auto-confirm users
-      setError('Account created successfully! You can now sign in.')
+      // Check if email confirmation is required
+      setError('Account created successfully! Please check your email for confirmation, then sign in.')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to sign up')
     } finally {

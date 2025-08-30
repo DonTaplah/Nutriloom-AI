@@ -42,25 +42,28 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
+    setLocalError(null);
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin,
+          redirectTo: `${window.location.origin}/auth/callback`,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
           },
-          skipBrowserRedirect: false
+          skipBrowserRedirect: true
         }
       });
       
       if (error) {
-        console.error('Google OAuth error:', error);
+        setLocalError('Google sign-in failed. Please try again.');
         setGoogleLoading(false);
+      } else if (data?.url) {
+        window.location.href = data.url;
       }
     } catch (err) {
-      console.error('Google sign-in error:', err);
+      setLocalError('Google sign-in failed. Please try again.');
       setGoogleLoading(false);
     }
   };
