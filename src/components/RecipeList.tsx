@@ -51,10 +51,6 @@ const RecipeList: React.FC<RecipeListProps> = ({
           <span>AI-powered matches</span>
         </div>
       </div>
-            <TrendingUp size={16} />
-            <span>AI-powered matches</span>
-          </div>
-        </div>
         
         {/* Recipe Count and Disclaimer */}
         <div className="mb-4">
