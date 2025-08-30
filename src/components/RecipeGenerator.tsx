@@ -51,6 +51,11 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
   };
 
   const generateRecipes = async () => {
+    if (!user.isAuthenticated) {
+      setError('Please sign in to generate recipes');
+      return;
+    }
+
     const ingredients = parseIngredients(ingredientsText);
     
     if (ingredients.length === 0) {
