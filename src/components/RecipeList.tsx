@@ -49,6 +49,9 @@ const RecipeList: React.FC<RecipeListProps> = ({
             <p className="text-slate-300">
               Found {Array.isArray(recipes) ? recipes.length : 0} recipes using your ingredients
             </p>
+            <p className="text-yellow-400 text-sm mt-2 bg-yellow-500/10 border border-yellow-500/30 rounded-lg px-3 py-2">
+              <strong>Disclaimer:</strong> Recipe photos may not match the actual recipe. Still working on it. Thanks!
+            </p>
           </div>
           <div className="flex items-center gap-2 text-sm text-slate-400">
             <TrendingUp size={16} />
