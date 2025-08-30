@@ -359,42 +359,42 @@ function App() {
           />
         )}
       
-        {/* Footer */}
-        <footer className="bg-slate-900/95 backdrop-blur-sm border-t border-indigo-500/20 py-4">
-          <div className="container mx-auto px-8 text-center">
-            <p className="text-slate-400 text-sm">
-              Nutriloom AI @2025🖤🤍RT
-            </p>
-            <div className="flex items-center justify-center gap-4 mt-3">
-              <a 
-                href="https://www.instagram.com/nutriloomai" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-slate-400 hover:text-pink-400 transition-colors duration-200"
-              >
-                <Instagram size={20} />
-              </a>
-              <a 
-                href="https://x.com/NutriloomAI" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-slate-400 hover:text-blue-400 transition-colors duration-200"
-              >
-                <Twitter size={20} />
-              </a>
-              <a 
-                href="mailto:nutriloomai@gmail.com" 
-                href="https://mail.google.com/mail/?view=cm&fs=1&to=nutriloomai@gmail.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-slate-400 hover:text-red-400 transition-colors duration-200"
-              >
-                <Mail size={20} />
-              </a>
-            </div>
-          </div>
-        </footer>
       </main>
+      
+      {/* Footer - appears on all pages */}
+      <footer className="ml-64 bg-slate-900/95 backdrop-blur-sm border-t border-indigo-500/20 py-4">
+        <div className="container mx-auto px-8 text-center">
+          <p className="text-slate-400 text-sm">
+            Nutriloom AI @2025🖤🤍RT
+          </p>
+          <div className="flex items-center justify-center gap-4 mt-3">
+            <a 
+              href="https://www.instagram.com/nutriloomai" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-slate-400 hover:text-pink-400 transition-colors duration-200"
+            >
+              <Instagram size={20} />
+            </a>
+            <a 
+              href="https://x.com/NutriloomAI" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-slate-400 hover:text-blue-400 transition-colors duration-200"
+            >
+              <Twitter size={20} />
+            </a>
+            <a 
+              href="mailto:nutriloomai@gmail.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-slate-400 hover:text-red-400 transition-colors duration-200"
+            >
+              <Mail size={20} />
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
