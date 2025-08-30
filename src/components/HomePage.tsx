@@ -178,7 +178,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* AI-Powered Personalization */}
-            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-all duration-300">
+            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-colors duration-200">
               <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
                 <Sparkles size={32} className="text-blue-400" />
               </div>
@@ -189,7 +189,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
             </div>
 
             {/* Premium Recipe Quality */}
-            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-all duration-300">
+            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-colors duration-200">
               <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
                 <Crown size={32} className="text-blue-400" />
               </div>
@@ -200,7 +200,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
             </div>
 
             {/* Interactive Cooking Guide */}
-            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-all duration-300 lg:border-indigo-500/50">
+            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-colors duration-200 lg:border-indigo-500/50">
               <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
                 <Star size={32} className="text-blue-400" />
               </div>
@@ -211,7 +211,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
             </div>
 
             {/* Smart Ingredient Management */}
-            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-all duration-300">
+            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-colors duration-200">
               <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
                 <BookOpen size={32} className="text-blue-400" />
               </div>
@@ -222,7 +222,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
             </div>
 
             {/* Safe & Secure */}
-            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-all duration-300">
+            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-colors duration-200">
               <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
                 <Shield size={32} className="text-blue-400" />
               </div>
@@ -233,7 +233,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
             </div>
 
             {/* Recipe Library */}
-            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-all duration-300">
+            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-indigo-400/50 transition-colors duration-200">
               <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
                 <Archive size={32} className="text-blue-400" />
               </div>

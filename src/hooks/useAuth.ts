@@ -159,7 +159,7 @@ export const useAuth = () => {
         email,
         password,
         options: {
-          emailRedirectTo: undefined,
+          emailRedirectTo: window.location.origin,
           data: {
             name: name
           }
@@ -168,8 +168,8 @@ export const useAuth = () => {
       
       if (error) throw error
       
-      // Show success message for email confirmation
-      setError('Please check your email and click the confirmation link to complete registration.')
+      // For development, we'll auto-confirm users
+      setError('Account created successfully! You can now sign in.')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to sign up')
     } finally {

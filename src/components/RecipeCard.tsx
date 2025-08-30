@@ -24,7 +24,7 @@ export default function RecipeCard({ recipe, onSelect }: RecipeCardProps) {
   return (
     <div
       onClick={() => onSelect(recipe)}
-      className="bg-slate-800/80 backdrop-blur-sm rounded-xl overflow-hidden border border-indigo-500/30 hover:border-indigo-400/50 transition-all duration-300 cursor-pointer hover:scale-105 hover:shadow-xl hover:shadow-indigo-500/20"
+      className="bg-slate-800/80 backdrop-blur-sm rounded-xl overflow-hidden border border-indigo-500/30 hover:border-indigo-400/50 transition-colors duration-200 cursor-pointer"
     >
       <div className="relative">
         <img

@@ -93,97 +93,39 @@ html {
   background-clip: text;
 }
 /* Smooth animations */
-/* White text gradients */
-.gradient-text-white {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #e2e8f0 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Slate text gradients */
-.gradient-text-slate {
-  background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 50%, #64748b 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Green text gradients */
-.gradient-text-green {
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #15803d 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Red text gradients */
-.gradient-text-red {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Yellow text gradients */
-.gradient-text-yellow {
-  background: linear-gradient(135deg, #eab308 0%, #ca8a04 50%, #a16207 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Orange text gradients */
-.gradient-text-orange {
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Purple text gradients */
-.gradient-text-purple {
-  background: linear-gradient(135deg, #a855f7 0%, #9333ea 50%, #7c3aed 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Indigo text gradients */
-.gradient-text-indigo {
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #4338ca 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Blue text gradients */
-.gradient-text-blue {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Emerald text gradients */
-.gradient-text-emerald {
-  background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Pink text gradients */
-.gradient-text-pink {
-  background: linear-gradient(135deg, #ec4899 0%, #db2777 50%, #be185d 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
 * {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-property: color, background-color, border-color;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+  transition-duration: 200ms;
+}
+
+/* Optimized gradient text classes */
+.gradient-text-white { color: #ffffff; }
+.gradient-text-slate { color: #94a3b8; }
+.gradient-text-primary { 
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.gradient-text-secondary { 
+  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.gradient-text-green { color: #22c55e; }
+.gradient-text-red { color: #ef4444; }
+.gradient-text-yellow { color: #eab308; }
+.gradient-text-orange { color: #f97316; }
+.gradient-text-purple { color: #a855f7; }
+.gradient-text-indigo { color: #6366f1; }
+.gradient-text-blue { color: #3b82f6; }
+.gradient-text-emerald { color: #10b981; }
+.gradient-text-pink { color: #ec4899; }
+.gradient-text-warm { color: #f59e0b; }
+.gradient-text-cool { color: #06b6d4; }
+.gradient-text-accent { color: #10b981; }
 }
 
 /* Custom slider styling */

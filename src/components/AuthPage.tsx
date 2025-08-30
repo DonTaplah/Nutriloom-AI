@@ -17,9 +17,22 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
   const [name, setName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setLocalError(null);
+    
+    if (!email || !password) {
+      setLocalError('Please fill in all required fields');
+      return;
+    }
+    
+    if (!isLogin && !name) {
+      setLocalError('Please enter your full name');
+      return;
+    }
+    
     if (isLogin) {
       onLogin(email, password);
     } else {
@@ -106,9 +119,9 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
           </button>
         </div>
 
-        {error && (
+        {(error || localError) && (
           <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
-            {error}
+            {localError || error}
           </div>
         )}
 
