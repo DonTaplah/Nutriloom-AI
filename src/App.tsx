@@ -502,7 +502,6 @@ function App() {
             <p className="text-slate-400 text-sm mb-3">
               Nutriloom AI @2025🖤🤍RT
             </p>
-          </p>
           <div className="flex items-center justify-center gap-4">
             <a 
               href="https://www.instagram.com/nutriloomai" 
