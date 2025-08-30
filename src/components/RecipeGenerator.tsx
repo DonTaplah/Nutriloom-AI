@@ -58,6 +58,89 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
     { value: 'beverage', label: 'Beverage' }
   ];
 
+  const cuisines = [
+    { value: '', label: 'Any (Let AI Decide)' },
+    { value: 'Italian', label: 'Italian' },
+    { value: 'French', label: 'French' },
+    { value: 'Chinese', label: 'Chinese' },
+    { value: 'Japanese', label: 'Japanese' },
+    { value: 'Thai', label: 'Thai' },
+    { value: 'Indian', label: 'Indian' },
+    { value: 'Mexican', label: 'Mexican' },
+    { value: 'Mediterranean', label: 'Mediterranean' },
+    { value: 'Greek', label: 'Greek' },
+    { value: 'Spanish', label: 'Spanish' },
+    { value: 'Korean', label: 'Korean' },
+    { value: 'Vietnamese', label: 'Vietnamese' },
+    { value: 'American', label: 'American' },
+    { value: 'British', label: 'British' },
+    { value: 'German', label: 'German' },
+    { value: 'Russian', label: 'Russian' },
+    { value: 'Turkish', label: 'Turkish' },
+    { value: 'Lebanese', label: 'Lebanese' },
+    { value: 'Moroccan', label: 'Moroccan' },
+    { value: 'Ethiopian', label: 'Ethiopian' },
+    { value: 'Brazilian', label: 'Brazilian' },
+    { value: 'Argentinian', label: 'Argentinian' },
+    { value: 'Peruvian', label: 'Peruvian' },
+    { value: 'Caribbean', label: 'Caribbean' },
+    { value: 'Jamaican', label: 'Jamaican' },
+    { value: 'Cuban', label: 'Cuban' },
+    { value: 'Portuguese', label: 'Portuguese' },
+    { value: 'Polish', label: 'Polish' },
+    { value: 'Hungarian', label: 'Hungarian' },
+    { value: 'Czech', label: 'Czech' },
+    { value: 'Scandinavian', label: 'Scandinavian' },
+    { value: 'Nordic', label: 'Nordic' },
+    { value: 'Dutch', label: 'Dutch' },
+    { value: 'Belgian', label: 'Belgian' },
+    { value: 'Swiss', label: 'Swiss' },
+    { value: 'Austrian', label: 'Austrian' },
+    { value: 'Israeli', label: 'Israeli' },
+    { value: 'Persian', label: 'Persian' },
+    { value: 'Pakistani', label: 'Pakistani' },
+    { value: 'Bangladeshi', label: 'Bangladeshi' },
+    { value: 'Sri Lankan', label: 'Sri Lankan' },
+    { value: 'Nepalese', label: 'Nepalese' },
+    { value: 'Tibetan', label: 'Tibetan' },
+    { value: 'Malaysian', label: 'Malaysian' },
+    { value: 'Indonesian', label: 'Indonesian' },
+    { value: 'Filipino', label: 'Filipino' },
+    { value: 'Singaporean', label: 'Singaporean' },
+    { value: 'Burmese', label: 'Burmese' },
+    { value: 'Cambodian', label: 'Cambodian' },
+    { value: 'Laotian', label: 'Laotian' },
+    { value: 'Mongolian', label: 'Mongolian' },
+    { value: 'Georgian', label: 'Georgian' },
+    { value: 'Armenian', label: 'Armenian' },
+    { value: 'Ukrainian', label: 'Ukrainian' },
+    { value: 'Romanian', label: 'Romanian' },
+    { value: 'Bulgarian', label: 'Bulgarian' },
+    { value: 'Croatian', label: 'Croatian' },
+    { value: 'Serbian', label: 'Serbian' },
+    { value: 'Bosnian', label: 'Bosnian' },
+    { value: 'Albanian', label: 'Albanian' },
+    { value: 'Macedonian', label: 'Macedonian' },
+    { value: 'Slovenian', label: 'Slovenian' },
+    { value: 'Slovak', label: 'Slovak' },
+    { value: 'Lithuanian', label: 'Lithuanian' },
+    { value: 'Latvian', label: 'Latvian' },
+    { value: 'Estonian', label: 'Estonian' },
+    { value: 'Finnish', label: 'Finnish' },
+    { value: 'Icelandic', label: 'Icelandic' },
+    { value: 'Irish', label: 'Irish' },
+    { value: 'Scottish', label: 'Scottish' },
+    { value: 'Welsh', label: 'Welsh' },
+    { value: 'Cajun', label: 'Cajun' },
+    { value: 'Creole', label: 'Creole' },
+    { value: 'Soul Food', label: 'Soul Food' },
+    { value: 'Tex-Mex', label: 'Tex-Mex' },
+    { value: 'Southwestern', label: 'Southwestern' },
+    { value: 'California', label: 'California' },
+    { value: 'Hawaiian', label: 'Hawaiian' },
+    { value: 'Fusion', label: 'Fusion' }
+  ];
+
   const parseIngredients = (text: string): string[] => {
     return text
       .split(/[,\n]/)
@@ -177,15 +260,19 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                 <h3 className="text-lg font-semibold text-white mb-3">
                   Optional: Cuisine Culture
                 </h3>
-                <input
-                  type="text"
+                <select
                   value={selectedCuisine}
                   onChange={(e) => setSelectedCuisine(e.target.value)}
-                  placeholder="e.g., Italian, Thai"
                   className="w-full px-4 py-3 bg-slate-900/80 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500"
-                />
+                >
+                  {cuisines.map((cuisine) => (
+                    <option key={cuisine.value} value={cuisine.value} className="bg-slate-800">
+                      {cuisine.label}
+                    </option>
+                  ))}
+                </select>
                 <p className="text-slate-400 text-sm mt-2">
-                  Leave blank for AI to decide.
+                  Select a cuisine style or let AI decide.
                 </p>
               </div>
 
