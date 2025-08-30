@@ -9,7 +9,7 @@ interface SidebarProps {
   onMyRecipes: () => void;
   onPricing: () => void;
   onScanDish: () => void;
-  user: User;
+  user: User | null;
   onAuth: () => void;
 }
 
@@ -56,10 +56,10 @@ const Sidebar: React.FC<SidebarProps> = ({
       id: 'syd',
       label: 'SYD',
       icon: Scan,
-      onClick: user.isAuthenticated ? (user.plan === 'pro' ? onScanDish : onPricing) : onAuth,
+      onClick: user?.isAuthenticated ? (user.plan === 'pro' ? onScanDish : onPricing) : onAuth,
       active: currentView === 'scan-dish',
       isPro: true,
-      disabled: !user.isAuthenticated || user.plan !== 'pro'
+      disabled: !user?.isAuthenticated || user.plan !== 'pro'
     }
   ];
 
@@ -110,7 +110,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       {/* User Section */}
       <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-700/50">
-        {user.isAuthenticated ? (
+        {user?.isAuthenticated ? (
           <div className="space-y-3">
             <div className="flex items-center gap-3 px-4 py-3 bg-slate-800/60 rounded-lg">
               <div className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center">
@@ -132,7 +132,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </p>
               </div>
             </div>
-            {user.plan === 'free' && (
+            {user?.plan === 'free' && (
               <button
                 onClick={onPricing}
                 className="w-full px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg text-sm font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200"

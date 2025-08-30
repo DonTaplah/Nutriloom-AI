@@ -6,12 +6,12 @@ interface NavbarProps {
   currentView: string;
   onBack: () => void;
   onHome: () => void;
-  user: UserType;
+  user: UserType | null;
   onPricing: () => void;
-  onLogout: () => void;
+  onLogout: () => Promise<void>;
   onVideoUpload: () => void;
   onRecipeGenerator: () => void;
-  setUser: (user: User | null) => void;
+  setUser: (user: UserType | null) => void;
   onAuth: () => void;
 }
 
@@ -60,19 +60,19 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
             </button>
             
             <button
-              onClick={user.isAuthenticated ? (user.plan === 'pro' ? onVideoUpload : onPricing) : onAuth}
+              onClick={user?.isAuthenticated ? (user.plan === 'pro' ? onVideoUpload : onPricing) : onAuth}
               className={`px-3 py-2 transition-colors duration-200 font-medium text-sm sm:text-base ${
-                user.isAuthenticated && user.plan === 'pro' 
+                user?.isAuthenticated && user.plan === 'pro' 
                   ? 'gradient-text-slate hover:gradient-text-white' 
                   : 'gradient-text-slate hover:gradient-text-purple cursor-pointer'
               }`}
             >
-              SYD {(!user.isAuthenticated || user.plan !== 'pro') && '(Pro)'}
+              SYD {(!user?.isAuthenticated || user.plan !== 'pro') && '(Pro)'}
             </button>
             
-            {user.isAuthenticated ? (
+            {user?.isAuthenticated ? (
               <button
-                onClick={() => setUser({ ...user, isAuthenticated: false })}
+                onClick={onLogout}
                 className="px-4 sm:px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 gradient-text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"
               >
                 Sign Out

@@ -6,7 +6,7 @@ import { Recipe } from '../types/Recipe';
 import { User } from '../types/User';
 
 interface RecipeGeneratorProps {
-  onRecipesGenerated: (recipes: Recipe[], ingredients: string[], cuisine: string) => void;
+  onRecipesGenerated: (ingredients: string[], cuisine: string, recipes: Recipe[]) => void;
   user: User;
   onPricing: () => void;
   onAuth: () => void;

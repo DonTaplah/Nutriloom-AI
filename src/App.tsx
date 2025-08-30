@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Instagram, Twitter, Mail, Heart } from 'lucide-react';
+import { useAuth } from './hooks/useAuth';
+import { useRecipes } from './hooks/useRecipes';
 import AuthPage from './components/AuthPage';
 import PricingPage from './components/PricingPage';
 import Navbar from './components/Navbar';
@@ -10,101 +12,105 @@ import RecipeDetail from './components/RecipeDetail';
 import RecipeGenerator from './components/RecipeGenerator';
 import ScanYourDishPage from './components/VideoUploadPage';
 import { Recipe } from './types/Recipe';
-import { User } from './types/User';
 
 type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing' | 'scan-dish' | 'generator' | 'my-recipes';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
-  const [user, setUser] = useState<User | null>({
-    id: '1',
-    email: 'demo@nutriloom.ai',
-    name: 'Demo User',
-    plan: 'free',
+  const { user, loading: authLoading, error: authError, signIn, signUp, signOut, updateUsageStats, upgradeToPro, setError: setAuthError } = useAuth();
+  const { savedRecipes, saveRecipe, removeRecipe, isRecipeSaved } = useRecipes(user);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [searchIngredients, setSearchIngredients] = useState<string[]>([]);
+  const [selectedCuisine, setSelectedCuisine] = useState<string>('all');
+
+  // Authentication handlers
+  const handleLogin = async (email: string, password: string) => {
+    await signIn(email, password);
+    if (!authError) {
+      setCurrentView('home');
+    }
+  };
+
+  const handleSignup = async (email: string, password: string, name: string) => {
+    await signUp(email, password, name);
+    if (!authError) {
+      setCurrentView('home');
+    }
+  };
+
+  const handleSelectPlan = (plan: 'free' | 'pro') => {
+    if (plan === 'pro') {
+      upgradeToPro();
+    }
+    setCurrentView('home');
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    setCurrentView('home');
+  };
+
+  const handleSetUser = (newUser: any) => {
+    if (newUser === null || !newUser.isAuthenticated) {
+      signOut();
+    }
+  };
+
+  // Create a user object that matches the expected interface
+  const appUser = user || {
+    id: '',
+    email: '',
+    name: '',
+    plan: 'free' as const,
     createdAt: new Date(),
     isAuthenticated: false,
     usageStats: {
       recipesGeneratedThisMonth: 0,
       lastResetDate: new Date()
     }
-  });
-  const [authLoading, setAuthLoading] = useState(false);
-  const [authError, setAuthError] = useState<string | null>(null);
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
-  const [searchIngredients, setSearchIngredients] = useState<string[]>([]);
-  const [selectedCuisine, setSelectedCuisine] = useState<string>('all');
-  const [likedRecipes, setLikedRecipes] = useState<Recipe[]>([]);
+  };
 
-  // Mock authentication functions
-  const handleLogin = async (email: string, password: string) => {
-    setAuthLoading(true);
-    setAuthError(null);
+  const handleGeneratedRecipes = async (ingredients: string[], cuisine: string, aiRecipes: Recipe[]) => {
+    setSearchIngredients(ingredients);
+    setSelectedCuisine(cuisine);
+    setRecipes(aiRecipes);
     
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock user data
-      const mockUser: User = {
-        id: '1',
-        email,
-        name: email.split('@')[0],
-        plan: 'free',
-        createdAt: new Date(),
-        isAuthenticated: true,
-        usageStats: {
-          recipesGeneratedThisMonth: 0,
-          lastResetDate: new Date()
-        }
-      };
-      
-      setUser(mockUser);
-      setCurrentView('home');
-    } catch (error) {
-      setAuthError('Invalid credentials. Please try again.');
-    } finally {
-      setAuthLoading(false);
+    // Update usage stats for free users
+    if (user && user.plan === 'free') {
+      await updateUsageStats(user.usageStats.recipesGeneratedThisMonth + 1);
     }
-  };
-
-  const handleSignup = async (name: string, email: string, password: string) => {
-    setAuthLoading(true);
-    setAuthError(null);
     
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock user data
-      const mockUser: User = {
-        id: '1',
-        email,
-        name,
-        plan: 'free',
-        createdAt: new Date(),
-        isAuthenticated: true,
-        usageStats: {
-          recipesGeneratedThisMonth: 0,
-          lastResetDate: new Date()
-        }
-      };
-      
-      setUser(mockUser);
-      setCurrentView('home');
-    } catch (error) {
-      setAuthError('Failed to create account. Please try again.');
-    } finally {
-      setAuthLoading(false);
+    setCurrentView('recipes');
+  };
+
+  const handleLikeRecipe = async (recipe: Recipe) => {
+    if (!user?.isAuthenticated) return;
+    
+    const isAlreadySaved = isRecipeSaved(recipe.id);
+    
+    if (isAlreadySaved) {
+      await removeRecipe(recipe.id);
+    } else {
+      await saveRecipe(recipe);
     }
   };
 
-  const handleSelectPlan = (plan: 'free' | 'pro') => {
-    if (user) {
-      setUser({ ...user, plan });
-      setCurrentView('home');
-    }
+  const isRecipeLiked = (recipeId: string) => {
+    return isRecipeSaved(recipeId);
   };
+
+  // Show loading screen while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white text-lg">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleHomePageSearch = (ingredients: string[], cuisine: string) => {
     setSearchIngredients(ingredients);
@@ -114,46 +120,11 @@ function App() {
     setCurrentView('recipes');
   };
 
-  const handleGeneratedRecipes = (ingredients: string[], cuisine: string, aiRecipes: Recipe[]) => {
-    setSearchIngredients(ingredients);
-    setSelectedCuisine(cuisine);
-    setRecipes(aiRecipes);
-    
-    // Update usage stats for free users
-    if (user && user.plan === 'free') {
-      const updatedUser = {
-        ...user,
-        usageStats: {
-          ...user.usageStats,
-          recipesGeneratedThisMonth: user.usageStats.recipesGeneratedThisMonth + 1
-        }
-      };
-      setUser(updatedUser);
-    }
-    
-    setCurrentView('recipes');
-  };
-
   const handleRecipeSelect = (recipe: Recipe) => {
     setSelectedRecipe(recipe);
     setCurrentView('detail');
   };
 
-  const handleLikeRecipe = (recipe: Recipe) => {
-    const isAlreadyLiked = likedRecipes.some(r => r.id === recipe.id);
-    
-    if (isAlreadyLiked) {
-      // Remove from liked recipes
-      setLikedRecipes(likedRecipes.filter(r => r.id !== recipe.id));
-    } else {
-      // Add to liked recipes
-      setLikedRecipes([...likedRecipes, recipe]);
-    }
-  };
-
-  const isRecipeLiked = (recipeId: string) => {
-    return likedRecipes.some(r => r.id === recipeId);
-  };
   const handleBack = () => {
     if (currentView === 'detail') {
       setCurrentView('recipes');
@@ -174,7 +145,7 @@ function App() {
     setCurrentView('my-recipes');
   };
 
-  // Mock AI recipe generation
+  // Mock AI recipe generation (keeping existing logic)
   const generateRecipes = (ingredients: string[], cuisine: string): Recipe[] => {
     const mockRecipes: Recipe[] = [
       {
@@ -310,7 +281,7 @@ function App() {
         onMyRecipes={handleMyRecipes}
         onPricing={() => setCurrentView('pricing')}
         onScanDish={() => setCurrentView('scan-dish')}
-        user={user}
+        user={appUser}
         onAuth={() => setCurrentView('auth')}
       />
       
@@ -319,7 +290,7 @@ function App() {
         {currentView === 'home' && (
           <HomePage 
             onSearch={handleHomePageSearch} 
-            user={user} 
+            user={appUser} 
             onRecipeGenerator={() => setCurrentView('generator')}
             onScanDish={() => setCurrentView('scan-dish')}
             onPricing={() => setCurrentView('pricing')}
@@ -330,7 +301,7 @@ function App() {
         {currentView === 'generator' && (
           <RecipeGenerator 
             onRecipesGenerated={handleGeneratedRecipes}
-            user={user}
+            user={appUser}
             onPricing={() => setCurrentView('pricing')}
             onAuth={() => setCurrentView('auth')}
           />
@@ -339,7 +310,7 @@ function App() {
         {currentView === 'pricing' && (
           <PricingPage 
             onSelectPlan={handleSelectPlan}
-            currentPlan={user?.plan}
+            currentPlan={appUser?.plan}
           />
         )}
         
@@ -371,7 +342,7 @@ function App() {
         {currentView === 'scan-dish' && (
           <ScanYourDishPage 
             onBack={handleBack} 
-            user={user}
+            user={appUser}
             onPricing={() => setCurrentView('pricing')}
           />
         )}
@@ -380,9 +351,9 @@ function App() {
           <div className="container mx-auto px-8 py-8">
             <h1 className="text-4xl font-bold text-white mb-8">My Recipes</h1>
             
-            {likedRecipes.length > 0 ? (
+            {savedRecipes.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {likedRecipes.map((recipe) => (
+                {savedRecipes.map((recipe) => (
                   <div
                     key={recipe.id}
                     onClick={() => handleRecipeSelect(recipe)}
