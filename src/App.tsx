@@ -438,6 +438,8 @@ function App() {
       
       </main>
       
+      </main>
+      
       {/* Footer - appears on all pages */}
       <footer className="lg:ml-64 bg-slate-900/95 backdrop-blur-sm border-t border-indigo-500/20 py-6">
         <div className="container mx-auto px-4 lg:px-8 text-center">
