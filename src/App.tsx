@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Instagram, Twitter, Mail } from 'lucide-react';
+import { Instagram, Twitter, Mail, Heart } from 'lucide-react';
 import AuthPage from './components/AuthPage';
 import PricingPage from './components/PricingPage';
 import Navbar from './components/Navbar';
@@ -314,7 +314,7 @@ function App() {
         {currentView === 'pricing' && (
           <PricingPage 
             onSelectPlan={handleSelectPlan}
-            currentPlan={user.plan}
+            currentPlan={user?.plan}
           />
         )}
         
@@ -401,6 +401,7 @@ function App() {
                   >
                     Create Your First Recipe
                   </button>
+                </div>
               </div>
             )}
           </div>
