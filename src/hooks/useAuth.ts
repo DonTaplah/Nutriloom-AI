@@ -30,11 +30,18 @@ export const useAuth = () => {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session?.user) {
+      console.log('Auth state change:', event, session?.user?.email);
+      
+      if (event === 'SIGNED_IN' && session?.user) {
         await loadUserProfile(session.user)
         setLoading(false)
+      } else if (event === 'TOKEN_REFRESHED' && session?.user) {
+        await loadUserProfile(session.user)
       } else if (event === 'SIGNED_OUT') {
         setUser(null)
+        setLoading(false)
+      } else if (event === 'INITIAL_SESSION' && session?.user) {
+        await loadUserProfile(session.user)
         setLoading(false)
       }
     })
@@ -60,7 +67,7 @@ export const useAuth = () => {
         const newProfile = {
           id: supabaseUser.id,
           email: supabaseUser.email || '',
-          name: supabaseUser.user_metadata?.name || supabaseUser.email?.split('@')[0] || 'User',
+          name: supabaseUser.user_metadata?.full_name || supabaseUser.user_metadata?.name || supabaseUser.email?.split('@')[0] || 'User',
           plan: 'free' as const,
           recipes_generated_this_month: 0,
           last_reset_date: new Date().toISOString()
