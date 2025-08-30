@@ -216,7 +216,7 @@ export default function PricingPage({ onSelectPlan, currentPlan }: PricingPagePr
           </div>
           <div className="space-y-2">
             <div className="text-5xl font-bold gradient-text-white">4.2★</div>
-            <div className="gradient-text-slate text-lg">Parent Rating</div>
+            <div className="gradient-text-slate text-lg">User Rating</div>
           </div>
         </div>
       </div>
