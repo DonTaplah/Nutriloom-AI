@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, BookOpen } from 'lucide-react';
 
 interface AuthPageProps {
-  onLogin: (email: string, password: string) => void;
-  onSignup: (email: string, password: string, name: string) => void;
+  onLogin: (email: string, password: string) => Promise<void>;
+  onSignup: (email: string, password: string, name: string) => Promise<void>;
   isLoading: boolean;
   error: string | null;
 }
@@ -24,9 +24,21 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error }: AuthPa
     }
   };
 
-  const handleGoogleSignIn = () => {
-    // Google sign-in logic would go here
-    console.log('Google sign-in clicked');
+  const handleGoogleSignIn = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      
+      if (error) {
+        console.error('Google sign-in error:', error);
+      }
+    } catch (err) {
+      console.error('Google sign-in failed:', err);
+    }
   };
 
   return (
