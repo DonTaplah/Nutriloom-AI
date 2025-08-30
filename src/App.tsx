@@ -443,10 +443,6 @@ function App() {
           </div>
         )}
         
-        {currentView === 'contact' && (
-          <ContactPage onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-        )}
-        
         {currentView === 'auth' && (
           <AuthPage
             onLogin={handleLogin}
@@ -458,100 +454,6 @@ function App() {
         )}
       
       </main>
-      
-      {/* Footer - appears on all pages */}
-      <footer className="lg:ml-64 bg-slate-900/95 backdrop-blur-sm border-t border-indigo-500/20 py-6">
-        <div className="container mx-auto px-4 lg:px-8 text-center">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            {/* Business Info */}
-            <div className="text-center md:text-left">
-              <h3 className="font-semibold text-white mb-3">Nutriloom AI</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">
-                AI-powered recipe generation serving the San Francisco Bay Area and beyond.
-              </p>
-            </div>
-            
-            {/* Contact Info */}
-            <div className="text-center">
-              <h3 className="font-semibold text-white mb-3">Contact</h3>
-              <div className="space-y-1 text-slate-400 text-sm">
-                <div>123 Innovation Drive</div>
-                <div>San Francisco, CA 94105</div>
-                <div>
-                  <a href="tel:+1-555-NUTRI-AI" className="hover:text-indigo-400 transition-colors">
-                    +1-555-NUTRI-AI
-                  </a>
-                </div>
-                <div>
-                  <a href="mailto:nutriloomai@gmail.com" className="hover:text-indigo-400 transition-colors">
-                    nutriloomai@gmail.com
-                  </a>
-                </div>
-              </div>
-            </div>
-            
-            {/* Quick Links */}
-            <div className="text-center md:text-right">
-              <h3 className="font-semibold text-white mb-3">Quick Links</h3>
-              <div className="space-y-1 text-slate-400 text-sm">
-                <div>
-                  <button 
-                    onClick={() => setCurrentView('contact')}
-                    className="hover:text-indigo-400 transition-colors"
-                  >
-                    Contact Us
-                  </button>
-                </div>
-                <div>
-                  <button 
-                    onClick={() => setCurrentView('pricing')}
-                    className="hover:text-indigo-400 transition-colors"
-                  >
-                    Pricing
-                  </button>
-                </div>
-                <div>
-                  <a href="mailto:support@nutriloomai.com" className="hover:text-indigo-400 transition-colors">
-                    Support
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="border-t border-slate-700 pt-4">
-            <p className="text-slate-400 text-sm mb-3">
-              Nutriloom AI @2025🖤🤍RT
-            </p>
-            <div className="flex items-center justify-center gap-4">
-              <a 
-                href="https://www.instagram.com/nutriloomai" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-slate-400 hover:text-pink-400 transition-colors duration-200"
-              >
-                <Instagram size={20} />
-              </a>
-              <a 
-                href="https://x.com/NutriloomAI" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-slate-400 hover:text-blue-400 transition-colors duration-200"
-              >
-                <Twitter size={20} />
-              </a>
-              <a 
-                href="mailto:nutriloomai@gmail.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-slate-400 hover:text-red-400 transition-colors duration-200"
-              >
-                <Mail size={20} />
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
 
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
