@@ -3,6 +3,7 @@ import { Instagram, Twitter, Mail } from 'lucide-react';
 import AuthPage from './components/AuthPage';
 import PricingPage from './components/PricingPage';
 import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
 import HomePage from './components/HomePage';
 import RecipeList from './components/RecipeList';
 import RecipeDetail from './components/RecipeDetail';
@@ -11,7 +12,7 @@ import ScanYourDishPage from './components/VideoUploadPage';
 import { Recipe } from './types/Recipe';
 import { User } from './types/User';
 
-type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing' | 'scan-dish' | 'generator';
+type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing' | 'scan-dish' | 'generator' | 'my-recipes';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
@@ -123,9 +124,15 @@ function App() {
       setCurrentView('home');
     } else if (currentView === 'scan-dish') {
       setCurrentView('home');
+    } else if (currentView === 'my-recipes') {
+      setCurrentView('home');
     }
   };
 
+  const handleMyRecipes = () => {
+    // For now, just show a placeholder - you can implement this later
+    setCurrentView('my-recipes');
+  };
 
   // Mock AI recipe generation
   const generateRecipes = (ingredients: string[], cuisine: string): Recipe[] => {
@@ -255,22 +262,20 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900">
-      {user && (
-        <Navbar 
-          currentView={currentView} 
-          onBack={handleBack}
-          onHome={() => setCurrentView('home')}
-          user={user}
-          onPricing={() => setCurrentView('pricing')}
-          onLogout={() => setUser(null)}
-          onVideoUpload={() => setCurrentView('scan-dish')}
-          onRecipeGenerator={() => setCurrentView('generator')}
-          setUser={setUser}
-          onAuth={() => setCurrentView('auth')}
-        />
-      )}
+      {/* Sidebar */}
+      <Sidebar
+        currentView={currentView}
+        onHome={() => setCurrentView('home')}
+        onRecipeGenerator={() => setCurrentView('generator')}
+        onMyRecipes={handleMyRecipes}
+        onPricing={() => setCurrentView('pricing')}
+        onScanDish={() => setCurrentView('scan-dish')}
+        user={user}
+        onAuth={() => setCurrentView('auth')}
+      />
       
-      <main className="container mx-auto px-4 py-8">
+      {/* Main Content */}
+      <main className="ml-64 min-h-screen">
         {currentView === 'home' && (
           <HomePage 
             onSearch={handleSearch} 
@@ -319,6 +324,32 @@ function App() {
           />
         )}
         
+        {currentView === 'my-recipes' && (
+          <div className="container mx-auto px-8 py-16">
+            <div className="text-center">
+              <h1 className="text-4xl font-bold text-white mb-4">My Recipes</h1>
+              <p className="text-slate-300 text-lg mb-8">
+                Your saved and created recipes will appear here.
+              </p>
+              <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-12 border border-slate-700/50">
+                <div className="text-6xl mb-4">📚</div>
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  No recipes saved yet
+                </h3>
+                <p className="text-slate-400 mb-6">
+                  Start creating recipes to build your personal collection
+                </p>
+                <button
+                  onClick={() => setCurrentView('generator')}
+                  className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200"
+                >
+                  Create Your First Recipe
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        
         {currentView === 'auth' && (
           <AuthPage
             onLogin={handleLogin}
@@ -327,43 +358,43 @@ function App() {
             error={authError}
           />
         )}
-      </main>
       
-      {/* Footer */}
-      <footer className="bg-slate-900/95 backdrop-blur-sm border-t border-indigo-500/20 py-4">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-slate-400 text-sm">
-            Nutriloom AI @2025🖤🤍RT
-          </p>
-          <div className="flex items-center justify-center gap-4 mt-3">
-            <a 
-              href="https://www.instagram.com/nutriloomai" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-slate-400 hover:text-pink-400 transition-colors duration-200"
-            >
-              <Instagram size={20} />
-            </a>
-            <a 
-              href="https://x.com/NutriloomAI" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-slate-400 hover:text-blue-400 transition-colors duration-200"
-            >
-              <Twitter size={20} />
-            </a>
-            <a 
-              href="mailto:nutriloomai@gmail.com" 
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=nutriloomai@gmail.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-slate-400 hover:text-red-400 transition-colors duration-200"
-            >
-              <Mail size={20} />
-            </a>
+        {/* Footer */}
+        <footer className="bg-slate-900/95 backdrop-blur-sm border-t border-indigo-500/20 py-4">
+          <div className="container mx-auto px-8 text-center">
+            <p className="text-slate-400 text-sm">
+              Nutriloom AI @2025🖤🤍RT
+            </p>
+            <div className="flex items-center justify-center gap-4 mt-3">
+              <a 
+                href="https://www.instagram.com/nutriloomai" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-slate-400 hover:text-pink-400 transition-colors duration-200"
+              >
+                <Instagram size={20} />
+              </a>
+              <a 
+                href="https://x.com/NutriloomAI" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-slate-400 hover:text-blue-400 transition-colors duration-200"
+              >
+                <Twitter size={20} />
+              </a>
+              <a 
+                href="mailto:nutriloomai@gmail.com" 
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=nutriloomai@gmail.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-slate-400 hover:text-red-400 transition-colors duration-200"
+              >
+                <Mail size={20} />
+              </a>
+            </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      </main>
     </div>
   );
 }
