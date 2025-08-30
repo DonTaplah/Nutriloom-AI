@@ -86,7 +86,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
               {/* Main Image Container */}
               <div className="bg-slate-800/40 backdrop-blur-sm rounded-3xl p-6 border border-indigo-500/20">
                 <img
-                  src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800"
+                  src="/An_AI_chef_with_a_spoon_and_a_fork_in_the_background-removebg-preview.png"
                   alt="Delicious cooking and recipe creation"
                   className="w-full h-80 object-cover rounded-2xl"
                 />
