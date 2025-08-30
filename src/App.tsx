@@ -30,6 +30,7 @@ function App() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [searchIngredients, setSearchIngredients] = useState<string[]>([]);
   const [selectedCuisine, setSelectedCuisine] = useState<string>('all');
+  const [likedRecipes, setLikedRecipes] = useState<Recipe[]>([]);
 
   // Mock authentication functions
   const handleLogin = async (email: string, password: string) => {
@@ -113,6 +114,21 @@ function App() {
     setCurrentView('detail');
   };
 
+  const handleLikeRecipe = (recipe: Recipe) => {
+    const isAlreadyLiked = likedRecipes.some(r => r.id === recipe.id);
+    
+    if (isAlreadyLiked) {
+      // Remove from liked recipes
+      setLikedRecipes(likedRecipes.filter(r => r.id !== recipe.id));
+    } else {
+      // Add to liked recipes
+      setLikedRecipes([...likedRecipes, recipe]);
+    }
+  };
+
+  const isRecipeLiked = (recipeId: string) => {
+    return likedRecipes.some(r => r.id === recipeId);
+  };
   const handleBack = () => {
     if (currentView === 'detail') {
       setCurrentView('recipes');
@@ -130,7 +146,6 @@ function App() {
   };
 
   const handleMyRecipes = () => {
-    // For now, just show a placeholder - you can implement this later
     setCurrentView('my-recipes');
   };
 
@@ -313,7 +328,19 @@ function App() {
         )}
         
         {currentView === 'detail' && selectedRecipe && (
-          <RecipeDetail recipe={selectedRecipe} />
+          <div className="container mx-auto px-8 py-8">
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-2 text-slate-300 hover:text-indigo-400 transition-colors duration-200 mb-6"
+            >
+              ← Back to Recipes
+            </button>
+            <RecipeDetail 
+              recipe={selectedRecipe} 
+              onLike={handleLikeRecipe}
+              isLiked={isRecipeLiked(selectedRecipe.id)}
+            />
+          </div>
         )}
         
         {currentView === 'scan-dish' && (
@@ -325,28 +352,58 @@ function App() {
         )}
         
         {currentView === 'my-recipes' && (
-          <div className="container mx-auto px-8 py-16">
-            <div className="text-center">
-              <h1 className="text-4xl font-bold text-white mb-4">My Recipes</h1>
-              <p className="text-slate-300 text-lg mb-8">
-                Your saved and created recipes will appear here.
-              </p>
-              <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-12 border border-slate-700/50">
-                <div className="text-6xl mb-4">📚</div>
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  No recipes saved yet
-                </h3>
-                <p className="text-slate-400 mb-6">
-                  Start creating recipes to build your personal collection
-                </p>
-                <button
-                  onClick={() => setCurrentView('generator')}
-                  className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200"
-                >
-                  Create Your First Recipe
-                </button>
+          <div className="container mx-auto px-8 py-8">
+            <h1 className="text-4xl font-bold text-white mb-8">My Recipes</h1>
+            
+            {likedRecipes.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {likedRecipes.map((recipe) => (
+                  <div
+                    key={recipe.id}
+                    onClick={() => handleRecipeSelect(recipe)}
+                    className="bg-slate-800/80 backdrop-blur-sm rounded-xl overflow-hidden border border-indigo-500/30 hover:border-indigo-400/50 transition-all duration-300 cursor-pointer hover:scale-105 hover:shadow-xl hover:shadow-indigo-500/20"
+                  >
+                    <div className="relative">
+                      <img
+                        src={recipe.image}
+                        alt={recipe.name}
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="absolute top-3 right-3">
+                        <Heart size={20} className="text-red-400" fill="currentColor" />
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-semibold text-white mb-2">{recipe.name}</h3>
+                      <p className="text-slate-300 text-sm mb-4">{recipe.cuisine} cuisine</p>
+                      <div className="flex items-center justify-between text-slate-400 text-sm">
+                        <span>{recipe.cookingTime + recipe.prepTime}m</span>
+                        <span>{recipe.servings} servings</span>
+                        <span>{recipe.nutrition.calories} cal</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
+            ) : (
+              <div className="text-center">
+                <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-12 border border-slate-700/50">
+                  <div className="text-6xl mb-4">📚</div>
+                  <h3 className="text-xl font-semibold text-white mb-2">
+                    No recipes saved yet
+                  </h3>
+                  <p className="text-slate-400 mb-6">
+                    Like recipes to add them to your personal collection
+                  </p>
+                  <button
+                    onClick={() => setCurrentView('generator')}
+                    className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200"
+                  >
+                    Create Your First Recipe
+                  </button>
+                </p>
+              </div>
+            )}
           </div>
         )}
         
