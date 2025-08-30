@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Lock, User, Eye, EyeOff, BookOpen } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, BookOpen, Menu } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface AuthPageProps {
