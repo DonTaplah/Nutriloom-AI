@@ -62,7 +62,13 @@ export default function PricingPage({ onSelectPlan, currentPlan }: PricingPagePr
                 <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
                   <X className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-slate-400 text-lg">AI Voice Assistant</span>
+                <span className="text-slate-400 text-lg">SYD - Scan Your Dish (AI Image Analysis)</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <X className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-slate-400 text-lg">AI Voice Assistant (Text-to-Speech)</span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
@@ -74,13 +80,25 @@ export default function PricingPage({ onSelectPlan, currentPlan }: PricingPagePr
                 <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
                   <X className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-slate-400 text-lg">Access to premium recipe features</span>
+                <span className="text-slate-400 text-lg">Legendary skill level recipes</span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
                   <X className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-slate-400 text-lg">Priority support</span>
+                <span className="text-slate-400 text-lg">Advanced nutritional analysis</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <X className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-slate-400 text-lg">Recipe complexity & sophistication</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <X className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-slate-400 text-lg">Priority customer support</span>
               </li>
             </ul>
 
@@ -122,48 +140,58 @@ export default function PricingPage({ onSelectPlan, currentPlan }: PricingPagePr
                 <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
                   <Check className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-slate-300 text-lg">
-                  <span className="line-through text-slate-500">Up to 3 recipe generations per day</span>
-                </span>
+                <span className="text-slate-300 text-lg">Everything in Basic, plus:</span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
                   <Check className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-slate-300 text-lg">Advanced Recipe Generation Engine</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Check className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-slate-300 text-lg">Community support</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Check className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-slate-300 text-lg">AI Voice Assistant</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Check className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-slate-300 text-lg">Unlimited recipe generations</span>
+                <span className="text-slate-300 text-lg">SYD - Scan Your Dish (AI Image Analysis)</span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
                   <Check className="w-4 h-4 text-white" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-slate-300 text-lg">Access to premium recipe features</span>
-                  <span className="text-slate-400 text-sm">(Legendary - sophisticated culinary artistry)</span>
+                  <span className="text-slate-300 text-lg">Complete nutritional breakdown & health scoring</span>
+                  <span className="text-slate-400 text-sm">(Ingredient identification, dietary flags, allergens)</span>
                 </div>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
                   <Check className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-slate-300 text-lg">Priority support</span>
+                <span className="text-slate-300 text-lg">AI Voice Assistant (Text-to-Speech for recipes)</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Check className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-slate-300 text-lg">Unlimited recipe generations (no daily limits)</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Check className="w-4 h-4 text-white" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-slate-300 text-lg">Legendary skill level recipes</span>
+                  <span className="text-slate-400 text-sm">(Restaurant-quality techniques & sophisticated culinary artistry)</span>
+                </div>
+              </li>
+              <li className="flex items-center gap-3">
+                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Check className="w-4 h-4 text-white" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-slate-300 text-lg">Advanced recipe complexity & detail</span>
+                  <span className="text-slate-400 text-sm">(3x more detailed instructions & professional techniques)</span>
+                </div>
+              </li>
+              <li className="flex items-center gap-3">
+                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Check className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-slate-300 text-lg">Priority customer support</span>
               </li>
             </ul>
 
