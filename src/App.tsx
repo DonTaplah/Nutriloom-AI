@@ -11,9 +11,12 @@ import RecipeList from './components/RecipeList';
 import RecipeDetail from './components/RecipeDetail';
 import RecipeGenerator from './components/RecipeGenerator';
 import ScanYourDishPage from './components/VideoUploadPage';
+import ContactPage from './components/ContactPage';
+import LocalBusinessSchema from './components/SEO/LocalBusinessSchema';
+import LocalSEOHead from './components/SEO/LocalSEOHead';
 import { Recipe } from './types/Recipe';
 
-type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing' | 'scan-dish' | 'generator' | 'my-recipes';
+type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing' | 'scan-dish' | 'generator' | 'my-recipes' | 'contact';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
@@ -138,6 +141,8 @@ function App() {
     } else if (currentView === 'scan-dish') {
       setCurrentView('home');
     } else if (currentView === 'my-recipes') {
+      setCurrentView('home');
+    } else if (currentView === 'contact') {
       setCurrentView('home');
     }
   };
@@ -274,6 +279,10 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900">
+      {/* Global SEO and Schema Markup */}
+      <LocalSEOHead />
+      <LocalBusinessSchema />
+      
       {/* Sidebar */}
       <Sidebar
         currentView={currentView}
@@ -282,6 +291,7 @@ function App() {
         onMyRecipes={handleMyRecipes}
         onPricing={() => setCurrentView('pricing')}
         onScanDish={() => setCurrentView('scan-dish')}
+        onContact={() => setCurrentView('contact')}
         user={appUser}
         onAuth={() => setCurrentView('auth')}
         isOpen={sidebarOpen}
@@ -412,6 +422,10 @@ function App() {
           </div>
         )}
         
+        {currentView === 'contact' && (
+          <ContactPage onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+        )}
+        
         {currentView === 'auth' && (
           <AuthPage
             onLogin={handleLogin}
@@ -425,12 +439,71 @@ function App() {
       </main>
       
       {/* Footer - appears on all pages */}
-      <footer className="lg:ml-64 bg-slate-900/95 backdrop-blur-sm border-t border-indigo-500/20 py-4">
+      <footer className="lg:ml-64 bg-slate-900/95 backdrop-blur-sm border-t border-indigo-500/20 py-6">
         <div className="container mx-auto px-4 lg:px-8 text-center">
-          <p className="text-slate-400 text-sm">
-            Nutriloom AI @2025🖤🤍RT
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            {/* Business Info */}
+            <div className="text-center md:text-left">
+              <h3 className="font-semibold text-white mb-3">Nutriloom AI</h3>
+              <p className="text-slate-400 text-sm leading-relaxed">
+                AI-powered recipe generation serving the San Francisco Bay Area and beyond.
+              </p>
+            </div>
+            
+            {/* Contact Info */}
+            <div className="text-center">
+              <h3 className="font-semibold text-white mb-3">Contact</h3>
+              <div className="space-y-1 text-slate-400 text-sm">
+                <div>123 Innovation Drive</div>
+                <div>San Francisco, CA 94105</div>
+                <div>
+                  <a href="tel:+1-555-NUTRI-AI" className="hover:text-indigo-400 transition-colors">
+                    +1-555-NUTRI-AI
+                  </a>
+                </div>
+                <div>
+                  <a href="mailto:nutriloomai@gmail.com" className="hover:text-indigo-400 transition-colors">
+                    nutriloomai@gmail.com
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+            {/* Quick Links */}
+            <div className="text-center md:text-right">
+              <h3 className="font-semibold text-white mb-3">Quick Links</h3>
+              <div className="space-y-1 text-slate-400 text-sm">
+                <div>
+                  <button 
+                    onClick={() => setCurrentView('contact')}
+                    className="hover:text-indigo-400 transition-colors"
+                  >
+                    Contact Us
+                  </button>
+                </div>
+                <div>
+                  <button 
+                    onClick={() => setCurrentView('pricing')}
+                    className="hover:text-indigo-400 transition-colors"
+                  >
+                    Pricing
+                  </button>
+                </div>
+                <div>
+                  <a href="mailto:support@nutriloomai.com" className="hover:text-indigo-400 transition-colors">
+                    Support
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="border-t border-slate-700 pt-4">
+            <p className="text-slate-400 text-sm mb-3">
+              Nutriloom AI @2025🖤🤍RT
+            </p>
           </p>
-          <div className="flex items-center justify-center gap-4 mt-3">
+          <div className="flex items-center justify-center gap-4">
             <a 
               href="https://www.instagram.com/nutriloomai" 
               target="_blank" 

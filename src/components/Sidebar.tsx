@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, BookOpen, Archive, CreditCard, Scan, Crown, X } from 'lucide-react';
+import { Home, BookOpen, Archive, CreditCard, Scan, Crown, X, Mail } from 'lucide-react';
 import { User } from '../types/User';
 
 interface SidebarProps {
@@ -9,6 +9,7 @@ interface SidebarProps {
   onMyRecipes: () => void;
   onPricing: () => void;
   onScanDish: () => void;
+  onContact: () => void;
   user: User | null;
   onAuth: () => void;
   isOpen: boolean;
@@ -22,6 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   onMyRecipes,
   onPricing,
   onScanDish,
+  onContact,
   user,
   onAuth,
   isOpen,
@@ -55,6 +57,13 @@ const Sidebar: React.FC<SidebarProps> = ({
       icon: CreditCard,
       onClick: onPricing,
       active: currentView === 'pricing'
+    },
+    {
+      id: 'contact',
+      label: 'Contact',
+      icon: Mail,
+      onClick: onContact,
+      active: currentView === 'contact'
     },
     {
       id: 'syd',

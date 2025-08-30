@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Edit3, Crown, Star, Sparkles, BookOpen, Shield, Archive, Scan, Menu } from 'lucide-react';
 import { User } from '../types/User';
+import LocationContent from './SEO/LocationContent';
+import LocalSEOHead from './SEO/LocalSEOHead';
+import GoogleBusinessIntegration from './SEO/GoogleBusinessIntegration';
 
 interface HomePageProps {
   onSearch: (ingredients: string[], cuisine: string) => void;
@@ -14,6 +17,19 @@ interface HomePageProps {
 
 const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, onScanDish, onPricing, onAuth, onToggleSidebar }) => {
   return (
+    <>
+      <LocalSEOHead
+        title="Nutriloom AI - AI Recipe Generator San Francisco"
+        description="Create personalized, nutritious recipes with AI technology in San Francisco. Serving the Bay Area with advanced meal planning and recipe generation."
+        keywords={[
+          "AI recipe generator San Francisco",
+          "meal planning Bay Area",
+          "nutrition app SF",
+          "personalized recipes California",
+          "healthy cooking AI"
+        ]}
+      />
+      
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900 relative overflow-hidden">
       {/* Mobile Header */}
       <div className="lg:hidden flex items-center justify-between p-4 bg-slate-900/95 backdrop-blur-sm border-b border-indigo-500/20">
@@ -430,8 +446,17 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
             No credit card required for free recipes • Upgrade anytime
           </p>
         </div>
+
+        {/* Local Content Section */}
+        <LocationContent showStats={true} showTestimonials={true} />
+        
+        {/* Google Business Integration */}
+        <div className="mt-16 lg:mt-24">
+          <GoogleBusinessIntegration showReviews={true} showPhotos={true} />
+        </div>
       </div>
     </div>
+    </>
   );
 };
 
