@@ -67,7 +67,7 @@ const RecipeList: React.FC<RecipeListProps> = ({
                     key={index}
                     className="inline-block px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs"
                   >
-                    {ingredient}
+                    {typeof ingredient === 'string' ? ingredient : ingredient.name}
                   </span>
                 ))}
               </div>
