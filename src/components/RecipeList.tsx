@@ -40,8 +40,17 @@ const RecipeList: React.FC<RecipeListProps> = ({
   return (
     <div className="max-w-7xl mx-auto">
       {/* Header */}
-          </div>
-          <div className="flex items-center gap-2 text-sm text-slate-400">
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">
+            Recipe Suggestions
+          </h1>
+        </div>
+        <div className="flex items-center gap-2 text-sm text-slate-400">
+          <TrendingUp size={16} />
+          <span>AI-powered matches</span>
+        </div>
+      </div>
             <TrendingUp size={16} />
             <span>AI-powered matches</span>
           </div>
