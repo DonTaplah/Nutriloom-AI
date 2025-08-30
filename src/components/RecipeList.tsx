@@ -40,16 +40,22 @@ const RecipeList: React.FC<RecipeListProps> = ({
   return (
     <div className="max-w-7xl mx-auto">
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-2">
-              Recipe Suggestions
-            </h1>
           </div>
           <div className="flex items-center gap-2 text-sm text-slate-400">
             <TrendingUp size={16} />
             <span>AI-powered matches</span>
+          </div>
+        </div>
+        
+        {/* Recipe Count and Disclaimer */}
+        <div className="mb-4">
+          <p className="text-slate-300 mb-3">
+            Found {Array.isArray(recipes) ? recipes.length : 0} recipes using your ingredients
+          </p>
+          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg px-4 py-3">
+            <p className="text-yellow-400 text-sm">
+              <strong>Disclaimer:</strong> Recipe photos may not match the actual recipe. Still working on it. Thanks!
+            </p>
           </div>
         </div>
 
