@@ -477,8 +477,10 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                         <span className="ml-1">to access Legendary recipes.</span>
                       </>
                     ) : (
-                      <span className="hidden sm:inline">Restaurant-quality techniques and sophisticated culinary artistry.</span>
-                      <span className="sm:hidden">Restaurant-quality techniques.</span>
+                      <>
+                        <span className="hidden sm:inline">Restaurant-quality techniques and sophisticated culinary artistry.</span>
+                        <span className="sm:hidden">Restaurant-quality techniques.</span>
+                      </>
                     )}
                   </p>
                 </div>
