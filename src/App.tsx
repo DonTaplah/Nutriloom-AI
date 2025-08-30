@@ -17,6 +17,7 @@ type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing' | 'scan-dish' | '
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, loading: authLoading, error: authError, signIn, signUp, signOut, updateUsageStats, upgradeToPro, setError: setAuthError } = useAuth();
   const { savedRecipes, saveRecipe, removeRecipe, isRecipeSaved } = useRecipes(user);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -283,10 +284,12 @@ function App() {
         onScanDish={() => setCurrentView('scan-dish')}
         user={appUser}
         onAuth={() => setCurrentView('auth')}
+        isOpen={sidebarOpen}
+        onToggle={() => setSidebarOpen(!sidebarOpen)}
       />
       
       {/* Main Content */}
-      <main className="ml-64 min-h-screen">
+      <main className="lg:ml-64 min-h-screen">
         {currentView === 'home' && (
           <HomePage 
             onSearch={handleHomePageSearch} 
@@ -295,6 +298,7 @@ function App() {
             onScanDish={() => setCurrentView('scan-dish')}
             onPricing={() => setCurrentView('pricing')}
             onAuth={() => setCurrentView('auth')}
+            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           />
         )}
         
@@ -304,6 +308,7 @@ function App() {
             user={appUser}
             onPricing={() => setCurrentView('pricing')}
             onAuth={() => setCurrentView('auth')}
+            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           />
         )}
         
@@ -311,6 +316,7 @@ function App() {
           <PricingPage 
             onSelectPlan={handleSelectPlan}
             currentPlan={appUser?.plan}
+            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           />
         )}
         
@@ -320,11 +326,12 @@ function App() {
             onRecipeSelect={handleRecipeSelect}
             searchIngredients={searchIngredients}
             selectedCuisine={selectedCuisine}
+            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           />
         )}
         
         {currentView === 'detail' && selectedRecipe && (
-          <div className="container mx-auto px-8 py-8">
+          <div className="container mx-auto px-4 lg:px-8 py-8">
             <button
               onClick={handleBack}
               className="flex items-center gap-2 text-slate-300 hover:text-indigo-400 transition-colors duration-200 mb-6"
@@ -335,6 +342,7 @@ function App() {
               recipe={selectedRecipe} 
               onLike={handleLikeRecipe}
               isLiked={isRecipeLiked(selectedRecipe.id)}
+              onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
             />
           </div>
         )}
@@ -344,11 +352,12 @@ function App() {
             onBack={handleBack} 
             user={appUser}
             onPricing={() => setCurrentView('pricing')}
+            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           />
         )}
         
         {currentView === 'my-recipes' && (
-          <div className="container mx-auto px-8 py-8">
+          <div className="container mx-auto px-4 lg:px-8 py-8">
             <h1 className="text-4xl font-bold text-white mb-8">My Recipes</h1>
             
             {savedRecipes.length > 0 ? (
@@ -409,14 +418,15 @@ function App() {
             onSignup={handleSignup}
             isLoading={authLoading}
             error={authError}
+            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           />
         )}
       
       </main>
       
       {/* Footer - appears on all pages */}
-      <footer className="ml-64 bg-slate-900/95 backdrop-blur-sm border-t border-indigo-500/20 py-4">
-        <div className="container mx-auto px-8 text-center">
+      <footer className="lg:ml-64 bg-slate-900/95 backdrop-blur-sm border-t border-indigo-500/20 py-4">
+        <div className="container mx-auto px-4 lg:px-8 text-center">
           <p className="text-slate-400 text-sm">
             Nutriloom AI @2025🖤🤍RT
           </p>
@@ -448,6 +458,14 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 }

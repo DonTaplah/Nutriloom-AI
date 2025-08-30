@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, BookOpen, Archive, CreditCard, Scan, Crown } from 'lucide-react';
+import { Home, BookOpen, Archive, CreditCard, Scan, Crown, X } from 'lucide-react';
 import { User } from '../types/User';
 
 interface SidebarProps {
@@ -11,6 +11,8 @@ interface SidebarProps {
   onScanDish: () => void;
   user: User | null;
   onAuth: () => void;
+  isOpen: boolean;
+  onToggle: () => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -21,7 +23,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   onPricing,
   onScanDish,
   user,
-  onAuth
+  onAuth,
+  isOpen,
+  onToggle
 }) => {
   const menuItems = [
     {
@@ -63,8 +67,25 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
   ];
 
+  const handleMenuClick = (onClick: () => void) => {
+    onClick();
+    // Close sidebar on mobile after navigation
+    if (window.innerWidth < 1024) {
+      onToggle();
+    }
+  };
   return (
-    <div className="w-64 bg-slate-900/95 backdrop-blur-sm border-r border-indigo-500/20 h-screen fixed left-0 top-0 z-40">
+    <div className={`w-64 bg-slate-900/95 backdrop-blur-sm border-r border-indigo-500/20 h-screen fixed left-0 top-0 z-50 transform transition-transform duration-300 ease-in-out ${
+      isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+    }`}>
+      {/* Mobile Close Button */}
+      <button
+        onClick={onToggle}
+        className="lg:hidden absolute top-4 right-4 p-2 text-slate-400 hover:text-white transition-colors duration-200"
+      >
+        <X size={20} />
+      </button>
+
       {/* Logo Section */}
       <div className="p-6 border-b border-slate-700/50">
         <div className="flex items-center gap-3">
@@ -84,7 +105,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           {menuItems.map((item) => (
             <li key={item.id}>
               <button
-                onClick={item.onClick}
+                onClick={() => handleMenuClick(item.onClick)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 ${
                   item.active
                     ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30'
@@ -134,7 +155,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
             {user?.plan === 'free' && (
               <button
-                onClick={onPricing}
+                onClick={() => handleMenuClick(onPricing)}
                 className="w-full px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg text-sm font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200"
               >
                 Upgrade to Pro
@@ -143,7 +164,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           </div>
         ) : (
           <button
-            onClick={onAuth}
+            onClick={() => handleMenuClick(onAuth)}
             className="w-full px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200"
           >
             Sign In

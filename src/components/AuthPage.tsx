@@ -6,9 +6,10 @@ interface AuthPageProps {
   onSignup: (email: string, password: string, name: string) => Promise<void>;
   isLoading: boolean;
   error: string | null;
+  onToggleSidebar: () => void;
 }
 
-export default function AuthPage({ onLogin, onSignup, isLoading, error }: AuthPageProps) {
+export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggleSidebar }: AuthPageProps) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -43,16 +44,16 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error }: AuthPa
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900 flex items-center justify-center p-4">
-      <div className="bg-slate-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-md border border-indigo-500/30">
+      <div className="bg-slate-800/80 backdrop-blur-sm p-6 lg:p-8 rounded-2xl shadow-2xl w-full max-w-md border border-indigo-500/30">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
             <div className="flex items-center gap-3">
               <img 
                 src="/An_AI_chef_with_a_spoon_and_a_fork_in_the_background-removebg-preview.png" 
                 alt="Nutriloom AI Chef" 
-                className="w-12 h-12 object-contain"
+                className="w-10 lg:w-12 h-10 lg:h-12 object-contain"
               />
-              <h1 className="text-2xl font-bold text-white">Nutriloom AI</h1>
+              <h1 className="text-xl lg:text-2xl font-bold text-white">Nutriloom AI</h1>
             </div>
           </div>
           <p className="text-slate-300 text-sm">Weaving nutrition into every meal</p>
@@ -61,7 +62,7 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error }: AuthPa
         <div className="flex mb-6">
           <button
             onClick={() => setIsLogin(true)}
-            className={`flex-1 py-2 px-4 rounded-l-lg font-medium transition-colors ${
+            className={`flex-1 py-2 px-4 rounded-l-lg font-medium transition-colors text-sm lg:text-base ${
               isLogin
                 ? 'bg-indigo-600 text-white'
                 : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
@@ -71,7 +72,7 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error }: AuthPa
           </button>
           <button
             onClick={() => setIsLogin(false)}
-            className={`flex-1 py-2 px-4 rounded-r-lg font-medium transition-colors ${
+            className={`flex-1 py-2 px-4 rounded-r-lg font-medium transition-colors text-sm lg:text-base ${
               !isLogin
                 ? 'bg-indigo-600 text-white'
                 : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
@@ -96,7 +97,7 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error }: AuthPa
                 placeholder="Full Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm lg:text-base"
                 required={!isLogin}
               />
             </div>
@@ -109,7 +110,7 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error }: AuthPa
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm lg:text-base"
               required
             />
           </div>
@@ -121,7 +122,7 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error }: AuthPa
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full pl-10 pr-12 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full pl-10 pr-12 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm lg:text-base"
               required
             />
             <button
@@ -136,7 +137,7 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error }: AuthPa
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm lg:text-base"
           >
             {isLoading ? 'Please wait...' : isLogin ? 'Sign In' : 'Create Account'}
           </button>
@@ -154,7 +155,7 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error }: AuthPa
 
           <button
             onClick={handleGoogleSignIn}
-            className="mt-4 w-full flex items-center justify-center px-4 py-3 border border-slate-600 rounded-lg bg-slate-700/50 hover:bg-slate-600/50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-800 transition-colors"
+            className="mt-4 w-full flex items-center justify-center px-4 py-3 border border-slate-600 rounded-lg bg-slate-700/50 hover:bg-slate-600/50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-800 transition-colors text-sm lg:text-base"
           >
             <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
               <path

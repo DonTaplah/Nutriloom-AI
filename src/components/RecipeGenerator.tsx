@@ -10,9 +10,10 @@ interface RecipeGeneratorProps {
   user: User;
   onPricing: () => void;
   onAuth: () => void;
+  onToggleSidebar: () => void;
 }
 
-const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, user, onPricing, onAuth }) => {
+const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, user, onPricing, onAuth, onToggleSidebar }) => {
   const [ingredientsText, setIngredientsText] = useState<string>('');
   const [selectedCuisine, setSelectedCuisine] = useState<string>('');
   const [selectedDishType, setSelectedDishType] = useState<string>('any');
@@ -290,14 +291,26 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900 py-4 lg:py-8">
+      {/* Mobile Header */}
+      <div className="lg:hidden flex items-center justify-between p-4 bg-slate-900/95 backdrop-blur-sm border-b border-indigo-500/20">
+        <button
+          onClick={onToggleSidebar}
+          className="p-2 text-slate-300 hover:text-white transition-colors duration-200"
+        >
+          <Menu size={24} />
+        </button>
+        <h1 className="text-lg font-bold gradient-text-primary">Recipe Generator</h1>
+        <div className="w-10"></div>
+      </div>
+
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4">
+          <h1 className="text-3xl lg:text-4xl font-bold text-white mb-4 hidden lg:block">
             Ingredient Inventory & Preferences
           </h1>
-          <p className="text-slate-300 text-lg mb-4">
+          <p className="text-slate-300 text-base lg:text-lg mb-4">
             List your ingredients, optionally specify cuisine, skill level, and dish type, and our AI will design a bespoke recipe.
           </p>
           {!user.isAuthenticated && (
@@ -312,15 +325,15 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
 
         {/* Main Form */}
         <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl border border-slate-700/50 overflow-hidden">
-          <div className="p-8 space-y-8">
+          <div className="p-4 lg:p-8 space-y-6 lg:space-y-8">
             {/* Available Ingredients */}
             <div>
-              <h2 className="text-xl font-semibold text-white mb-3">Available Ingredients</h2>
+              <h2 className="text-lg lg:text-xl font-semibold text-white mb-3">Available Ingredients</h2>
               <textarea
                 value={ingredientsText}
                 onChange={(e) => setIngredientsText(e.target.value)}
                 placeholder="e.g., chicken breast, wild mushrooms, truffle oil, arborio rice, fresh thyme"
-                className="w-full h-24 px-4 py-3 bg-slate-900/80 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 resize-none"
+                className="w-full h-20 lg:h-24 px-4 py-3 bg-slate-900/80 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 resize-none text-sm lg:text-base"
               />
               <p className="text-slate-400 text-sm mt-2">
                 Separate ingredients by commas or new lines.
@@ -335,7 +348,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                     className="flex items-center gap-1 px-3 py-1 bg-slate-700/60 text-slate-300 rounded-lg text-sm hover:bg-slate-600/60 hover:text-white transition-all duration-200"
                   >
                     <RefreshCw size={14} />
-                    Refresh
+                    <span className="hidden sm:inline">Refresh</span>
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -343,7 +356,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                     <button
                       key={index}
                       onClick={() => addIngredient(ingredient)}
-                      className="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm border border-indigo-500/30 hover:bg-indigo-500/30 hover:text-indigo-200 transition-all duration-200"
+                      className="px-2 lg:px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-xs lg:text-sm border border-indigo-500/30 hover:bg-indigo-500/30 hover:text-indigo-200 transition-all duration-200"
                     >
                       + {ingredient}
                     </button>
@@ -356,16 +369,16 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
             </div>
 
             {/* Cuisine and Dish Type Row */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
               {/* Optional Cuisine Culture */}
               <div>
-                <h3 className="text-lg font-semibold text-white mb-3">
+                <h3 className="text-base lg:text-lg font-semibold text-white mb-3">
                   Optional: Cuisine Culture
                 </h3>
                 <select
                   value={selectedCuisine}
                   onChange={(e) => setSelectedCuisine(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-900/80 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-4 py-3 bg-slate-900/80 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 text-sm lg:text-base"
                 >
                   {cuisines.map((cuisine) => (
                     <option key={cuisine.value} value={cuisine.value} className="bg-slate-800">
@@ -380,13 +393,13 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
 
               {/* Optional Dish Type */}
               <div>
-                <h3 className="text-lg font-semibold text-white mb-3">
+                <h3 className="text-base lg:text-lg font-semibold text-white mb-3">
                   Optional: Dish Type
                 </h3>
                 <select
                   value={selectedDishType}
                   onChange={(e) => setSelectedDishType(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-900/80 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full px-4 py-3 bg-slate-900/80 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-indigo-500 text-sm lg:text-base"
                 >
                   {dishTypes.map((dishType) => (
                     <option key={dishType.value} value={dishType.value} className="bg-slate-800">
@@ -402,11 +415,11 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
 
             {/* Recipe Skill Level */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-3">Recipe Skill Level</h3>
+              <h3 className="text-base lg:text-lg font-semibold text-white mb-3">Recipe Skill Level</h3>
               <select
                 value={skillLevel}
                 onChange={(e) => setSkillLevel(e.target.value as 'beginner' | 'pro' | 'legendary')}
-                className="w-full px-4 py-3 bg-slate-900/80 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-4 py-3 bg-slate-900/80 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-indigo-500 text-sm lg:text-base"
               >
                 <option value="beginner" className="bg-slate-800">Amateur (Default)</option>
                 <option value="pro" className="bg-slate-800">Professional</option>
@@ -420,7 +433,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
             </div>
 
             {/* Premium Recipe Checkbox */}
-            <div className="border-t border-slate-700 pt-6">
+            <div className="border-t border-slate-700 pt-4 lg:pt-6">
               <div className="flex items-start gap-3">
                 <input
                   type="checkbox"
@@ -431,17 +444,20 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                   className="mt-1 w-4 h-4 text-indigo-600 bg-slate-900 border-slate-600 rounded focus:ring-indigo-500 focus:ring-2 disabled:opacity-50"
                 />
                 <div className="flex-1">
-                  <label htmlFor="premium-recipe" className="flex items-center gap-2 text-white font-medium cursor-pointer">
+                  <label htmlFor="premium-recipe" className="flex items-center gap-2 text-white font-medium cursor-pointer text-sm lg:text-base">
                     <Star className="w-5 h-5 text-yellow-400" />
-                    Generate Premium (Legendary) Recipe
+                    <span className="hidden sm:inline">Generate Premium (Legendary) Recipe</span>
+                    <span className="sm:hidden">Premium Recipe</span>
                     {(!user.isAuthenticated || user.plan === 'free') && (
-                      <span className="px-2 py-1 bg-indigo-600 text-white text-xs rounded-full">
-                        Pro Only - Login Required
+                      <span className="px-2 py-1 bg-indigo-600 text-white text-xs rounded-full whitespace-nowrap">
+                        <span className="hidden sm:inline">Pro Only - Login Required</span>
+                        <span className="sm:hidden">Pro Only</span>
                       </span>
                     )}
                   </label>
                   <p className="text-slate-400 text-sm mt-1">
-                    Unlock "Five Stars Diner" level recipes. 
+                    <span className="hidden sm:inline">Unlock "Five Stars Diner" level recipes.</span>
+                    <span className="sm:hidden">Unlock premium recipes.</span>
                     {!user.isAuthenticated ? (
                       <>
                         <span className="text-blue-400 hover:text-blue-300 cursor-pointer ml-1" onClick={onAuth}>
@@ -461,7 +477,8 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                         <span className="ml-1">to access Legendary recipes.</span>
                       </>
                     ) : (
-                      'Restaurant-quality techniques and sophisticated culinary artistry.'
+                      <span className="hidden sm:inline">Restaurant-quality techniques and sophisticated culinary artistry.</span>
+                      <span className="sm:hidden">Restaurant-quality techniques.</span>
                     )}
                   </p>
                 </div>
@@ -515,9 +532,10 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                   <div className="mt-3 pt-3 border-t border-blue-500/30">
                     <button
                       onClick={onPricing}
-                      className="w-full px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200"
+                      className="w-full px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 text-sm lg:text-base"
                     >
-                      Upgrade to Pro for Unlimited Generations
+                      <span className="hidden sm:inline">Upgrade to Pro for Unlimited Generations</span>
+                      <span className="sm:hidden">Upgrade to Pro</span>
                     </button>
                   </div>
                 )}
@@ -525,7 +543,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
             )}
 
             {/* Generate Button */}
-            <div className="border-t border-slate-700 pt-6">
+            <div className="border-t border-slate-700 pt-4 lg:pt-6">
               <button
                 onClick={generateRecipes}
                 disabled={
@@ -533,7 +551,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                   ingredientsText.trim().length === 0 || 
                   (user.isAuthenticated && user.plan === 'free' && getRemainingGenerations() === 0)
                 }
-                className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-200 ${
+                className={`w-full py-3 lg:py-4 rounded-xl font-semibold text-base lg:text-lg transition-all duration-200 ${
                   isGenerating || 
                   ingredientsText.trim().length === 0 || 
                   (user.isAuthenticated && user.plan === 'free' && getRemainingGenerations() === 0)
@@ -546,19 +564,31 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                 {isGenerating ? (
                   <div className="flex items-center justify-center gap-2">
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Generating Recipe...</span>
+                    <span className="text-sm lg:text-base">Generating Recipe...</span>
                   </div>
                 ) : user.isAuthenticated && user.plan === 'free' && getRemainingGenerations() === 0 ? (
                   <div className="flex items-center justify-center gap-2">
-                    <span>Monthly Limit Reached - Upgrade to Pro</span>
+                    <span className="text-sm lg:text-base">
+                      <span className="hidden sm:inline">Monthly Limit Reached - Upgrade to Pro</span>
+                      <span className="sm:hidden">Limit Reached - Upgrade</span>
+                    </span>
                   </div>
                 ) : (
                   <div className="flex items-center justify-center gap-2">
                     <Sparkles size={20} />
-                    <span>
+                    <span className="text-sm lg:text-base">
                       {generatePremium && user.isAuthenticated && user.plan === 'pro' 
-                        ? 'Generate Premium Recipe' 
-                        : `Generate ${skillLevel === 'beginner' ? 'Amateur' : skillLevel.charAt(0).toUpperCase() + skillLevel.slice(1)} Recipe`
+                        ? (
+                          <>
+                            <span className="hidden sm:inline">Generate Premium Recipe</span>
+                            <span className="sm:hidden">Generate Premium</span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="hidden sm:inline">{`Generate ${skillLevel === 'beginner' ? 'Amateur' : skillLevel.charAt(0).toUpperCase() + skillLevel.slice(1)} Recipe`}</span>
+                            <span className="sm:hidden">Generate Recipe</span>
+                          </>
+                        )
                       }
                     </span>
                   </div>
@@ -570,13 +600,13 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
 
         {/* Pro Upgrade Section */}
         {(!user.isAuthenticated || user.plan === 'free') && (
-          <div className="mt-8 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 rounded-2xl p-8">
+          <div className="mt-6 lg:mt-8 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 rounded-2xl p-6 lg:p-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Crown size={32} className="text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Unlock Premium Features</h3>
-              <p className="text-slate-300 mb-6 max-w-2xl mx-auto">
+              <h3 className="text-xl lg:text-2xl font-bold text-white mb-2">Unlock Premium Features</h3>
+              <p className="text-slate-300 mb-6 max-w-2xl mx-auto text-sm lg:text-base">
                 Upgrade to Pro for Legendary recipes, SYD dish scanning, unlimited generations, 
                 and advanced culinary techniques that transform your cooking.
               </p>
@@ -584,7 +614,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                 {user.isAuthenticated ? (
                   <button 
                     onClick={onPricing}
-                    className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                    className="px-6 lg:px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl text-sm lg:text-base"
                   >
                     Upgrade to Pro
                   </button>
@@ -592,13 +622,13 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                   <>
                     <button 
                       onClick={onAuth}
-                      className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                      className="px-6 lg:px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl text-sm lg:text-base"
                     >
                       Sign In
                     </button>
                     <button 
                       onClick={onPricing}
-                      className="px-8 py-3 bg-slate-700/60 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-600/60 hover:text-white transition-all duration-200"
+                      className="px-6 lg:px-8 py-3 bg-slate-700/60 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-600/60 hover:text-white transition-all duration-200 text-sm lg:text-base"
                     >
                       View Pricing
                     </button>
@@ -610,9 +640,9 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
         )}
 
         {/* Features Info */}
-        <div className="mt-8 grid md:grid-cols-2 gap-6">
-          <div className="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50">
-            <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+        <div className="mt-6 lg:mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+          <div className="bg-slate-800/60 backdrop-blur-sm rounded-xl p-4 lg:p-6 border border-slate-700/50">
+            <h3 className="text-base lg:text-lg font-semibold text-white mb-3 flex items-center gap-2">
               <ChefHat className="w-5 h-5 text-indigo-400" />
               AI Recipe Generation
             </h3>
@@ -622,8 +652,8 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
             </p>
           </div>
 
-          <div className="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50">
-            <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+          <div className="bg-slate-800/60 backdrop-blur-sm rounded-xl p-4 lg:p-6 border border-slate-700/50">
+            <h3 className="text-base lg:text-lg font-semibold text-white mb-3 flex items-center gap-2">
               <Star className="w-5 h-5 text-yellow-400" />
               Premium Quality
             </h3>
