@@ -458,17 +458,12 @@ function App() {
       {/* Footer */}
       <footer className="lg:ml-64 bg-slate-900/95 backdrop-blur-sm border-t border-indigo-500/20 py-8">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <img 
-                src="/An_AI_chef_with_a_spoon_and_a_fork_in_the_background-removebg-preview.png" 
-                alt="Nutriloom AI" 
-                className="w-6 h-6 object-contain"
-              />
-              <span className="text-white font-semibold">Nutriloom AI</span>
+          <div className="text-center space-y-4">
+            <div className="text-white font-semibold text-lg">
+              NutriloomAI@2025 🖤🤍RT
             </div>
             
-            <div className="flex items-center gap-6">
+            <div className="flex items-center justify-center gap-6">
               <a href="https://www.instagram.com/nutriloomai" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-pink-400 transition-colors">
                 <Instagram size={20} />
               </a>
@@ -478,12 +473,6 @@ function App() {
               <a href="mailto:nutriloomai@gmail.com" className="text-slate-400 hover:text-indigo-400 transition-colors">
                 <Mail size={20} />
               </a>
-            </div>
-            
-            <div className="flex items-center gap-1 text-slate-400 text-sm">
-              <span>Made with</span>
-              <Heart size={16} className="text-red-400" fill="currentColor" />
-              <span>by Nutriloom AI</span>
             </div>
           </div>
         </div>
