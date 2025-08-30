@@ -93,18 +93,18 @@ function App() {
     }
   };
 
-  const handleSearch = (ingredients: string[], cuisine: string, aiRecipes?: Recipe[]) => {
+  const handleHomePageSearch = (ingredients: string[], cuisine: string) => {
     setSearchIngredients(ingredients);
     setSelectedCuisine(cuisine);
-    
-    if (aiRecipes) {
-      // Use AI-generated recipes
-      setRecipes(aiRecipes);
-    } else {
-      // Fallback to mock recipes
-      const generatedRecipes = generateRecipes(ingredients, cuisine);
-      setRecipes(generatedRecipes);
-    }
+    const generatedRecipes = generateRecipes(ingredients, cuisine);
+    setRecipes(generatedRecipes);
+    setCurrentView('recipes');
+  };
+
+  const handleGeneratedRecipes = (ingredients: string[], cuisine: string, aiRecipes: Recipe[]) => {
+    setSearchIngredients(ingredients);
+    setSelectedCuisine(cuisine);
+    setRecipes(aiRecipes);
     setCurrentView('recipes');
   };
 
@@ -278,7 +278,7 @@ function App() {
       <main className="ml-64 min-h-screen">
         {currentView === 'home' && (
           <HomePage 
-            onSearch={handleSearch} 
+            onSearch={handleHomePageSearch} 
             user={user} 
             onRecipeGenerator={() => setCurrentView('generator')}
             onScanDish={() => setCurrentView('scan-dish')}
@@ -289,7 +289,7 @@ function App() {
         
         {currentView === 'generator' && (
           <RecipeGenerator 
-            onRecipesGenerated={handleSearch}
+            onRecipesGenerated={handleGeneratedRecipes}
             user={user}
             onPricing={() => setCurrentView('pricing')}
             onAuth={() => setCurrentView('auth')}
