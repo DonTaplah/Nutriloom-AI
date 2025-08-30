@@ -207,15 +207,15 @@ export default function PricingPage({ onSelectPlan, currentPlan }: PricingPagePr
         {/* Stats Section */}
         <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           <div className="space-y-2">
-            <div className="text-5xl font-bold gradient-text-white">10K+</div>
+            <div className="text-5xl font-bold gradient-text-white">1M+</div>
             <div className="gradient-text-slate text-lg">Recipes Created</div>
           </div>
           <div className="space-y-2">
-            <div className="text-5xl font-bold gradient-text-white">5K+</div>
-            <div className="gradient-text-slate text-lg">Happy Families</div>
+            <div className="text-5xl font-bold gradient-text-white">100k+</div>
+            <div className="gradient-text-slate text-lg">Happy Chef</div>
           </div>
           <div className="space-y-2">
-            <div className="text-5xl font-bold gradient-text-white">4.9★</div>
+            <div className="text-5xl font-bold gradient-text-white">4.2★</div>
             <div className="gradient-text-slate text-lg">Parent Rating</div>
           </div>
         </div>
