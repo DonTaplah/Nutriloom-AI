@@ -5,6 +5,10 @@ export interface User {
   plan: 'free' | 'pro';
   createdAt: Date;
   isAuthenticated: boolean;
+  usageStats: {
+    recipesGeneratedThisMonth: number;
+    lastResetDate: Date;
+  };
 }
 
 export interface AuthState {

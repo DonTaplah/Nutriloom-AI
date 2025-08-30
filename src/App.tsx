@@ -22,7 +22,11 @@ function App() {
     name: 'Demo User',
     plan: 'free',
     createdAt: new Date(),
-    isAuthenticated: false
+    isAuthenticated: false,
+    usageStats: {
+      recipesGeneratedThisMonth: 0,
+      lastResetDate: new Date()
+    }
   });
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -48,7 +52,11 @@ function App() {
         name: email.split('@')[0],
         plan: 'free',
         createdAt: new Date(),
-        isAuthenticated: true
+        isAuthenticated: true,
+        usageStats: {
+          recipesGeneratedThisMonth: 0,
+          lastResetDate: new Date()
+        }
       };
       
       setUser(mockUser);
@@ -75,7 +83,11 @@ function App() {
         name,
         plan: 'free',
         createdAt: new Date(),
-        isAuthenticated: true
+        isAuthenticated: true,
+        usageStats: {
+          recipesGeneratedThisMonth: 0,
+          lastResetDate: new Date()
+        }
       };
       
       setUser(mockUser);
@@ -106,6 +118,19 @@ function App() {
     setSearchIngredients(ingredients);
     setSelectedCuisine(cuisine);
     setRecipes(aiRecipes);
+    
+    // Update usage stats for free users
+    if (user && user.plan === 'free') {
+      const updatedUser = {
+        ...user,
+        usageStats: {
+          ...user.usageStats,
+          recipesGeneratedThisMonth: user.usageStats.recipesGeneratedThisMonth + 1
+        }
+      };
+      setUser(updatedUser);
+    }
+    
     setCurrentView('recipes');
   };
 

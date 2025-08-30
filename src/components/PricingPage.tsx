@@ -44,7 +44,7 @@ export default function PricingPage({ onSelectPlan, currentPlan }: PricingPagePr
                 <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
                   <Check className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-slate-300 text-lg">Up to 3 recipe generations per day</span>
+                <span className="text-slate-300 text-lg">5 recipe generations per month</span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">

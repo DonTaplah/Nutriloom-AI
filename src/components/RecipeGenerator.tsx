@@ -22,6 +22,51 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
   const [error, setError] = useState<string | null>(null);
   const [suggestedIngredients, setSuggestedIngredients] = useState<string[]>(() => getRandomIngredientSet());
 
+  // Check if it's a new month and reset usage if needed
+  React.useEffect(() => {
+    if (user.isAuthenticated && user.plan === 'free') {
+      const now = new Date();
+      const lastReset = new Date(user.usageStats.lastResetDate);
+      
+      // Check if we're in a new month
+      if (now.getMonth() !== lastReset.getMonth() || now.getFullYear() !== lastReset.getFullYear()) {
+        const updatedUser = {
+          ...user,
+          usageStats: {
+            recipesGeneratedThisMonth: 0,
+            lastResetDate: now
+          }
+        };
+        // This would normally be handled by the parent component
+        // For now, we'll just check in the generate function
+      }
+    }
+  }, [user]);
+
+  const getRemainingGenerations = () => {
+    if (!user.isAuthenticated || user.plan === 'pro') return null;
+    
+    const now = new Date();
+    const lastReset = new Date(user.usageStats.lastResetDate);
+    
+    // Check if we're in a new month
+    if (now.getMonth() !== lastReset.getMonth() || now.getFullYear() !== lastReset.getFullYear()) {
+      return 5; // Reset to full limit for new month
+    }
+    
+    return Math.max(0, 5 - user.usageStats.recipesGeneratedThisMonth);
+  };
+
+  const getNextResetDate = () => {
+    const now = new Date();
+    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    return nextMonth.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
+
   const refreshIngredients = () => {
     setSuggestedIngredients(getRandomIngredientSet());
   };
@@ -207,6 +252,15 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
     if (ingredients.length === 0) {
       setError('Please enter at least one ingredient');
       return;
+    }
+
+    // Check usage limits for free users
+    if (user.plan === 'free') {
+      const remaining = getRemainingGenerations();
+      if (remaining !== null && remaining <= 0) {
+        setError(`You've reached your monthly limit of 5 recipe generations. Your limit resets on ${getNextResetDate()}. Upgrade to Pro for unlimited generations.`);
+        return;
+      }
     }
 
     if (generatePremium && (!user.isAuthenticated || user.plan === 'free')) {
@@ -416,8 +470,57 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
 
             {/* Error Message */}
             {error && (
-              <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
+              <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm leading-relaxed">
                 {error}
+              </div>
+            )}
+
+            {/* Usage Stats for Free Users */}
+            {user.isAuthenticated && user.plan === 'free' && (
+              <div className="bg-blue-500/20 border border-blue-500/50 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-blue-300 font-medium">Monthly Usage</span>
+                  <span className="text-blue-400 text-sm">Free Plan</span>
+                </div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-blue-200">Recipes Generated:</span>
+                  <span className="text-blue-100 font-semibold">
+                    {getRemainingGenerations() !== null ? 5 - getRemainingGenerations()! : user.usageStats.recipesGeneratedThisMonth} / 5
+                  </span>
+                </div>
+                <div className="w-full bg-blue-900/50 rounded-full h-2 mb-3">
+                  <div
+                    className="bg-blue-400 h-2 rounded-full transition-all duration-300"
+                    style={{ 
+                      width: `${getRemainingGenerations() !== null 
+                        ? ((5 - getRemainingGenerations()!) / 5) * 100 
+                        : (user.usageStats.recipesGeneratedThisMonth / 5) * 100}%` 
+                    }}
+                  ></div>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-blue-300">
+                    {getRemainingGenerations() !== null && getRemainingGenerations()! > 0 
+                      ? `${getRemainingGenerations()} generations remaining`
+                      : getRemainingGenerations() === 0
+                      ? 'Monthly limit reached'
+                      : `${getRemainingGenerations() || 0} remaining`
+                    }
+                  </span>
+                  <span className="text-blue-400">
+                    Resets: {getNextResetDate()}
+                  </span>
+                </div>
+                {getRemainingGenerations() === 0 && (
+                  <div className="mt-3 pt-3 border-t border-blue-500/30">
+                    <button
+                      onClick={onPricing}
+                      className="w-full px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200"
+                    >
+                      Upgrade to Pro for Unlimited Generations
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
@@ -425,9 +528,15 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
             <div className="border-t border-slate-700 pt-6">
               <button
                 onClick={generateRecipes}
-                disabled={isGenerating || ingredientsText.trim().length === 0}
+                disabled={
+                  isGenerating || 
+                  ingredientsText.trim().length === 0 || 
+                  (user.isAuthenticated && user.plan === 'free' && getRemainingGenerations() === 0)
+                }
                 className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-200 ${
-                  isGenerating || ingredientsText.trim().length === 0
+                  isGenerating || 
+                  ingredientsText.trim().length === 0 || 
+                  (user.isAuthenticated && user.plan === 'free' && getRemainingGenerations() === 0)
                     ? 'bg-slate-600 text-slate-400 cursor-not-allowed'
                     : generatePremium && user.isAuthenticated && user.plan === 'pro'
                     ? 'bg-gradient-to-r from-yellow-600 to-orange-600 text-white hover:from-yellow-700 hover:to-orange-700 shadow-lg hover:shadow-xl'
@@ -438,6 +547,10 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                   <div className="flex items-center justify-center gap-2">
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     <span>Generating Recipe...</span>
+                  </div>
+                ) : user.isAuthenticated && user.plan === 'free' && getRemainingGenerations() === 0 ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <span>Monthly Limit Reached - Upgrade to Pro</span>
                   </div>
                 ) : (
                   <div className="flex items-center justify-center gap-2">
