@@ -121,7 +121,6 @@ const RecipeList: React.FC<RecipeListProps> = ({
             </select>
           </div>
         </div>
-      </div>
 
       {/* Recipe Grid */}
       {sortedAndFilteredRecipes.length > 0 ? (
