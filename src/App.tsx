@@ -368,6 +368,27 @@ function App() {
         
         {currentView === 'my-recipes' && (
           <div className="container mx-auto px-4 lg:px-8 py-8">
+            {/* Mobile Header */}
+            <div className="lg:hidden flex items-center justify-between mb-6 bg-slate-900/95 backdrop-blur-sm border border-indigo-500/20 rounded-xl p-4">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setSidebarOpen(!sidebarOpen)}
+                  className="p-2 text-slate-300 hover:text-white transition-colors duration-200"
+                >
+                  <Menu size={24} />
+                </button>
+              </div>
+              <h1 className="text-lg font-bold gradient-text-primary">My Recipes</h1>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setCurrentView('home')}
+                  className="p-2 text-slate-300 hover:text-white transition-colors duration-200"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            </div>
+            
             <h1 className="text-4xl font-bold text-white mb-8">My Recipes</h1>
             
             {savedRecipes.length > 0 ? (

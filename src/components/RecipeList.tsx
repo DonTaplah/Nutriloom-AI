@@ -43,12 +43,14 @@ const RecipeList: React.FC<RecipeListProps> = ({
     <div className="max-w-7xl mx-auto px-4 lg:px-8 py-4 lg:py-8">
       {/* Mobile Header */}
       <div className="lg:hidden flex items-center justify-between mb-6 bg-slate-900/95 backdrop-blur-sm border border-indigo-500/20 rounded-xl p-4">
-        <button
-          onClick={onToggleSidebar}
-          className="p-2 text-slate-300 hover:text-white transition-colors duration-200"
-        >
-          <Menu size={24} />
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onToggleSidebar}
+            className="p-2 text-slate-300 hover:text-white transition-colors duration-200"
+          >
+            <Menu size={24} />
+          </button>
+        </div>
         <h1 className="text-lg font-bold gradient-text-primary">Recipe Results</h1>
         <div className="w-10"></div>
       </div>

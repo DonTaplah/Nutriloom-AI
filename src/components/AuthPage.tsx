@@ -54,6 +54,20 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900 flex items-center justify-center p-4">
+      {/* Mobile Header */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-slate-900/95 backdrop-blur-sm border-b border-indigo-500/20">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onToggleSidebar}
+            className="p-2 text-slate-300 hover:text-white transition-colors duration-200"
+          >
+            <Menu size={24} />
+          </button>
+        </div>
+        <h1 className="text-lg font-bold gradient-text-primary">Sign In</h1>
+        <div className="w-10"></div>
+      </div>
+      
       <div className="bg-slate-800/80 backdrop-blur-sm p-6 lg:p-8 rounded-2xl shadow-2xl w-full max-w-md border border-indigo-500/30">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">

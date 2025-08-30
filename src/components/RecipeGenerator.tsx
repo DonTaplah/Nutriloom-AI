@@ -294,12 +294,14 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900 py-4 lg:py-8">
       {/* Mobile Header */}
       <div className="lg:hidden flex items-center justify-between p-4 bg-slate-900/95 backdrop-blur-sm border-b border-indigo-500/20">
-        <button
-          onClick={onToggleSidebar}
-          className="p-2 text-slate-300 hover:text-white transition-colors duration-200"
-        >
-          <Menu size={24} />
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onToggleSidebar}
+            className="p-2 text-slate-300 hover:text-white transition-colors duration-200"
+          >
+            <Menu size={24} />
+          </button>
+        </div>
         <h1 className="text-lg font-bold gradient-text-primary">Recipe Generator</h1>
         <div className="w-10"></div>
       </div>

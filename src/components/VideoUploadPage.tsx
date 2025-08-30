@@ -205,19 +205,23 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack, user, onPric
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900">
       {/* Mobile Header */}
       <div className="lg:hidden flex items-center justify-between p-4 bg-slate-900/95 backdrop-blur-sm border-b border-indigo-500/20">
-        <button
-          onClick={onToggleSidebar}
-          className="p-2 text-slate-300 hover:text-white transition-colors duration-200"
-        >
-          <Menu size={24} />
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onToggleSidebar}
+            className="p-2 text-slate-300 hover:text-white transition-colors duration-200"
+          >
+            <Menu size={24} />
+          </button>
+        </div>
         <h1 className="text-lg font-bold gradient-text-primary">SYD - Scan Your Dish</h1>
-        <button
-          onClick={onBack}
-          className="p-2 text-slate-300 hover:text-white transition-colors duration-200"
-        >
-          <X size={20} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onBack}
+            className="p-2 text-slate-300 hover:text-white transition-colors duration-200"
+          >
+            <X size={20} />
+          </button>
+        </div>
       </div>
 
       <div className="container mx-auto px-4 py-4 lg:py-8">
