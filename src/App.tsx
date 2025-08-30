@@ -502,31 +502,32 @@ function App() {
             <p className="text-slate-400 text-sm mb-3">
               Nutriloom AI @2025🖤🤍RT
             </p>
-          <div className="flex items-center justify-center gap-4">
-            <a 
-              href="https://www.instagram.com/nutriloomai" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-slate-400 hover:text-pink-400 transition-colors duration-200"
-            >
-              <Instagram size={20} />
-            </a>
-            <a 
-              href="https://x.com/NutriloomAI" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-slate-400 hover:text-blue-400 transition-colors duration-200"
-            >
-              <Twitter size={20} />
-            </a>
-            <a 
-              href="mailto:nutriloomai@gmail.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-slate-400 hover:text-red-400 transition-colors duration-200"
-            >
-              <Mail size={20} />
-            </a>
+            <div className="flex items-center justify-center gap-4">
+              <a 
+                href="https://www.instagram.com/nutriloomai" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-slate-400 hover:text-pink-400 transition-colors duration-200"
+              >
+                <Instagram size={20} />
+              </a>
+              <a 
+                href="https://x.com/NutriloomAI" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-slate-400 hover:text-blue-400 transition-colors duration-200"
+              >
+                <Twitter size={20} />
+              </a>
+              <a 
+                href="mailto:nutriloomai@gmail.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-slate-400 hover:text-red-400 transition-colors duration-200"
+              >
+                <Mail size={20} />
+              </a>
+            </div>
           </div>
         </div>
       </footer>
