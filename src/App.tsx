@@ -401,7 +401,6 @@ function App() {
                   >
                     Create Your First Recipe
                   </button>
-                </p>
               </div>
             )}
           </div>
