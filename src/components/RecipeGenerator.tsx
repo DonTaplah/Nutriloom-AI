@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChefHat, Sparkles, RefreshCw, Crown, Zap, Clock, Users, Star } from 'lucide-react';
+import { ChefHat, Sparkles, RefreshCw, Crown, Zap, Clock, Users, Star, Menu } from 'lucide-react';
 import { generateRecipesWithAI, RecipeGenerationParams } from '../services/openai';
 import { getRandomIngredientSet } from '../data/ingredients';
 import { Recipe } from '../types/Recipe';
