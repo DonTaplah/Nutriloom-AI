@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Instagram, Twitter, Mail, Heart } from 'lucide-react';
+import { Instagram, Twitter, Mail, Heart, Menu, X } from 'lucide-react';
 import { useAuth } from './hooks/useAuth';
 import { useRecipes } from './hooks/useRecipes';
 import AuthPage from './components/AuthPage';
