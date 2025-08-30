@@ -126,7 +126,6 @@ html {
 .gradient-text-warm { color: #f59e0b; }
 .gradient-text-cool { color: #06b6d4; }
 .gradient-text-accent { color: #10b981; }
-}
 
 /* Custom slider styling */
 .slider::-webkit-slider-thumb {
