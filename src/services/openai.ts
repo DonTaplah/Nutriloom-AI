@@ -29,8 +29,8 @@ export const generateRecipesWithAI = async (params: RecipeGenerationParams) => {
     legendary: "Create masterpiece recipes with advanced culinary techniques, unique flavor profiles, and restaurant-quality presentations. Include molecular gastronomy, advanced knife skills, and professional plating techniques."
   };
 
-  const cuisineFilter = cuisine === 'all' ? '' : `Focus on ${cuisine} cuisine.`;
-  const dishTypeFilter = dishType && dishType !== 'any' ? `Create ${dishType} recipes.` : '';
+  const cuisineFilter = cuisine && cuisine !== '' ? `Focus on ${cuisine} cuisine.` : '';
+  const dishTypeFilter = dishType && dishType !== 'any' ? `Create ${dishType.replace('-', ' ')} recipes.` : '';
   
   const prompt = `You are a professional chef and recipe developer. ${skillLevelPrompts[skillLevel]}
 
@@ -45,15 +45,15 @@ Generate 12-15 unique and diverse recipes that MUST:
 1. Use PRIMARILY the provided ingredients: ${ingredients.join(', ')}
 2. Match the ${skillLevel} skill level exactly
 3. Serve exactly ${servings} people
-4. ${cuisineFilter ? `Follow ${cuisine} cuisine style` : 'Use diverse cuisine styles'}
-5. ${dishTypeFilter ? `Be ${dishType} type dishes` : 'Include various dish types'}
+4. ${cuisineFilter ? `Follow ${cuisine} cuisine style` : 'Use diverse cuisine styles from around the world'}
+5. ${dishTypeFilter ? `Be ${dishType.replace('-', ' ')} type dishes` : 'Include various dish types (appetizers, mains, sides, desserts)'}
 6. Include common pantry staples (salt, pepper, oil, basic spices, flour, sugar, etc.) as needed
 
 Make sure each recipe is distinctly different in:
 - Cooking method (baking, frying, grilling, steaming, etc.)
 - Flavor profile (spicy, sweet, savory, tangy, etc.)
 - Meal type (breakfast, lunch, dinner, snack, dessert)
-- Cuisine style (${cuisine !== 'all' ? cuisine : 'varied'})
+- Cuisine style (${cuisine && cuisine !== '' ? cuisine : 'varied international styles'})
 - Difficulty level (${skillLevel})
 
 For each recipe, provide:

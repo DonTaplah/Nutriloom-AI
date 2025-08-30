@@ -172,14 +172,14 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
     try {
       const params: RecipeGenerationParams = {
         ingredients: ingredients,
-        cuisine: selectedCuisine || 'all',
+        cuisine: selectedCuisine || '',
         dishType: selectedDishType,
         skillLevel: generatePremium ? 'legendary' : skillLevel,
         servings: 4
       };
 
       const recipes = await generateRecipesWithAI(params);
-      onRecipesGenerated(recipes, ingredients, selectedCuisine || 'all');
+      onRecipesGenerated(recipes, ingredients, selectedCuisine || '');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate recipes');
     } finally {
