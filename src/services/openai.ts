@@ -118,8 +118,29 @@ Format as JSON array with this structure:
       throw new Error('No response from OpenAI');
     }
 
+    // Clean the response to ensure valid JSON
+    let cleanedResponse = response.trim();
+    
+    // Remove markdown code block delimiters if present
+    if (cleanedResponse.startsWith('```json')) {
+      cleanedResponse = cleanedResponse.replace(/^```json\s*/, '');
+    }
+    if (cleanedResponse.startsWith('```')) {
+      cleanedResponse = cleanedResponse.replace(/^```\s*/, '');
+    }
+    if (cleanedResponse.endsWith('```')) {
+      cleanedResponse = cleanedResponse.replace(/\s*```$/, '');
+    }
+    
+    // Remove any trailing text after the JSON array
+    const jsonStart = cleanedResponse.indexOf('[');
+    const jsonEnd = cleanedResponse.lastIndexOf(']');
+    
+    if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+      cleanedResponse = cleanedResponse.substring(jsonStart, jsonEnd + 1);
+    }
     // Parse the JSON response
-    const recipes = JSON.parse(response);
+    const recipes = JSON.parse(cleanedResponse);
     
     // Transform to our Recipe interface format
     return recipes.map((recipe: any, index: number) => ({
