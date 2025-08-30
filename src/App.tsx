@@ -337,7 +337,7 @@ function App() {
           </p>
           <div className="flex items-center justify-center gap-4 mt-3">
             <a 
-              href="https://instagram.com" 
+              href="https://www.instagram.com/nutriloomai" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-slate-400 hover:text-pink-400 transition-colors duration-200"
@@ -345,7 +345,7 @@ function App() {
               <Instagram size={20} />
             </a>
             <a 
-              href="https://twitter.com" 
+              href="https://x.com/NutriloomAI" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-slate-400 hover:text-blue-400 transition-colors duration-200"
@@ -353,7 +353,7 @@ function App() {
               <Twitter size={20} />
             </a>
             <a 
-              href="mailto:contact@nutriloom.ai" 
+              href="mailto:nutriloomai@gmail.com" 
               className="text-slate-400 hover:text-red-400 transition-colors duration-200"
             >
               <Mail size={20} />
