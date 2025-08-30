@@ -3,7 +3,6 @@ import { Edit3, Crown, Star, Sparkles, BookOpen, Shield, Archive, Scan, Menu } f
 import { User } from '../types/User';
 import LocationContent from './SEO/LocationContent';
 import LocalSEOHead from './SEO/LocalSEOHead';
-import GoogleBusinessIntegration from './SEO/GoogleBusinessIntegration';
 
 interface HomePageProps {
   onSearch: (ingredients: string[], cuisine: string) => void;
@@ -445,14 +444,6 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
           <p className="text-sm gradient-text-slate px-4">
             No credit card required for free recipes • Upgrade anytime
           </p>
-        </div>
-
-        {/* Local Content Section */}
-        <LocationContent showStats={true} showTestimonials={true} />
-        
-        {/* Google Business Integration */}
-        <div className="mt-16 lg:mt-24">
-          <GoogleBusinessIntegration showReviews={true} showPhotos={true} />
         </div>
       </div>
     </div>
