@@ -15,7 +15,14 @@ type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing' | 'scan-dish' | '
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>({
+    id: '1',
+    email: 'demo@nutriloom.ai',
+    name: 'Demo User',
+    plan: 'free',
+    createdAt: new Date(),
+    isAuthenticated: false
+  });
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -119,17 +126,6 @@ function App() {
     }
   };
 
-  // Show auth page if user is not authenticated
-  if (!user) {
-    return (
-      <AuthPage
-        onLogin={handleLogin}
-        onSignup={handleSignup}
-        isLoading={authLoading}
-        error={authError}
-      />
-    );
-  }
 
   // Mock AI recipe generation
   const generateRecipes = (ingredients: string[], cuisine: string): Recipe[] => {
@@ -259,17 +255,20 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900">
-      <Navbar 
-        currentView={currentView} 
-        onBack={handleBack}
-        onHome={() => setCurrentView('home')}
-        user={user}
-        onPricing={() => setCurrentView('pricing')}
-        onLogout={() => setUser(null)}
-        onVideoUpload={() => setCurrentView('scan-dish')}
-        onRecipeGenerator={() => setCurrentView('generator')}
-        setUser={setUser}
-      />
+      {user && (
+        <Navbar 
+          currentView={currentView} 
+          onBack={handleBack}
+          onHome={() => setCurrentView('home')}
+          user={user}
+          onPricing={() => setCurrentView('pricing')}
+          onLogout={() => setUser(null)}
+          onVideoUpload={() => setCurrentView('scan-dish')}
+          onRecipeGenerator={() => setCurrentView('generator')}
+          setUser={setUser}
+          onAuth={() => setCurrentView('auth')}
+        />
+      )}
       
       <main className="container mx-auto px-4 py-8">
         {currentView === 'home' && (
@@ -288,6 +287,7 @@ function App() {
             onRecipesGenerated={handleSearch}
             user={user}
             onPricing={() => setCurrentView('pricing')}
+            onAuth={() => setCurrentView('auth')}
           />
         )}
         

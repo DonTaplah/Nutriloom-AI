@@ -9,9 +9,10 @@ interface RecipeGeneratorProps {
   onRecipesGenerated: (recipes: Recipe[], ingredients: string[], cuisine: string) => void;
   user: User;
   onPricing: () => void;
+  onAuth: () => void;
 }
 
-const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, user, onPricing }) => {
+const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, user, onPricing, onAuth }) => {
   const [ingredientsText, setIngredientsText] = useState<string>('');
   const [selectedCuisine, setSelectedCuisine] = useState<string>('');
   const [selectedDishType, setSelectedDishType] = useState<string>('any');
@@ -57,7 +58,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
       return;
     }
 
-    if (generatePremium && user.plan === 'free') {
+    if (generatePremium && (!user.isAuthenticated || user.plan === 'free')) {
       setError('Premium recipes require a Pro subscription');
       return;
     }
@@ -94,12 +95,14 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
           <p className="text-slate-300 text-lg mb-4">
             List your ingredients, optionally specify cuisine, skill level, and dish type, and our AI will design a bespoke recipe.
           </p>
-          <div className="text-slate-400">
-            <span className="text-blue-400 hover:text-blue-300 cursor-pointer">Log In</span>
-            <span className="mx-2">or</span>
-            <span className="text-blue-400 hover:text-blue-300 cursor-pointer">Sign Up</span>
-            <span className="ml-2">to use the Recipe AI generator.</span>
-          </div>
+          {!user.isAuthenticated && (
+            <div className="text-slate-400">
+              <span className="text-blue-400 hover:text-blue-300 cursor-pointer" onClick={onAuth}>Log In</span>
+              <span className="mx-2">or</span>
+              <span className="text-blue-400 hover:text-blue-300 cursor-pointer" onClick={onAuth}>Sign Up</span>
+              <span className="ml-2">to use the Recipe AI generator.</span>
+            </div>
+          )}
         </div>
 
         {/* Main Form */}
@@ -170,8 +173,8 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
               >
                 <option value="beginner" className="bg-slate-800">Amateur (Default)</option>
                 <option value="pro" className="bg-slate-800">Professional</option>
-                <option value="legendary" className="bg-slate-800" disabled={user.plan === 'free'}>
-                  Legendary {user.plan === 'free' ? '(Pro Only)' : ''}
+                <option value="legendary" className="bg-slate-800" disabled={!user.isAuthenticated || user.plan === 'free'}>
+                  Legendary {(!user.isAuthenticated || user.plan === 'free') ? '(Pro Only)' : ''}
                 </option>
               </select>
               <p className="text-slate-400 text-sm mt-2">
@@ -187,14 +190,14 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                   id="premium-recipe"
                   checked={generatePremium}
                   onChange={(e) => setGeneratePremium(e.target.checked)}
-                  disabled={user.plan === 'free'}
+                  disabled={!user.isAuthenticated || user.plan === 'free'}
                   className="mt-1 w-4 h-4 text-indigo-600 bg-slate-900 border-slate-600 rounded focus:ring-indigo-500 focus:ring-2 disabled:opacity-50"
                 />
                 <div className="flex-1">
                   <label htmlFor="premium-recipe" className="flex items-center gap-2 text-white font-medium cursor-pointer">
                     <Star className="w-5 h-5 text-yellow-400" />
                     Generate Premium (Legendary) Recipe
-                    {user.plan === 'free' && (
+                    {(!user.isAuthenticated || user.plan === 'free') && (
                       <span className="px-2 py-1 bg-indigo-600 text-white text-xs rounded-full">
                         Pro Only - Login Required
                       </span>
@@ -202,16 +205,23 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                   </label>
                   <p className="text-slate-400 text-sm mt-1">
                     Unlock "Five Stars Diner" level recipes. 
-                    {user.plan === 'free' ? (
+                    {!user.isAuthenticated ? (
                       <>
-                        <span className="text-blue-400 hover:text-blue-300 cursor-pointer ml-1" onClick={onPricing}>
+                        <span className="text-blue-400 hover:text-blue-300 cursor-pointer ml-1" onClick={onAuth}>
                           Login
                         </span>
                         <span className="mx-1">or</span>
-                        <span className="text-blue-400 hover:text-blue-300 cursor-pointer" onClick={onPricing}>
+                        <span className="text-blue-400 hover:text-blue-300 cursor-pointer" onClick={onAuth}>
                           Sign Up
                         </span>
                         <span className="ml-1">to access Pro.</span>
+                      </>
+                    ) : user.plan === 'free' ? (
+                      <>
+                        <span className="text-blue-400 hover:text-blue-300 cursor-pointer ml-1" onClick={onPricing}>
+                          Upgrade to Pro
+                        </span>
+                        <span className="ml-1">to access Legendary recipes.</span>
                       </>
                     ) : (
                       'Restaurant-quality techniques and sophisticated culinary artistry.'
@@ -236,7 +246,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                 className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-200 ${
                   isGenerating || ingredientsText.trim().length === 0
                     ? 'bg-slate-600 text-slate-400 cursor-not-allowed'
-                    : generatePremium && user.plan === 'pro'
+                    : generatePremium && user.isAuthenticated && user.plan === 'pro'
                     ? 'bg-gradient-to-r from-yellow-600 to-orange-600 text-white hover:from-yellow-700 hover:to-orange-700 shadow-lg hover:shadow-xl'
                     : 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:from-indigo-700 hover:to-blue-700 shadow-lg hover:shadow-xl'
                 }`}
@@ -250,7 +260,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                   <div className="flex items-center justify-center gap-2">
                     <Sparkles size={20} />
                     <span>
-                      {generatePremium && user.plan === 'pro' 
+                      {generatePremium && user.isAuthenticated && user.plan === 'pro' 
                         ? 'Generate Premium Recipe' 
                         : `Generate ${skillLevel === 'beginner' ? 'Amateur' : skillLevel.charAt(0).toUpperCase() + skillLevel.slice(1)} Recipe`
                       }
@@ -263,7 +273,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
         </div>
 
         {/* Pro Upgrade Section */}
-        {user.plan === 'free' && (
+        {(!user.isAuthenticated || user.plan === 'free') && (
           <div className="mt-8 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 rounded-2xl p-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -275,18 +285,29 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                 and advanced culinary techniques that transform your cooking.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button 
-                  onClick={onPricing}
-                  className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
-                >
-                  Upgrade to Pro
-                </button>
-                <button 
-                  onClick={() => setCurrentView('auth')}
-                  className="px-8 py-3 bg-slate-700/60 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-600/60 hover:text-white transition-all duration-200"
-                >
-                  Sign In
-                </button>
+                {user.isAuthenticated ? (
+                  <button 
+                    onClick={onPricing}
+                    className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                  >
+                    Upgrade to Pro
+                  </button>
+                ) : (
+                  <>
+                    <button 
+                      onClick={onAuth}
+                      className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                    >
+                      Sign In
+                    </button>
+                    <button 
+                      onClick={onPricing}
+                      className="px-8 py-3 bg-slate-700/60 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-600/60 hover:text-white transition-all duration-200"
+                    >
+                      View Pricing
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -12,9 +12,10 @@ interface NavbarProps {
   onVideoUpload: () => void;
   onRecipeGenerator: () => void;
   setUser: (user: User | null) => void;
+  onAuth: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPricing, onLogout, onVideoUpload, onRecipeGenerator, setUser }) => {
+const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPricing, onLogout, onVideoUpload, onRecipeGenerator, setUser, onAuth }) => {
   return (
     <nav className="bg-slate-900/95 backdrop-blur-sm shadow-lg border-b border-indigo-500/20">
       <div className="container mx-auto px-4">
@@ -59,22 +60,31 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
             </button>
             
             <button
-              onClick={user.plan === 'pro' ? onVideoUpload : onPricing}
+              onClick={user.isAuthenticated ? (user.plan === 'pro' ? onVideoUpload : onPricing) : onAuth}
               className={`px-3 py-2 transition-colors duration-200 font-medium text-sm sm:text-base ${
-                user.plan === 'pro' 
+                user.isAuthenticated && user.plan === 'pro' 
                   ? 'gradient-text-slate hover:gradient-text-white' 
                   : 'gradient-text-slate hover:gradient-text-purple cursor-pointer'
               }`}
             >
-              SYD {user.plan !== 'pro' && '(Pro)'}
+              SYD {(!user.isAuthenticated || user.plan !== 'pro') && '(Pro)'}
             </button>
             
-            <button
-              onClick={() => setUser(null)}
-              className="px-4 sm:px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 gradient-text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"
-            >
-              Sign Out
-            </button>
+            {user.isAuthenticated ? (
+              <button
+                onClick={() => setUser({ ...user, isAuthenticated: false })}
+                className="px-4 sm:px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 gradient-text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"
+              >
+                Sign Out
+              </button>
+            ) : (
+              <button
+                onClick={onAuth}
+                className="px-4 sm:px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 gradient-text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </div>
       </div>

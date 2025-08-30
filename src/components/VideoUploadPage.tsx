@@ -120,7 +120,7 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack, user, onPric
 
   return (
     <>
-      {user.plan !== 'pro' ? (
+      {!user.isAuthenticated || user.plan !== 'pro' ? (
         // Pro-only access gate
         <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 flex items-center justify-center">
           <div className="max-w-2xl mx-auto px-4 text-center">
