@@ -130,7 +130,7 @@ export default function PricingPage({ onSelectPlan, currentPlan }: PricingPagePr
             
             <div className="mb-8">
               <div className="flex items-baseline gap-2">
-                <span className="text-6xl font-bold gradient-text-blue">$3</span>
+                <span className="text-6xl font-bold gradient-text-blue">$4.99</span>
                 <span className="gradient-text-slate text-xl">/month</span>
               </div>
             </div>
