@@ -59,13 +59,6 @@ const Sidebar: React.FC<SidebarProps> = ({
       active: currentView === 'pricing'
     },
     {
-      id: 'contact',
-      label: 'Contact',
-      icon: Mail,
-      onClick: onContact,
-      active: currentView === 'contact'
-    },
-    {
       id: 'syd',
       label: 'SYD',
       icon: Scan,
