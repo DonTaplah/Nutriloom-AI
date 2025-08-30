@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, BookOpen } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface AuthPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -30,15 +31,20 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin
+          redirectTo: `${window.location.origin}`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          }
         }
       });
       
       if (error) {
-        console.error('Google sign-in error:', error);
+        throw error;
       }
     } catch (err) {
-      console.error('Google sign-in failed:', err);
+      console.error('Google sign-in error:', err);
+      // You could set an error state here if needed
     }
   };
 
