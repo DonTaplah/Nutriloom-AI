@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChefHat, Sparkles, RefreshCw, Crown, Zap, Clock, Users, Star } from 'lucide-react';
 import { generateRecipesWithAI, RecipeGenerationParams } from '../services/openai';
-import { getRandomIngredientSet, getShuffledIngredients } from '../data/ingredients';
+import { getRandomIngredientSet } from '../data/ingredients';
 import { Recipe } from '../types/Recipe';
 import { User } from '../types/User';
 
@@ -20,6 +20,21 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
   const [generatePremium, setGeneratePremium] = useState<boolean>(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [suggestedIngredients, setSuggestedIngredients] = useState<string[]>(() => getRandomIngredientSet());
+
+  const refreshIngredients = () => {
+    setSuggestedIngredients(getRandomIngredientSet());
+  };
+
+  const addIngredient = (ingredient: string) => {
+    const currentIngredients = parseIngredients(ingredientsText);
+    if (!currentIngredients.includes(ingredient)) {
+      const newIngredients = currentIngredients.length > 0 
+        ? `${ingredientsText}, ${ingredient}`
+        : ingredient;
+      setIngredientsText(newIngredients);
+    }
+  };
 
   const dishTypes = [
     { value: 'any', label: 'Any (Let AI Decide)' },
@@ -125,6 +140,34 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
               <p className="text-slate-400 text-sm mt-2">
                 Separate ingredients by commas or new lines.
               </p>
+              
+              {/* Suggested Ingredients */}
+              <div className="mt-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-sm font-medium text-slate-300">Suggested Ingredients</h4>
+                  <button
+                    onClick={refreshIngredients}
+                    className="flex items-center gap-1 px-3 py-1 bg-slate-700/60 text-slate-300 rounded-lg text-sm hover:bg-slate-600/60 hover:text-white transition-all duration-200"
+                  >
+                    <RefreshCw size={14} />
+                    Refresh
+                  </button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {suggestedIngredients.map((ingredient, index) => (
+                    <button
+                      key={index}
+                      onClick={() => addIngredient(ingredient)}
+                      className="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm border border-indigo-500/30 hover:bg-indigo-500/30 hover:text-indigo-200 transition-all duration-200"
+                    >
+                      + {ingredient}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-slate-400 text-xs mt-2">
+                  Click any ingredient to add it to your list
+                </p>
+              </div>
             </div>
 
             {/* Cuisine and Dish Type Row */}
