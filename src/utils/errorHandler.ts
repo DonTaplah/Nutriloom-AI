@@ -159,11 +159,11 @@ export const createValidationError = (field: string, message: string): AppError 
   );
 };
 
-export const createAuthError = (message: string, context?: Record<string, any>): AppError => {
+export const createAuthError = (message: string, context?: Record<string, any>, userMessage?: string): AppError => {
   return ErrorHandler.getInstance().createError(
     ErrorType.AUTH,
     message,
-    "Authentication failed. Please check your credentials and try again.",
+    userMessage || "Authentication failed. Please check your credentials and try again.",
     ErrorSeverity.HIGH,
     context,
     true

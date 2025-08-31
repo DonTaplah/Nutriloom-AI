@@ -158,9 +158,16 @@ export const useAuth = () => {
       
       if (error) throw error
     } catch (err) {
+      let userMessage = "Authentication failed. Please check your credentials and try again.";
+      
+      if (err instanceof Error && err.message.includes('Invalid login credentials')) {
+        userMessage = "Invalid email or password. Please try again.";
+      }
+      
       const signInError = createAuthError(
         `Sign in failed: ${err}`,
-        { action: 'signIn', email }
+        { action: 'signIn', email },
+        userMessage
       )
       addError(signInError)
       setError(signInError.userMessage)
@@ -191,9 +198,16 @@ export const useAuth = () => {
       // Check if email confirmation is required
       setError('Account created successfully! Please check your email for confirmation, then sign in.')
     } catch (err) {
+      let userMessage = "Sign up failed. Please try again.";
+      
+      if (err instanceof Error && err.message.includes('Password should contain')) {
+        userMessage = err.message;
+      }
+      
       const signUpError = createAuthError(
         `Sign up failed: ${err}`,
-        { action: 'signUp', email }
+        { action: 'signUp', email },
+        userMessage
       )
       addError(signUpError)
       setError(signUpError.userMessage)
