@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { createValidationError } from './errorHandler';
 
 export interface ValidationRule {
