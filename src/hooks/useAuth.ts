@@ -65,7 +65,7 @@ export const useAuth = () => {
         .from('user_profiles')
         .select('*')
         .eq('id', supabaseUser.id)
-        .single()
+        .maybeSingle()
 
       if (profileError && profileError.code !== 'PGRST116') {
         throw profileError
