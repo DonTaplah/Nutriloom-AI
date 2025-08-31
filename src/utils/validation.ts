@@ -79,7 +79,8 @@ export const authValidationSchema: ValidationSchema = {
   password: {
     required: true,
     minLength: 6,
-    message: 'Password must be at least 6 characters'
+    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]).{6,}$/,
+    message: 'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character'
   },
   name: {
     required: true,
