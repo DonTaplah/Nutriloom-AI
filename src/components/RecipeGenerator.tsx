@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { ChefHat, Sparkles, RefreshCw, Crown, Zap, Clock, Users, Star, Menu } from 'lucide-react';
-import { generateRecipesWithAI, RecipeGenerationParams } from '../services/openai';
+import { generateRecipesWithAI, RecipeGenerationParams } from '../services/enhancedOpenai';
 import { getRandomIngredientSet } from '../data/ingredients';
 import { Recipe } from '../types/Recipe';
 import { User } from '../types/User';
+import { useErrorHandler } from '../hooks/useErrorHandler';
+import { useValidation, recipeValidationSchema } from '../utils/validation';
+import { useRetry } from '../hooks/useRetry';
+import { useOfflineSupport } from '../hooks/useOfflineSupport';
 
 interface RecipeGeneratorProps {
   onRecipesGenerated: (ingredients: string[], cuisine: string, recipes: Recipe[]) => void;
@@ -22,6 +26,17 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [suggestedIngredients, setSuggestedIngredients] = useState<string[]>(() => getRandomIngredientSet());
+
+  const { addError } = useErrorHandler();
+  const { validate, errors: validationErrors, clearErrors } = useValidation(recipeValidationSchema);
+  const { retry, isRetrying, attemptCount } = useRetry({
+    maxAttempts: 3,
+    delay: 2000,
+    onRetry: (attempt) => {
+      setError(`Retrying... (Attempt ${attempt}/${3})`);
+    }
+  });
+  const { isOnline, addToOfflineQueue } = useOfflineSupport();
 
   // Check if it's a new month and reset usage if needed
   React.useEffect(() => {
@@ -248,10 +263,30 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
       return;
     }
 
+    // Clear previous errors
+    setError(null);
+    clearErrors();
+
     const ingredients = parseIngredients(ingredientsText);
     
-    if (ingredients.length === 0) {
-      setError('Please enter at least one ingredient');
+    // Validate form data
+    const formData = {
+      ingredients: ingredientsText,
+      cuisine: selectedCuisine
+    };
+
+    if (!validate(formData)) {
+      setError(Object.values(validationErrors)[0] || 'Please check your input');
+      return;
+    }
+
+    // Handle offline scenario
+    if (!isOnline) {
+      addToOfflineQueue(
+        () => generateRecipes(),
+        'Generate recipes'
+      );
+      setError('You\'re offline. Your request will be processed when you\'re back online.');
       return;
     }
 
@@ -270,9 +305,8 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
     }
 
     setIsGenerating(true);
-    setError(null);
 
-    try {
+    const generateAction = async () => {
       const params: RecipeGenerationParams = {
         ingredients: ingredients,
         cuisine: selectedCuisine || '',
@@ -283,8 +317,16 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
 
       const recipes = await generateRecipesWithAI(params);
       onRecipesGenerated(ingredients, selectedCuisine || '', recipes);
+    };
+
+    try {
+      await retry(generateAction);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to generate recipes');
+      if ('userMessage' in err) {
+        setError(err.userMessage);
+      } else {
+        setError('Failed to generate recipes. Please try again.');
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -552,11 +594,13 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                 onClick={generateRecipes}
                 disabled={
                   isGenerating || 
+                  isRetrying ||
                   ingredientsText.trim().length === 0 || 
                   (user.isAuthenticated && user.plan === 'free' && getRemainingGenerations() === 0)
                 }
                 className={`w-full py-3 lg:py-4 rounded-xl font-semibold text-base lg:text-lg transition-all duration-200 ${
                   isGenerating || 
+                  isRetrying ||
                   ingredientsText.trim().length === 0 || 
                   (user.isAuthenticated && user.plan === 'free' && getRemainingGenerations() === 0)
                     ? 'bg-slate-600 text-slate-400 cursor-not-allowed'
@@ -565,10 +609,12 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                     : 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:from-indigo-700 hover:to-blue-700 shadow-lg hover:shadow-xl'
                 }`}
               >
-                {isGenerating ? (
+                {isGenerating || isRetrying ? (
                   <div className="flex items-center justify-center gap-2">
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span className="text-sm lg:text-base">Generating Recipe...</span>
+                    <span className="text-sm lg:text-base">
+                      {isRetrying ? `Retrying... (${attemptCount}/3)` : 'Generating Recipe...'}
+                    </span>
                   </div>
                 ) : user.isAuthenticated && user.plan === 'free' && getRemainingGenerations() === 0 ? (
                   <div className="flex items-center justify-center gap-2">

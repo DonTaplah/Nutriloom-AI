@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react'
 import { User as SupabaseUser } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
 import { User } from '../types/User'
+import { createAuthError, createAPIError, handleGlobalError } from '../utils/errorHandler'
+import { useErrorHandler } from './useErrorHandler'
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { addError } = useErrorHandler()
 
   useEffect(() => {
     // Get initial session
@@ -19,8 +22,12 @@ export const useAuth = () => {
           await loadUserProfile(session.user)
         }
       } catch (err) {
-        console.error('Error getting initial session:', err)
-        setError(err instanceof Error ? err.message : 'Failed to load session')
+        const authError = createAuthError(
+          `Failed to get initial session: ${err}`,
+          { action: 'getInitialSession' }
+        )
+        addError(authError)
+        setError(authError.userMessage)
       } finally {
         setLoading(false)
       }
@@ -129,8 +136,13 @@ export const useAuth = () => {
         })
       }
     } catch (err) {
-      console.error('Error loading user profile:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load user profile')
+      const profileError = createAPIError(
+        `Failed to load user profile: ${err}`,
+        500,
+        { action: 'loadUserProfile', userId: supabaseUser.id }
+      )
+      addError(profileError)
+      setError(profileError.userMessage)
     }
   }
 
@@ -146,7 +158,12 @@ export const useAuth = () => {
       
       if (error) throw error
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to sign in')
+      const signInError = createAuthError(
+        `Sign in failed: ${err}`,
+        { action: 'signIn', email }
+      )
+      addError(signInError)
+      setError(signInError.userMessage)
     } finally {
       setLoading(false)
     }
@@ -174,7 +191,12 @@ export const useAuth = () => {
       // Check if email confirmation is required
       setError('Account created successfully! Please check your email for confirmation, then sign in.')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to sign up')
+      const signUpError = createAuthError(
+        `Sign up failed: ${err}`,
+        { action: 'signUp', email }
+      )
+      addError(signUpError)
+      setError(signUpError.userMessage)
     } finally {
       setLoading(false)
     }
@@ -189,7 +211,12 @@ export const useAuth = () => {
       if (error) throw error
       setUser(null)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to sign out')
+      const signOutError = createAuthError(
+        `Sign out failed: ${err}`,
+        { action: 'signOut' }
+      )
+      addError(signOutError)
+      setError(signOutError.userMessage)
     } finally {
       setLoading(false)
     }
@@ -216,7 +243,12 @@ export const useAuth = () => {
         }
       })
     } catch (err) {
-      console.error('Error updating usage stats:', err)
+      const usageError = createAPIError(
+        `Failed to update usage stats: ${err}`,
+        500,
+        { action: 'updateUsageStats', userId: user.id, recipesGenerated }
+      )
+      addError(usageError)
     }
   }
 
@@ -236,8 +268,13 @@ export const useAuth = () => {
         plan: 'pro'
       })
     } catch (err) {
-      console.error('Error upgrading to pro:', err)
-      setError(err instanceof Error ? err.message : 'Failed to upgrade plan')
+      const upgradeError = createAPIError(
+        `Failed to upgrade to pro: ${err}`,
+        500,
+        { action: 'upgradeToPro', userId: user.id }
+      )
+      addError(upgradeError)
+      setError(upgradeError.userMessage)
     }
   }
 

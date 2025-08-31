@@ -2,11 +2,16 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { Recipe } from '../types/Recipe'
 import { User } from '../types/User'
+import { createAPIError, handleGlobalError } from '../utils/errorHandler'
+import { useErrorHandler } from './useErrorHandler'
+import { useOfflineSupport } from './useOfflineSupport'
 
 export const useRecipes = (user: User | null) => {
   const [savedRecipes, setSavedRecipes] = useState<Recipe[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { addError } = useErrorHandler()
+  const { isOnline, addToOfflineQueue } = useOfflineSupport()
 
   useEffect(() => {
     if (user?.isAuthenticated) {
@@ -36,8 +41,13 @@ export const useRecipes = (user: User | null) => {
 
       setSavedRecipes(recipes)
     } catch (err) {
-      console.error('Error loading saved recipes:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load saved recipes')
+      const loadError = createAPIError(
+        `Failed to load saved recipes: ${err}`,
+        500,
+        { action: 'loadSavedRecipes', userId: user.id }
+      )
+      addError(loadError)
+      setError(loadError.userMessage)
     } finally {
       setLoading(false)
     }
@@ -46,6 +56,15 @@ export const useRecipes = (user: User | null) => {
   const saveRecipe = async (recipe: Recipe) => {
     if (!user?.isAuthenticated) return
 
+    // Handle offline scenario
+    if (!isOnline) {
+      addToOfflineQueue(
+        () => saveRecipe(recipe),
+        `Save recipe: ${recipe.name}`
+      )
+      setSavedRecipes(prev => [recipe, ...prev])
+      return
+    }
     try {
       const { error } = await supabase
         .from('saved_recipes')
@@ -58,14 +77,28 @@ export const useRecipes = (user: User | null) => {
 
       setSavedRecipes(prev => [recipe, ...prev])
     } catch (err) {
-      console.error('Error saving recipe:', err)
-      setError(err instanceof Error ? err.message : 'Failed to save recipe')
+      const saveError = createAPIError(
+        `Failed to save recipe: ${err}`,
+        500,
+        { action: 'saveRecipe', userId: user.id, recipeId: recipe.id }
+      )
+      addError(saveError)
+      setError(saveError.userMessage)
     }
   }
 
   const removeRecipe = async (recipeId: string) => {
     if (!user?.isAuthenticated) return
 
+    // Handle offline scenario
+    if (!isOnline) {
+      addToOfflineQueue(
+        () => removeRecipe(recipeId),
+        `Remove recipe: ${recipeId}`
+      )
+      setSavedRecipes(prev => prev.filter(recipe => recipe.id !== recipeId))
+      return
+    }
     try {
       const { error } = await supabase
         .from('saved_recipes')
@@ -77,8 +110,13 @@ export const useRecipes = (user: User | null) => {
 
       setSavedRecipes(prev => prev.filter(recipe => recipe.id !== recipeId))
     } catch (err) {
-      console.error('Error removing recipe:', err)
-      setError(err instanceof Error ? err.message : 'Failed to remove recipe')
+      const removeError = createAPIError(
+        `Failed to remove recipe: ${err}`,
+        500,
+        { action: 'removeRecipe', userId: user.id, recipeId }
+      )
+      addError(removeError)
+      setError(removeError.userMessage)
     }
   }
 
