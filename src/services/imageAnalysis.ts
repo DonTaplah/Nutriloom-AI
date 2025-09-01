@@ -241,20 +241,20 @@ const convertToBase64 = (file: File): Promise<string> => {
 // Helper function to get nutrition grade color
 export const getNutritionGradeColor = (grade: string): string => {
   switch (grade.charAt(0).toUpperCase()) {
-    case 'A': return 'text-green-400';
-    case 'B': return 'text-blue-400';
-    case 'C': return 'text-yellow-400';
-    case 'D': return 'text-orange-400';
-    case 'F': return 'text-red-400';
-    default: return 'text-slate-400';
+    case 'A': return 'text-green-300';
+    case 'B': return 'text-blue-300';
+    case 'C': return 'text-yellow-300';
+    case 'D': return 'text-orange-300';
+    case 'F': return 'text-red-300';
+    default: return 'text-slate-300';
   }
 };
 
 // Helper function to get health score color
 export const getHealthScoreColor = (score: number): string => {
-  if (score >= 8.5) return 'text-green-400';
-  if (score >= 7.0) return 'text-blue-400';
-  if (score >= 5.5) return 'text-yellow-400';
-  if (score >= 4.0) return 'text-orange-400';
-  return 'text-red-400';
+  if (score >= 8.5) return 'text-green-300';
+  if (score >= 7.0) return 'text-blue-300';
+  if (score >= 5.5) return 'text-yellow-300';
+  if (score >= 4.0) return 'text-orange-300';
+  return 'text-red-300';
 };
