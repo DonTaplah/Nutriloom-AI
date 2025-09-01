@@ -18,11 +18,12 @@ import RecipeDetail from './components/RecipeDetail';
 import RecipeGenerator from './components/RecipeGenerator';
 import ScanYourDishPage from './components/VideoUploadPage';
 import ContactPage from './components/ContactPage';
+import PrivacyPolicyPage from './components/PrivacyPolicyPage';
 import LocalBusinessSchema from './components/SEO/LocalBusinessSchema';
 import LocalSEOHead from './components/SEO/LocalSEOHead';
 import { Recipe } from './types/Recipe';
 
-type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing' | 'scan-dish' | 'generator' | 'my-recipes' | 'contact';
+type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing' | 'scan-dish' | 'generator' | 'my-recipes' | 'contact' | 'privacy';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
@@ -478,6 +479,13 @@ function App() {
               <ContactPage onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
             )}
             
+            {currentView === 'privacy' && (
+              <PrivacyPolicyPage 
+                onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+                onBack={() => setCurrentView('home')}
+              />
+            )}
+            
             {currentView === 'auth' && (
               <AuthPage
                 onLogin={handleLogin}
@@ -493,7 +501,7 @@ function App() {
         {/* Footer */}
         <footer className="lg:ml-64 bg-slate-900/95 backdrop-blur-sm border-t border-indigo-500/20 py-8">
           <div className="container mx-auto px-4 lg:px-8">
-            <div className="text-center space-y-4">
+            <div className="text-center space-y-6">
               <div className="text-white font-semibold text-lg">
                 NutriloomAI@2025 🖤🤍RT
               </div>
@@ -508,6 +516,22 @@ function App() {
                 <a href="mailto:nutriloomai@gmail.com" className="text-slate-400 hover:text-indigo-400 transition-colors">
                   <Mail size={20} />
                 </a>
+              </div>
+              
+              {/* Footer Links */}
+              <div className="flex items-center justify-center gap-6 text-sm">
+                <button
+                  onClick={() => setCurrentView('privacy')}
+                  className="text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer"
+                >
+                  Privacy Policy
+                </button>
+                <button
+                  onClick={() => setCurrentView('contact')}
+                  className="text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer"
+                >
+                  Contact Us
+                </button>
               </div>
             </div>
           </div>

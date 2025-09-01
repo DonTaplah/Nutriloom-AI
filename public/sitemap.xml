@@ -99,6 +99,14 @@
     <priority>0.5</priority>
   </url>
   
+  <!-- Privacy Policy -->
+  <url>
+    <loc>https://nutriloomai.com/privacy</loc>
+    <lastmod>2025-01-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
   <!-- Blog/Resources (if applicable) -->
   <url>
     <loc>https://nutriloomai.com/blog</loc>
