@@ -171,6 +171,14 @@ FORMAT AS JSON:
       jsonString = jsonString.replace(/^```\s*/, '').replace(/\s*```$/, '');
     }
 
+    // Find the actual JSON object boundaries
+    const firstBrace = jsonString.indexOf('{');
+    const lastBrace = jsonString.lastIndexOf('}');
+    
+    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+      jsonString = jsonString.substring(firstBrace, lastBrace + 1);
+    }
+
     // Parse the JSON response
     const analysis = JSON.parse(jsonString);
     

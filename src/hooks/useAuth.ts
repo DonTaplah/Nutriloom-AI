@@ -165,7 +165,7 @@ export const useAuth = () => {
       }
       
       const signInError = createAuthError(
-        `Sign in failed: ${err}`,
+        `Sign in failed: ${err instanceof Error ? err.message : String(err)}`,
         { action: 'signIn', email },
         userMessage
       )
@@ -226,7 +226,7 @@ export const useAuth = () => {
       setUser(null)
     } catch (err) {
       const signOutError = createAuthError(
-        `Sign out failed: ${err}`,
+        `Sign out failed: ${err instanceof Error ? err.message : String(err)}`,
         { action: 'signOut' }
       )
       addError(signOutError)
