@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle, Menu } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle, Menu, Instagram, Twitter } from 'lucide-react';
 import { useValidation } from '../utils/validation';
 import { useErrorHandler } from '../hooks/useErrorHandler';
 import { createValidationError } from '../utils/errorHandler';
