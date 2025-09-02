@@ -39,12 +39,16 @@ function App() {
   // Authentication handlers
   const handleLogin = async (email: string, password: string) => {
     setAuthError(null);
-    await signIn(email, password);
+    const result = await signIn(email, password);
+    if (result?.success) {
+      setCurrentView('home');
+    }
   };
 
   const handleSignup = async (email: string, password: string, name: string) => {
     setAuthError(null);
-    await signUp(email, password, name);
+    const result = await signUp(email, password, name);
+    // For signup, we don't redirect immediately as user needs to confirm email
   };
 
   const handleSelectPlan = (plan: 'free' | 'pro') => {

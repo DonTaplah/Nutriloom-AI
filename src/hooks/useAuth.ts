@@ -157,6 +157,9 @@ export const useAuth = () => {
       })
       
       if (error) throw error
+      
+      // Sign in successful - the onAuthStateChange will handle user loading
+      return { success: true }
     } catch (err) {
       let userMessage = "Authentication failed. Please check your credentials and try again.";
       
@@ -171,6 +174,7 @@ export const useAuth = () => {
       )
       addError(signInError)
       setError(signInError.userMessage)
+      return { success: false }
     } finally {
       setLoading(false)
     }
@@ -197,6 +201,7 @@ export const useAuth = () => {
       
       // Check if email confirmation is required
       setError('Account created successfully! Please check your email for confirmation, then sign in.')
+      return { success: true }
     } catch (err) {
       let userMessage = "Sign up failed. Please try again.";
       
@@ -211,6 +216,7 @@ export const useAuth = () => {
       )
       addError(signUpError)
       setError(signUpError.userMessage)
+      return { success: false }
     } finally {
       setLoading(false)
     }
