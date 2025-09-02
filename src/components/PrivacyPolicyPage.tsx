@@ -66,7 +66,12 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ onToggleSidebar, 
           <div>
             <p className="text-slate-300 leading-relaxed">
               Nutriloom AI ("we," "our," or "us") values your trust. This Privacy Policy explains how we collect, use, and protect your information when you use our website{' '}
-              <span className="text-indigo-400">nutriloomai.com</span>{' '}
+              <button 
+                onClick={() => window.location.href = 'https://nutriloomai.com'}
+                className="text-indigo-400 hover:text-indigo-300 underline cursor-pointer"
+              >
+                nutriloomai.com
+              </button>{' '}
               and related services (the "Services").
             </p>
           </div>
@@ -143,7 +148,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ onToggleSidebar, 
             <ul className="text-slate-300 space-y-2 ml-4">
               <li>• We retain your information only as long as needed for the purposes described in this Policy.</li>
               <li>• You may request deletion of your data by contacting us at{' '}
-                <a href="mailto:nutriloomai@gmail.com" className="text-indigo-400 hover:text-indigo-300">
+                <a href="mailto:nutriloomai@gmail.com" className="text-indigo-400 hover:text-indigo-300 underline">
                   nutriloomai@gmail.com
                 </a>
               </li>
@@ -162,7 +167,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ onToggleSidebar, 
             </ul>
             <p className="text-slate-300 mt-4">
               To exercise these rights, contact us at{' '}
-              <a href="mailto:nutriloomai@gmail.com" className="text-indigo-400 hover:text-indigo-300">
+              <a href="mailto:nutriloomai@gmail.com" className="text-indigo-400 hover:text-indigo-300 underline">
                 nutriloomai@gmail.com
               </a>
             </p>
@@ -215,19 +220,22 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ onToggleSidebar, 
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Mail size={16} className="text-indigo-400" />
-                <a href="mailto:nutriloomai@gmail.com" className="text-indigo-400 hover:text-indigo-300">
+                <a href="mailto:nutriloomai@gmail.com" className="text-indigo-400 hover:text-indigo-300 underline">
                   nutriloomai@gmail.com
                 </a>
                 <span className="text-slate-400">/</span>
-                <a href="mailto:devdontaplah@gmail.com" className="text-indigo-400 hover:text-indigo-300">
+                <a href="mailto:devdontaplah@gmail.com" className="text-indigo-400 hover:text-indigo-300 underline">
                   devdontaplah@gmail.com
                 </a>
               </div>
               <div className="flex items-center gap-2">
                 <Globe size={16} className="text-indigo-400" />
-                <a href="https://nutriloomai.com" className="text-indigo-400 hover:text-indigo-300">
+                <button 
+                  onClick={() => window.location.href = 'https://nutriloomai.com'}
+                  className="text-indigo-400 hover:text-indigo-300 underline cursor-pointer"
+                >
                   nutriloomai.com
-                </a>
+                </button>
               </div>
             </div>
           </div>
