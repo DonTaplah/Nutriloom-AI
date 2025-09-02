@@ -522,7 +522,7 @@ function App() {
               <div className="flex items-center justify-center gap-6 text-sm">
                 <button
                   onClick={() => setCurrentView('privacy')}
-                  className="text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer"
+                  className="text-slate-400 hover:text-indigo-400 transition-colors"
                 >
                   Privacy Policy
                 </button>
