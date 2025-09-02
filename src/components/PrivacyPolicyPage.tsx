@@ -66,7 +66,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ onToggleSidebar, 
           <div>
             <p className="text-slate-300 leading-relaxed">
               Nutriloom AI ("we," "our," or "us") values your trust. This Privacy Policy explains how we collect, use, and protect your information when you use our website{' '}
-              <a href="https://nutriloomai.com" className="text-indigo-400 hover:text-indigo-300">nutriloomai.com</a>{' '}
+              <span className="text-indigo-400">nutriloomai.com</span>{' '}
               and related services (the "Services").
             </p>
           </div>
