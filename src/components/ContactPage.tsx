@@ -65,8 +65,20 @@ const ContactPage: React.FC<ContactPageProps> = ({ onToggleSidebar }) => {
     setIsSubmitting(true);
 
     try {
-      // Simulate form submission (replace with actual API call)
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Create email content
+      const emailSubject = encodeURIComponent(`Nutriloom AI Contact: ${formData.subject}`);
+      const emailBody = encodeURIComponent(
+        `Name: ${formData.name}\n` +
+        `Email: ${formData.email}\n` +
+        `Subject: ${formData.subject}\n\n` +
+        `Message:\n${formData.message}\n\n` +
+        `---\n` +
+        `Sent from Nutriloom AI Contact Form`
+      );
+      
+      // Open email client with pre-filled content
+      const mailtoLink = `mailto:nutriloomai@gmail.com?subject=${emailSubject}&body=${emailBody}`;
+      window.open(mailtoLink, '_blank');
       
       setIsSubmitted(true);
       setFormData({ name: '', email: '', subject: '', message: '' });
@@ -88,7 +100,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ onToggleSidebar }) => {
           </div>
           <h1 className="text-2xl font-bold text-white mb-4">Message Sent!</h1>
           <p className="text-slate-300 mb-6">
-            Thank you for contacting us. We'll get back to you within 24 hours.
+            Your email client should have opened with your message. If it didn't open automatically, please send your message to nutriloomai@gmail.com
           </p>
           <button
             onClick={() => setIsSubmitted(false)}
@@ -150,6 +162,13 @@ const ContactPage: React.FC<ContactPageProps> = ({ onToggleSidebar }) => {
                 />
                 {errors.name && (
                   <p className="mt-1 text-sm text-red-400">{errors.name}</p>
+              <a
+                href="mailto:nutriloomai@gmail.com"
+                className="flex items-center gap-2 px-4 py-2 bg-green-600/20 border border-green-500/30 rounded-lg text-green-300 hover:bg-green-600/30 transition-colors"
+              >
+                <Mail size={18} />
+                Email
+              </a>
                 )}
               </div>
 
