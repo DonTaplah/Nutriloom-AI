@@ -163,13 +163,6 @@ const ContactPage: React.FC<ContactPageProps> = ({ onToggleSidebar }) => {
                 {errors.name && (
                   <p className="mt-1 text-sm text-red-400">{errors.name}</p>
               <a
-                href="mailto:nutriloomai@gmail.com"
-                className="flex items-center gap-2 px-4 py-2 bg-green-600/20 border border-green-500/30 rounded-lg text-green-300 hover:bg-green-600/30 transition-colors"
-              >
-                <Mail size={18} />
-                Email
-              </a>
-                )}
               </div>
 
               <div>
