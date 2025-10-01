@@ -14,14 +14,13 @@ export const useAuth = () => {
   useEffect(() => {
     // Get initial session
     const getInitialSession = async () => {
+      // Skip session check if Supabase is not configured
+      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+        setLoading(false)
+        return
+      }
+      
       try {
-        // Check if Supabase is properly configured
-        if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-          console.warn('Supabase not configured. Please connect to Supabase using the settings button.')
-          setLoading(false)
-          return
-        }
-        
         const { data: { session }, error } = await supabase.auth.getSession()
         if (error) throw error
         
@@ -29,15 +28,7 @@ export const useAuth = () => {
           await loadUserProfile(session.user)
         }
       } catch (err) {
-        // Only show error if it's not a configuration issue
-        if (import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY) {
-          const authError = createAuthError(
-            `Failed to get initial session: ${err}`,
-            { action: 'getInitialSession' }
-          )
-          addError(authError)
-          setError(authError.userMessage)
-        }
+        console.warn('Failed to get initial session:', err)
       } finally {
         setLoading(false)
       }
