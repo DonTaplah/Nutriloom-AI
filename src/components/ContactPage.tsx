@@ -163,6 +163,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ onToggleSidebar }) => {
                 {errors.name && (
                   <p className="mt-1 text-sm text-red-400">{errors.name}</p>
                 )
+                }
               <a
               </div>
 
