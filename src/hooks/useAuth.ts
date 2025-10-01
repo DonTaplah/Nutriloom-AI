@@ -15,6 +15,13 @@ export const useAuth = () => {
     // Get initial session
     const getInitialSession = async () => {
       try {
+        // Check if Supabase is properly configured
+        if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+          console.warn('Supabase not configured. Please connect to Supabase using the settings button.')
+          setLoading(false)
+          return
+        }
+        
         const { data: { session }, error } = await supabase.auth.getSession()
         if (error) throw error
         
@@ -22,12 +29,15 @@ export const useAuth = () => {
           await loadUserProfile(session.user)
         }
       } catch (err) {
-        const authError = createAuthError(
-          `Failed to get initial session: ${err}`,
-          { action: 'getInitialSession' }
-        )
-        addError(authError)
-        setError(authError.userMessage)
+        // Only show error if it's not a configuration issue
+        if (import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY) {
+          const authError = createAuthError(
+            `Failed to get initial session: ${err}`,
+            { action: 'getInitialSession' }
+          )
+          addError(authError)
+          setError(authError.userMessage)
+        }
       } finally {
         setLoading(false)
       }
@@ -151,6 +161,12 @@ export const useAuth = () => {
     setError(null)
     
     try {
+      // Check if Supabase is configured
+      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+        setError('Please connect to Supabase to enable authentication. Click the settings button to configure.')
+        return { success: false }
+      }
+      
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -185,6 +201,12 @@ export const useAuth = () => {
     setError(null)
     
     try {
+      // Check if Supabase is configured
+      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+        setError('Please connect to Supabase to enable authentication. Click the settings button to configure.')
+        return { success: false }
+      }
+      
       const { error } = await supabase.auth.signUp({
         email,
         password,
