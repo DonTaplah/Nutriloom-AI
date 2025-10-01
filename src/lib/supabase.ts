@@ -3,10 +3,13 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-// Check if Supabase is configured
-const isSupabaseConfigured = supabaseUrl && supabaseAnonKey && 
+// Check if Supabase is properly configured with real values
+const isSupabaseConfigured = supabaseUrl && 
+  supabaseAnonKey && 
   supabaseUrl !== 'your_supabase_url' && 
-  supabaseAnonKey !== 'your_supabase_anon_key'
+  supabaseAnonKey !== 'your_supabase_anon_key' &&
+  supabaseUrl.startsWith('https://') &&
+  supabaseUrl.includes('.supabase.co')
 
 if (!isSupabaseConfigured) {
   console.warn('Supabase not configured. Please connect to Supabase using the button in the top right.')
@@ -39,26 +42,51 @@ const createMockSupabaseClient = () => ({
     signInWithOAuth: () => Promise.resolve({ 
       data: { url: null, provider: null }, 
       error: { message: 'Supabase not configured. Please connect to Supabase to enable authentication.' } 
-    })
+    }),
+    getUser: () => Promise.resolve({ data: { user: null }, error: null }),
+    refreshSession: () => Promise.resolve({ data: { session: null, user: null }, error: null }),
+    setSession: () => Promise.resolve({ data: { session: null, user: null }, error: null }),
+    updateUser: () => Promise.resolve({ data: { user: null }, error: { message: 'Supabase not configured' } }),
+    resetPasswordForEmail: () => Promise.resolve({ data: {}, error: { message: 'Supabase not configured' } }),
+    exchangeCodeForSession: () => Promise.resolve({ data: { session: null, user: null }, error: null }),
+    resend: () => Promise.resolve({ data: {}, error: { message: 'Supabase not configured' } }),
+    initialize: () => Promise.resolve(),
+    startAutoRefresh: () => {},
+    stopAutoRefresh: () => {}
   },
   from: (table: string) => ({
     select: (columns?: string) => ({
       eq: (column: string, value: any) => ({
         maybeSingle: () => Promise.resolve({ data: null, error: null }),
         single: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
-        order: (column: string, options?: any) => Promise.resolve({ data: [], error: null })
+        order: (column: string, options?: any) => Promise.resolve({ data: [], error: null }),
+        limit: (count: number) => Promise.resolve({ data: [], error: null }),
+        range: (from: number, to: number) => Promise.resolve({ data: [], error: null })
       }),
-      order: (column: string, options?: any) => Promise.resolve({ data: [], error: null })
+      order: (column: string, options?: any) => Promise.resolve({ data: [], error: null }),
+      limit: (count: number) => Promise.resolve({ data: [], error: null }),
+      range: (from: number, to: number) => Promise.resolve({ data: [], error: null })
     }),
-    insert: (values: any) => Promise.resolve({ 
-      data: null, 
-      error: { message: 'Supabase not configured. Data not saved.' } 
+    insert: (values: any) => ({
+      select: (columns?: string) => ({
+        single: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured. Data not saved.' } }),
+        maybeSingle: () => Promise.resolve({ data: null, error: null })
+      }),
+      then: (callback: any) => Promise.resolve({ 
+        data: null, 
+        error: { message: 'Supabase not configured. Data not saved.' } 
+      }).then(callback)
     }),
     update: (values: any) => ({
       eq: (column: string, value: any) => ({
         select: (columns?: string) => ({
-          single: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } })
-        })
+          single: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+          maybeSingle: () => Promise.resolve({ data: null, error: null })
+        }),
+        then: (callback: any) => Promise.resolve({ 
+          data: null, 
+          error: { message: 'Supabase not configured' } 
+        }).then(callback)
       })
     }),
     delete: () => ({
@@ -66,21 +94,41 @@ const createMockSupabaseClient = () => ({
         data: null, 
         error: { message: 'Supabase not configured' } 
       })
+    }),
+    upsert: (values: any) => ({
+      select: (columns?: string) => ({
+        single: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+        maybeSingle: () => Promise.resolve({ data: null, error: null })
+      })
     })
-  })
+  }),
+  storage: {
+    from: (bucket: string) => ({
+      upload: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+      download: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+      list: () => Promise.resolve({ data: [], error: null }),
+      remove: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+      getPublicUrl: () => ({ data: { publicUrl: '' } })
+    })
+  },
+  functions: {
+    invoke: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } })
+  },
+  channel: () => ({
+    on: () => ({ subscribe: () => {} }),
+    subscribe: () => {},
+    unsubscribe: () => Promise.resolve('ok')
+  }),
+  removeChannel: () => Promise.resolve('ok'),
+  removeAllChannels: () => Promise.resolve([]),
+  getChannels: () => []
 })
 
-// Export the appropriate client
-export const supabase = isSupabaseConfigured 
-  ? createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        autoRefreshToken: true,
-        persistSession: true,
-        detectSessionInUrl: true,
-        flowType: 'pkce'
-      }
-    })
-  : createMockSupabaseClient()
+// Always use mock client to prevent any network requests
+export const supabase = createMockSupabaseClient()
+
+// Export configuration status for components that need to check
+export { isSupabaseConfigured }
 
 // Database types
 export interface Database {
