@@ -14,9 +14,10 @@ export default defineConfig({
           icons: ['lucide-react']
         }
       }
-    }
+    },
+    chunkSizeWarningLimit: 600
   },
   optimizeDeps: {
-    exclude: ['lucide-react'],
-  },
+    include: ['react', 'react-dom', 'react-helmet-async']
+  }
 });

@@ -12,34 +12,41 @@ export const useAuth = () => {
   const { addError } = useErrorHandler()
 
   useEffect(() => {
+    let mounted = true
+
     // Get initial session
     const getInitialSession = async () => {
       // Skip session check if Supabase is not configured
       if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-        setLoading(false)
+        if (mounted) setLoading(false)
         return
       }
-      
+
       try {
         const { data: { session }, error } = await supabase.auth.getSession()
         if (error) throw error
-        
-        if (session?.user) {
+
+        if (session?.user && mounted) {
           await loadUserProfile(session.user)
         }
       } catch (err) {
         console.warn('Failed to get initial session:', err)
       } finally {
-        setLoading(false)
+        if (mounted) setLoading(false)
       }
     }
 
-    getInitialSession()
+    // Set loading to false immediately if no config, otherwise check session
+    if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+      setLoading(false)
+    } else {
+      getInitialSession()
+    }
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state change:', event, session?.user?.email);
-      
+      if (!mounted) return
+
       if (event === 'SIGNED_IN' && session?.user) {
         await loadUserProfile(session.user)
         setLoading(false)
@@ -50,13 +57,18 @@ export const useAuth = () => {
         setUser(null)
         setLoading(false)
         setError(null)
-      } else if (event === 'INITIAL_SESSION' && session?.user) {
-        await loadUserProfile(session.user)
+      } else if (event === 'INITIAL_SESSION') {
+        if (session?.user) {
+          await loadUserProfile(session.user)
+        }
         setLoading(false)
       }
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
   }, [])
 
   const loadUserProfile = async (supabaseUser: SupabaseUser) => {

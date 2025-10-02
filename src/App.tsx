@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { Instagram, Twitter, Mail, Heart, Menu, X } from 'lucide-react';
 import { useAuth } from './hooks/useAuth';
 import { useRecipes } from './hooks/useRecipes';
@@ -8,20 +8,21 @@ import ErrorToastContainer from './components/ErrorToastContainer';
 import OfflineIndicator from './components/OfflineIndicator';
 import NetworkStatus from './components/NetworkStatus';
 import LoadingFallback from './components/LoadingFallback';
-import AuthPage from './components/AuthPage';
-import PricingPage from './components/PricingPage';
-import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
-import HomePage from './components/HomePage';
-import RecipeList from './components/RecipeList';
-import RecipeDetail from './components/RecipeDetail';
-import RecipeGenerator from './components/RecipeGenerator';
-import ScanYourDishPage from './components/VideoUploadPage';
-import ContactPage from './components/ContactPage';
-import PrivacyPolicyPage from './components/PrivacyPolicyPage';
 import LocalBusinessSchema from './components/SEO/LocalBusinessSchema';
 import LocalSEOHead from './components/SEO/LocalSEOHead';
 import { Recipe } from './types/Recipe';
+
+// Lazy load route components for better initial load performance
+const HomePage = lazy(() => import('./components/HomePage'));
+const AuthPage = lazy(() => import('./components/AuthPage'));
+const PricingPage = lazy(() => import('./components/PricingPage'));
+const RecipeGenerator = lazy(() => import('./components/RecipeGenerator'));
+const RecipeList = lazy(() => import('./components/RecipeList'));
+const RecipeDetail = lazy(() => import('./components/RecipeDetail'));
+const ScanYourDishPage = lazy(() => import('./components/VideoUploadPage'));
+const ContactPage = lazy(() => import('./components/ContactPage'));
+const PrivacyPolicyPage = lazy(() => import('./components/PrivacyPolicyPage'));
 
 type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing' | 'scan-dish' | 'generator' | 'my-recipes' | 'contact' | 'privacy';
 
@@ -112,9 +113,9 @@ function App() {
     return isRecipeSaved(recipeId);
   };
 
-  // Show loading screen while checking authentication
+  // Show loading screen while checking authentication (only for initial mount)
   if (authLoading) {
-    return <LoadingFallback message="Loading your culinary experience..." size="lg" fullScreen />;
+    return <LoadingFallback message="Loading..." size="lg" fullScreen />;
   }
 
   const handleHomePageSearch = (ingredients: string[], cuisine: string) => {
@@ -327,11 +328,12 @@ function App() {
         {/* Main Content */}
         <main className="lg:ml-64 min-h-screen">
           <ErrorBoundary fallback={
-            <LoadingFallback 
-              message="Something went wrong loading this page. Please try refreshing." 
-              fullScreen 
+            <LoadingFallback
+              message="Something went wrong loading this page. Please try refreshing."
+              fullScreen
             />
           }>
+            <Suspense fallback={<LoadingFallback message="Loading..." size="lg" fullScreen />}>
             {currentView === 'home' && (
               <HomePage 
                 onSearch={handleHomePageSearch} 
@@ -484,12 +486,12 @@ function App() {
             )}
             
             {currentView === 'privacy' && (
-              <PrivacyPolicyPage 
+              <PrivacyPolicyPage
                 onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
                 onBack={() => setCurrentView('home')}
               />
             )}
-            
+
             {currentView === 'auth' && (
               <AuthPage
                 onLogin={handleLogin}
@@ -499,6 +501,7 @@ function App() {
                 onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
               />
             )}
+            </Suspense>
           </ErrorBoundary>
         </main>
 
