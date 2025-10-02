@@ -124,8 +124,10 @@ const createMockSupabaseClient = () => ({
   getChannels: () => []
 })
 
-// Always use mock client to prevent any network requests
-export const supabase = createMockSupabaseClient()
+// Use real Supabase client if configured, otherwise use mock
+export const supabase = isSupabaseConfigured
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : createMockSupabaseClient()
 
 // Export configuration status for components that need to check
 export { isSupabaseConfigured }
