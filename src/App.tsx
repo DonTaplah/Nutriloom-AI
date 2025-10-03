@@ -113,10 +113,7 @@ function App() {
     return isRecipeSaved(recipeId);
   };
 
-  // Show loading screen while checking authentication (only for initial mount)
-  if (authLoading) {
-    return <LoadingFallback message="Loading..." size="lg" fullScreen />;
-  }
+  // Don't block rendering on auth check - let the app load immediately
 
   const handleHomePageSearch = (ingredients: string[], cuisine: string) => {
     setSearchIngredients(ingredients);

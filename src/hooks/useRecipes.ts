@@ -15,7 +15,11 @@ export const useRecipes = (user: User | null) => {
 
   useEffect(() => {
     if (user?.isAuthenticated) {
-      loadSavedRecipes()
+      // Defer recipe loading to not block initial render
+      const timer = setTimeout(() => {
+        loadSavedRecipes()
+      }, 100)
+      return () => clearTimeout(timer)
     } else {
       setSavedRecipes([])
     }
