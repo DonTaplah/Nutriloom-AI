@@ -49,7 +49,11 @@ function App() {
   const handleSignup = async (email: string, password: string, name: string) => {
     setAuthError(null);
     const result = await signUp(email, password, name);
-    // For signup, we don't redirect immediately as user needs to confirm email
+    // If auto-signed in (email confirmation disabled), redirect to home
+    if (result?.success && result.autoSignedIn) {
+      setCurrentView('home');
+    }
+    // Otherwise, user needs to confirm email or switch to login
   };
 
   const handleSelectPlan = (plan: 'free' | 'pro') => {

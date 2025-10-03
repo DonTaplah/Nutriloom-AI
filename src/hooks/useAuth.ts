@@ -202,15 +202,15 @@ export const useAuth = () => {
   const signUp = async (email: string, password: string, name: string) => {
     setLoading(true)
     setError(null)
-    
+
     try {
       // Check if Supabase is configured
       if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
         setError('Please connect to Supabase to enable authentication. Click the settings button to configure.')
         return { success: false }
       }
-      
-      const { error } = await supabase.auth.signUp({
+
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -221,19 +221,30 @@ export const useAuth = () => {
           }
         }
       })
-      
+
       if (error) throw error
-      
-      // Check if email confirmation is required
+
+      // Check if user was created and signed in automatically (email confirmation disabled)
+      if (data.user && data.session) {
+        // User is signed in immediately - email confirmation is disabled
+        await loadUserProfile(data.user)
+        return { success: true, autoSignedIn: true }
+      }
+
+      // Email confirmation required
       setError('Account created successfully! Please check your email for confirmation, then sign in.')
-      return { success: true }
+      return { success: true, autoSignedIn: false }
     } catch (err) {
       let userMessage = "Sign up failed. Please try again.";
-      
-      if (err instanceof Error && err.message.includes('Password should contain')) {
-        userMessage = err.message;
+
+      if (err instanceof Error) {
+        if (err.message.includes('Password should contain')) {
+          userMessage = err.message;
+        } else if (err.message.includes('User already registered')) {
+          userMessage = "This email is already registered. Please sign in instead.";
+        }
       }
-      
+
       const signUpError = createAuthError(
         `Sign up failed: ${err}`,
         { action: 'signUp', email },
