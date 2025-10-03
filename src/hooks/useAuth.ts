@@ -162,30 +162,40 @@ export const useAuth = () => {
   const signIn = async (email: string, password: string) => {
     setLoading(true)
     setError(null)
-    
+
     try {
       // Check if Supabase is configured
       if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
         setError('Please connect to Supabase to enable authentication. Click the settings button to configure.')
         return { success: false }
       }
-      
-      const { error } = await supabase.auth.signInWithPassword({
+
+      console.log('Attempting sign in with:', email)
+
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
       })
-      
+
+      console.log('Sign in response:', { hasUser: !!data?.user, hasSession: !!data?.session, error: error?.message })
+
       if (error) throw error
-      
-      // Sign in successful - the onAuthStateChange will handle user loading
+
+      // Load user profile immediately after sign in
+      if (data.user) {
+        await loadUserProfile(data.user)
+      }
+
       return { success: true }
     } catch (err) {
       let userMessage = "Authentication failed. Please check your credentials and try again.";
-      
+
       if (err instanceof Error && err.message.includes('Invalid login credentials')) {
         userMessage = "Invalid email or password. Please try again.";
       }
-      
+
+      console.error('Sign in error:', err)
+
       const signInError = createAuthError(
         `Sign in failed: ${err instanceof Error ? err.message : String(err)}`,
         { action: 'signIn', email },
