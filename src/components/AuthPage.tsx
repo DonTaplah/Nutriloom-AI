@@ -19,24 +19,29 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
   const [googleLoading, setGoogleLoading] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLocalError(null);
-    
+
     if (!email || !password) {
       setLocalError('Please fill in all required fields');
       return;
     }
-    
+
     if (!isLogin && !name) {
       setLocalError('Please enter your full name');
       return;
     }
-    
-    if (isLogin) {
-      onLogin(email, password);
-    } else {
-      onSignup(email, password, name);
+
+    try {
+      if (isLogin) {
+        await onLogin(email, password);
+      } else {
+        await onSignup(email, password, name);
+      }
+    } catch (err) {
+      console.error('Auth submit error:', err);
+      setLocalError('An error occurred. Please try again.');
     }
   };
 

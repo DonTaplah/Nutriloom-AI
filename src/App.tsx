@@ -39,21 +39,29 @@ function App() {
 
   // Authentication handlers
   const handleLogin = async (email: string, password: string) => {
-    setAuthError(null);
-    const result = await signIn(email, password);
-    if (result?.success) {
-      setCurrentView('home');
+    try {
+      setAuthError(null);
+      const result = await signIn(email, password);
+      if (result?.success) {
+        setCurrentView('home');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
     }
   };
 
   const handleSignup = async (email: string, password: string, name: string) => {
-    setAuthError(null);
-    const result = await signUp(email, password, name);
-    // If auto-signed in (email confirmation disabled), redirect to home
-    if (result?.success && result.autoSignedIn) {
-      setCurrentView('home');
+    try {
+      setAuthError(null);
+      const result = await signUp(email, password, name);
+      // If auto-signed in (email confirmation disabled), redirect to home
+      if (result?.success && result.autoSignedIn) {
+        setCurrentView('home');
+      }
+      // Otherwise, user needs to confirm email or switch to login
+    } catch (err) {
+      console.error('Signup error:', err);
     }
-    // Otherwise, user needs to confirm email or switch to login
   };
 
   const handleSelectPlan = (plan: 'free' | 'pro') => {
