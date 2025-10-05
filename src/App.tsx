@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Instagram, Twitter, Mail, Heart, Menu, X } from 'lucide-react';
 import { useAuth } from './hooks/useAuth';
 import { useRecipes } from './hooks/useRecipes';
@@ -36,6 +36,13 @@ function App() {
   const [searchIngredients, setSearchIngredients] = useState<string[]>([]);
   const [selectedCuisine, setSelectedCuisine] = useState<string>('all');
   const { errorState, removeError, retryAction } = useErrorHandler();
+
+  // Redirect authenticated users away from auth page
+  useEffect(() => {
+    if (user && user.isAuthenticated && currentView === 'auth') {
+      setCurrentView('home');
+    }
+  }, [user, currentView]);
 
   // Authentication handlers
   const handleLogin = async (email: string, password: string) => {
