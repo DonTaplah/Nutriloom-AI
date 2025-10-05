@@ -170,14 +170,10 @@ export const useAuth = () => {
         return { success: false }
       }
 
-      console.log('Attempting sign in with:', email)
-
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
       })
-
-      console.log('Sign in response:', { hasUser: !!data?.user, hasSession: !!data?.session, error: error?.message })
 
       if (error) throw error
 
@@ -193,8 +189,6 @@ export const useAuth = () => {
       if (err instanceof Error && err.message.includes('Invalid login credentials')) {
         userMessage = "Invalid email or password. Please try again.";
       }
-
-      console.error('Sign in error:', err)
 
       const signInError = createAuthError(
         `Sign in failed: ${err instanceof Error ? err.message : String(err)}`,

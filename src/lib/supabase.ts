@@ -3,12 +3,6 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-console.log('Supabase configuration:', {
-  url: supabaseUrl,
-  hasKey: !!supabaseAnonKey,
-  keyPrefix: supabaseAnonKey?.substring(0, 20)
-})
-
 // Check if Supabase is properly configured with real values
 const isSupabaseConfigured = supabaseUrl &&
   supabaseAnonKey &&
@@ -19,8 +13,6 @@ const isSupabaseConfigured = supabaseUrl &&
 
 if (!isSupabaseConfigured) {
   console.warn('Supabase not configured. Please connect to Supabase using the button in the top right.')
-} else {
-  console.log('Supabase is configured correctly')
 }
 
 // Create a complete mock client that prevents all network requests
