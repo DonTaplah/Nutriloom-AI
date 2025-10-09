@@ -121,8 +121,8 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack, user, onPric
 
   return (
     <>
-      {!user.isAuthenticated || user.plan !== 'pro' ? (
-        // Pro-only access gate
+      {!user.isAuthenticated ? (
+        // Login required gate
         <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 flex items-center justify-center">
           <div className="max-w-2xl mx-auto px-4 text-center">
             <button
@@ -132,26 +132,22 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack, user, onPric
               <X size={20} />
               <span>Back</span>
             </button>
-            
+
             <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl p-12 border border-purple-500/30">
               <div className="w-24 h-24 bg-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <Scan size={48} className="text-white" />
               </div>
-              
+
               <h1 className="text-4xl font-bold gradient-text-white mb-4">
                 <span className="gradient-text-primary">SYD</span> - <span className="gradient-text-secondary">Scan Your Dish</span>
               </h1>
-              
-              <div className="w-16 h-16 bg-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Crown size={32} className="text-white" />
-              </div>
-              
-              <h2 className="text-2xl font-bold gradient-text-purple mb-4">Pro Feature</h2>
-              
+
+              <h2 className="text-2xl font-bold gradient-text-purple mb-4">Login Required</h2>
+
               <p className="gradient-text-slate text-lg mb-8 leading-relaxed">
                 SYD (Scan Your Dish) is an advanced AI-powered feature that analyzes your food photos to provide:
               </p>
-              
+
               <div className="grid md:grid-cols-2 gap-4 mb-8 text-left">
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
@@ -182,13 +178,13 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack, user, onPric
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
-                  onClick={onPricing}
+                  onClick={onAuth}
                   className="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl"
                 >
-                  Upgrade to Pro
+                  Sign In / Sign Up
                 </button>
                 <button
                   onClick={onBack}
@@ -201,7 +197,7 @@ const ScanYourDishPage: React.FC<VideoUploadPageProps> = ({ onBack, user, onPric
           </div>
         </div>
       ) : (
-        // Original SYD functionality for Pro users
+        // Original SYD functionality for logged in users
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900">
       {/* Mobile Header */}
       <div className="lg:hidden flex items-center justify-between p-4 bg-slate-900/95 backdrop-blur-sm border-b border-indigo-500/20">

@@ -60,14 +60,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
             </button>
             
             <button
-              onClick={user?.isAuthenticated ? (user.plan === 'pro' ? onVideoUpload : onPricing) : onAuth}
-              className={`px-3 py-2 transition-colors duration-200 font-medium text-sm sm:text-base ${
-                user?.isAuthenticated && user.plan === 'pro' 
-                  ? 'gradient-text-slate hover:gradient-text-white' 
-                  : 'gradient-text-slate hover:gradient-text-purple cursor-pointer'
-              }`}
+              onClick={user?.isAuthenticated ? onVideoUpload : onAuth}
+              className="px-3 py-2 transition-colors duration-200 font-medium text-sm sm:text-base gradient-text-slate hover:gradient-text-white"
             >
-              SYD {(!user?.isAuthenticated || user.plan !== 'pro') && '(Pro)'}
+              SYD {!user?.isAuthenticated && '(Login)'}
             </button>
             
             {user?.isAuthenticated ? (

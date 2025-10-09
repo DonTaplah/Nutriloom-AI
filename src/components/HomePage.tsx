@@ -97,15 +97,15 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
               <button
                 onClick={onScanDish}
                 className={`flex items-center justify-center gap-3 px-6 lg:px-8 py-3 lg:py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm lg:text-base ${
-                  user.isAuthenticated && user.plan === 'pro' 
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700' 
+                  user.isAuthenticated
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700'
                     : 'bg-slate-600 gradient-text-slate cursor-not-allowed'
                 }`}
-                disabled={!user.isAuthenticated || user.plan !== 'pro'}
+                disabled={!user.isAuthenticated}
               >
                 <Scan size={20} />
-                <span className="hidden sm:inline">{user.isAuthenticated && user.plan === 'pro' ? 'SYD - Scan Your Dish' : 'SYD - Scan Your Dish (Pro Only)'}</span>
-                <span className="sm:hidden">SYD {(!user.isAuthenticated || user.plan !== 'pro') && '(Pro)'}</span>
+                <span className="hidden sm:inline">{user.isAuthenticated ? 'SYD - Scan Your Dish' : 'SYD - Login Required'}</span>
+                <span className="sm:hidden">SYD {!user.isAuthenticated && '(Login)'}</span>
               </button>
               
               <button
