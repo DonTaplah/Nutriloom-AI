@@ -40,16 +40,19 @@ function App() {
   // Redirect authenticated users away from auth page
   useEffect(() => {
     if (user && user.isAuthenticated && currentView === 'auth') {
+      console.log('Redirecting authenticated user to home');
       setCurrentView('home');
     }
-  }, [user, currentView]);
+  }, [user]);
 
   // Authentication handlers
   const handleLogin = async (email: string, password: string) => {
     try {
       setAuthError(null);
       const result = await signIn(email, password);
+      console.log('Sign in result:', result);
       if (result?.success) {
+        console.log('Sign in successful, redirecting to home');
         setCurrentView('home');
       }
     } catch (err) {

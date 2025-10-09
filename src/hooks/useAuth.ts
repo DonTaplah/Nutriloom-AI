@@ -73,12 +73,15 @@ export const useAuth = () => {
 
   const loadUserProfile = async (supabaseUser: SupabaseUser) => {
     try {
+      console.log('Loading user profile for:', supabaseUser.id);
       // Check if user profile exists
       const { data: profile, error: profileError } = await supabase
         .from('user_profiles')
         .select('*')
         .eq('id', supabaseUser.id)
         .maybeSingle()
+
+      console.log('Profile query result:', { profile, profileError });
 
       if (profileError && profileError.code !== 'PGRST116') {
         throw profileError
@@ -99,9 +102,11 @@ export const useAuth = () => {
           .from('user_profiles')
           .insert(newProfile)
 
+        console.log('Profile insert result:', { insertError });
+
         if (insertError) throw insertError
 
-        setUser({
+        const userState = {
           id: newProfile.id,
           email: newProfile.email,
           name: newProfile.name,
@@ -112,7 +117,9 @@ export const useAuth = () => {
             recipesGeneratedThisMonth: newProfile.recipes_generated_this_month,
             lastResetDate: new Date(newProfile.last_reset_date)
           }
-        })
+        };
+        console.log('Setting user state to:', userState);
+        setUser(userState)
       } else {
         // Check if we need to reset monthly usage
         const now = new Date()
@@ -135,7 +142,7 @@ export const useAuth = () => {
           updatedProfile = resetProfile
         }
 
-        setUser({
+        const userState = {
           id: updatedProfile.id,
           email: updatedProfile.email,
           name: updatedProfile.name,
@@ -146,9 +153,12 @@ export const useAuth = () => {
             recipesGeneratedThisMonth: updatedProfile.recipes_generated_this_month,
             lastResetDate: new Date(updatedProfile.last_reset_date)
           }
-        })
+        };
+        console.log('Setting user state to:', userState);
+        setUser(userState)
       }
     } catch (err) {
+      console.error('Error loading user profile:', err);
       const profileError = createAPIError(
         `Failed to load user profile: ${err}`,
         500,
