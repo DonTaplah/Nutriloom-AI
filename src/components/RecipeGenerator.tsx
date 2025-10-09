@@ -40,7 +40,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
 
   // Check if it's a new month and reset usage if needed
   React.useEffect(() => {
-    if (user.isAuthenticated && user.plan === 'free') {
+    if (false && user.isAuthenticated && user.plan === 'free') {
       const now = new Date();
       const lastReset = new Date(user.usageStats.lastResetDate);
       
@@ -290,19 +290,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
       return;
     }
 
-    // Check usage limits for free users
-    if (user.plan === 'free') {
-      const remaining = getRemainingGenerations();
-      if (remaining !== null && remaining <= 0) {
-        setError(`You've reached your monthly limit of 5 recipe generations. Your limit resets on ${getNextResetDate()}. Upgrade to Pro for unlimited generations.`);
-        return;
-      }
-    }
-
-    if (generatePremium && (!user.isAuthenticated || user.plan === 'free')) {
-      setError('Premium recipes require a Pro subscription');
-      return;
-    }
+    // All users have Pro access now - no limits
 
     setIsGenerating(true);
 
@@ -467,8 +455,8 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
               >
                 <option value="beginner" className="bg-slate-800">Amateur (Default)</option>
                 <option value="pro" className="bg-slate-800">Professional</option>
-                <option value="legendary" className="bg-slate-800" disabled={!user.isAuthenticated || user.plan === 'free'}>
-                  Legendary {(!user.isAuthenticated || user.plan === 'free') ? '(Pro Only)' : ''}
+                <option value="legendary" className="bg-slate-800" disabled={!user.isAuthenticated}>
+                  Legendary {!user.isAuthenticated ? '(Login Required)' : ''}
                 </option>
               </select>
               <p className="text-slate-400 text-sm mt-2">
@@ -484,7 +472,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                   id="premium-recipe"
                   checked={generatePremium}
                   onChange={(e) => setGeneratePremium(e.target.checked)}
-                  disabled={!user.isAuthenticated || user.plan === 'free'}
+                  disabled={!user.isAuthenticated}
                   className="mt-1 w-4 h-4 text-indigo-600 bg-slate-900 border-slate-600 rounded focus:ring-indigo-500 focus:ring-2 disabled:opacity-50"
                 />
                 <div className="flex-1">
@@ -492,10 +480,10 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                     <Star className="w-5 h-5 text-yellow-400" />
                     <span className="hidden sm:inline">Generate Premium (Legendary) Recipe</span>
                     <span className="sm:hidden">Premium Recipe</span>
-                    {(!user.isAuthenticated || user.plan === 'free') && (
+                    {!user.isAuthenticated && (
                       <span className="px-2 py-1 bg-indigo-600 text-white text-xs rounded-full whitespace-nowrap">
-                        <span className="hidden sm:inline">Pro Only - Login Required</span>
-                        <span className="sm:hidden">Pro Only</span>
+                        <span className="hidden sm:inline">Login Required</span>
+                        <span className="sm:hidden">Login</span>
                       </span>
                     )}
                   </label>
@@ -511,14 +499,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                         <span className="text-blue-400 hover:text-blue-300 cursor-pointer" onClick={onAuth}>
                           Sign Up
                         </span>
-                        <span className="ml-1">to access Pro.</span>
-                      </>
-                    ) : user.plan === 'free' ? (
-                      <>
-                        <span className="text-blue-400 hover:text-blue-300 cursor-pointer ml-1" onClick={onPricing}>
-                          Upgrade to Pro
-                        </span>
-                        <span className="ml-1">to access Legendary recipes.</span>
+                        <span className="ml-1">to access premium features.</span>
                       </>
                     ) : (
                       <>
@@ -538,8 +519,8 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
               </div>
             )}
 
-            {/* Usage Stats for Free Users */}
-            {user.isAuthenticated && user.plan === 'free' && (
+            {/* Usage Stats - Hidden for all Pro users */}
+            {false && user.isAuthenticated && user.plan === 'free' && (
               <div className="bg-blue-500/20 border border-blue-500/50 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-blue-300 font-medium">Monthly Usage</span>
@@ -596,13 +577,13 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                   isGenerating || 
                   isRetrying ||
                   ingredientsText.trim().length === 0 || 
-                  (user.isAuthenticated && user.plan === 'free' && getRemainingGenerations() === 0)
+                  false
                 }
                 className={`w-full py-3 lg:py-4 rounded-xl font-semibold text-base lg:text-lg transition-all duration-200 ${
                   isGenerating || 
                   isRetrying ||
                   ingredientsText.trim().length === 0 || 
-                  (user.isAuthenticated && user.plan === 'free' && getRemainingGenerations() === 0)
+                  false
                     ? 'bg-slate-600 text-slate-400 cursor-not-allowed'
                     : generatePremium && user.isAuthenticated && user.plan === 'pro'
                     ? 'bg-gradient-to-r from-yellow-600 to-orange-600 text-white hover:from-yellow-700 hover:to-orange-700 shadow-lg hover:shadow-xl'
@@ -616,7 +597,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
                       {isRetrying ? `Retrying... (${attemptCount}/3)` : 'Generating Recipe...'}
                     </span>
                   </div>
-                ) : user.isAuthenticated && user.plan === 'free' && getRemainingGenerations() === 0 ? (
+                ) : false ? (
                   <div className="flex items-center justify-center gap-2">
                     <span className="text-sm lg:text-base">
                       <span className="hidden sm:inline">Monthly Limit Reached - Upgrade to Pro</span>
@@ -649,7 +630,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ onRecipesGenerated, u
         </div>
 
         {/* Pro Upgrade Section */}
-        {(!user.isAuthenticated || user.plan === 'free') && (
+        {!user.isAuthenticated && (
           <div className="mt-6 lg:mt-8 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 rounded-2xl p-6 lg:p-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">

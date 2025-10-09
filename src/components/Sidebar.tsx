@@ -62,10 +62,10 @@ const Sidebar: React.FC<SidebarProps> = ({
       id: 'syd',
       label: 'SYD',
       icon: Scan,
-      onClick: user?.isAuthenticated ? (user.plan === 'pro' ? onScanDish : onPricing) : onAuth,
+      onClick: user?.isAuthenticated ? onScanDish : onAuth,
       active: currentView === 'scan-dish',
       isPro: true,
-      disabled: !user?.isAuthenticated || user.plan !== 'pro'
+      disabled: !user?.isAuthenticated
     }
   ];
 
@@ -155,14 +155,6 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </p>
               </div>
             </div>
-            {user?.plan === 'free' && (
-              <button
-                onClick={() => handleMenuClick(onPricing)}
-                className="w-full px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg text-sm font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200"
-              >
-                Upgrade to Pro
-              </button>
-            )}
           </div>
         ) : (
           <button

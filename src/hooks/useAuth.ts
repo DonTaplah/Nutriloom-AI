@@ -85,12 +85,12 @@ export const useAuth = () => {
       }
 
       if (!profile) {
-        // Create new user profile
+        // Create new user profile with Pro plan by default
         const newProfile = {
           id: supabaseUser.id,
           email: supabaseUser.email || '',
           name: supabaseUser.user_metadata?.full_name || supabaseUser.user_metadata?.name || supabaseUser.email?.split('@')[0] || 'User',
-          plan: 'free' as const,
+          plan: 'pro' as const,
           recipes_generated_this_month: 0,
           last_reset_date: new Date().toISOString()
         }
