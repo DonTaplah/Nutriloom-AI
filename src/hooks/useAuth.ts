@@ -167,6 +167,7 @@ export const useAuth = () => {
       // Check if Supabase is configured
       if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
         setError('Please connect to Supabase to enable authentication. Click the settings button to configure.')
+        setLoading(false)
         return { success: false }
       }
 
@@ -182,6 +183,7 @@ export const useAuth = () => {
         await loadUserProfile(data.user)
       }
 
+      setLoading(false)
       return { success: true }
     } catch (err) {
       let userMessage = "Authentication failed. Please check your credentials and try again.";
@@ -197,9 +199,8 @@ export const useAuth = () => {
       )
       addError(signInError)
       setError(signInError.userMessage)
-      return { success: false }
-    } finally {
       setLoading(false)
+      return { success: false }
     }
   }
 
@@ -211,6 +212,7 @@ export const useAuth = () => {
       // Check if Supabase is configured
       if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
         setError('Please connect to Supabase to enable authentication. Click the settings button to configure.')
+        setLoading(false)
         return { success: false }
       }
 
@@ -232,11 +234,13 @@ export const useAuth = () => {
       if (data.user && data.session) {
         // User is signed in immediately - email confirmation is disabled
         await loadUserProfile(data.user)
+        setLoading(false)
         return { success: true, autoSignedIn: true }
       }
 
       // Email confirmation required
       setError('Account created successfully! Please check your email for confirmation, then sign in.')
+      setLoading(false)
       return { success: true, autoSignedIn: false }
     } catch (err) {
       let userMessage = "Sign up failed. Please try again.";
@@ -256,9 +260,8 @@ export const useAuth = () => {
       )
       addError(signUpError)
       setError(signUpError.userMessage)
-      return { success: false }
-    } finally {
       setLoading(false)
+      return { success: false }
     }
   }
 
