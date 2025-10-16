@@ -40,13 +40,13 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
 
     try {
       if (isLogin) {
-        const result = await onLogin('', password); // Email not needed for password-only auth
-        if (result?.success) {
+        const result = await onLogin(email, password);
+        if (result) {
           // User will be redirected by parent component
         }
       } else {
-        const result = await onSignup('', password, name);
-        if (result?.success) {
+        const result = await onSignup(email, password, name);
+        if (result) {
           // User will be redirected by parent component
         }
       }
