@@ -74,6 +74,10 @@ export const useAuth = () => {
   const loadUserProfile = async (supabaseUser: SupabaseUser) => {
     try {
       console.log('Loading user profile for:', supabaseUser.id);
+
+      // Small delay to ensure trigger has completed for new users
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       // Check if user profile exists
       const { data: profile, error: profileError } = await supabase
         .from('user_profiles')
@@ -88,7 +92,9 @@ export const useAuth = () => {
       }
 
       if (!profile) {
-        // Create new user profile with Pro plan by default
+        console.log('Profile not found, creating manually as fallback...');
+        // Fallback: Create new user profile with Pro plan by default
+        // (trigger should have created this, but just in case)
         const newProfile = {
           id: supabaseUser.id,
           email: supabaseUser.email || '',
@@ -104,7 +110,10 @@ export const useAuth = () => {
 
         console.log('Profile insert result:', { insertError });
 
-        if (insertError) throw insertError
+        if (insertError) {
+          console.error('Failed to create profile:', insertError);
+          throw insertError
+        }
 
         const userState = {
           id: newProfile.id,
