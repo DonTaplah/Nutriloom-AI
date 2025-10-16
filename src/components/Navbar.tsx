@@ -67,16 +67,26 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onBack, onHome, user, onPr
             </button>
             
             {user?.isAuthenticated ? (
-              <button
-                onClick={onLogout}
-                className="px-4 sm:px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 gradient-text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"
-              >
-                Sign Out
-              </button>
+              <div className="flex items-center space-x-3">
+                <div className="hidden sm:flex items-center space-x-2 px-3 py-2 bg-slate-800/50 rounded-lg border border-indigo-500/30">
+                  <User className="w-4 h-4 text-indigo-400" />
+                  <span className="text-white text-sm font-medium">{user.name || user.email}</span>
+                  <span className="text-xs text-indigo-300 font-semibold uppercase px-2 py-1 bg-indigo-500/20 rounded">
+                    {user.plan}
+                  </span>
+                </div>
+                <button
+                  onClick={onLogout}
+                  className="px-4 sm:px-6 py-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-blue-700 transition-all duration-200 text-sm sm:text-base flex items-center space-x-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Sign Out</span>
+                </button>
+              </div>
             ) : (
               <button
                 onClick={onAuth}
-                className="px-4 sm:px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 gradient-text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 text-sm sm:text-base"
+                className="px-4 sm:px-6 py-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-blue-700 transition-all duration-200 text-sm sm:text-base"
               >
                 Sign In
               </button>
