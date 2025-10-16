@@ -1,217 +1,213 @@
-// Comprehensive Error Handling Utilities
-export enum ErrorType {
-  NETWORK = 'NETWORK',
-  API = 'API',
-  VALIDATION = 'VALIDATION',
-  AUTH = 'AUTH',
-  STORAGE = 'STORAGE',
-  UNKNOWN = 'UNKNOWN'
+import React, { useState } from 'react';
+import { Mail, Lock, User, Eye, EyeOff, BookOpen, Menu } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { isSupabaseConfigured } from '../lib/supabase';
+
+interface AuthPageProps {
+  onLogin: (email: string, password: string) => Promise<void>;
+  onSignup: (email: string, password: string, name: string) => Promise<void>;
+  isLoading: boolean;
+  error: string | null;
+  onToggleSidebar: () => void;
 }
 
-export enum ErrorSeverity {
-  LOW = 'LOW',
-  MEDIUM = 'MEDIUM',
-  HIGH = 'HIGH',
-  CRITICAL = 'CRITICAL'
-}
+export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggleSidebar }: AuthPageProps) {
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null);
 
-export interface AppError {
-  id: string;
-  type: ErrorType;
-  severity: ErrorSeverity;
-  message: string;
-  userMessage: string;
-  timestamp: Date;
-  context?: Record<string, any>;
-  stack?: string;
-  retryable: boolean;
-}
-
-export class ErrorHandler {
-  private static instance: ErrorHandler;
-  private errorQueue: AppError[] = [];
-  private maxQueueSize = 100;
-
-  static getInstance(): ErrorHandler {
-    if (!ErrorHandler.instance) {
-      ErrorHandler.instance = new ErrorHandler();
-    }
-    return ErrorHandler.instance;
-  }
-
-  createError(
-    type: ErrorType,
-    message: string,
-    userMessage: string,
-    severity: ErrorSeverity = ErrorSeverity.MEDIUM,
-    context?: Record<string, any>,
-    retryable: boolean = false
-  ): AppError {
-    return {
-      id: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      type,
-      severity,
-      message,
-      userMessage,
-      timestamp: new Date(),
-      context,
-      stack: new Error().stack,
-      retryable
-    };
-  }
-
-  logError(error: AppError): void {
-    // Add to queue
-    this.errorQueue.push(error);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLocalError(null);
     
-    // Maintain queue size
-    if (this.errorQueue.length > this.maxQueueSize) {
-      this.errorQueue.shift();
-    }
-
-    // Console logging for development
-    if (import.meta.env.DEV) {
-      console.group(`🚨 ${error.severity} Error - ${error.type}`);
-      console.error('Message:', error.message);
-      console.error('User Message:', error.userMessage);
-      console.error('Context:', error.context);
-      console.error('Stack:', error.stack);
-      console.groupEnd();
-    }
-
-    // Send to external logging service in production
-    if (import.meta.env.PROD) {
-      this.sendToLoggingService(error);
-    }
-  }
-
-  private async sendToLoggingService(error: AppError): Promise<void> {
     try {
-      // In a real app, send to services like Sentry, LogRocket, etc.
-      await fetch('/api/errors', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(error)
-      });
-    } catch (loggingError) {
-      console.error('Failed to log error:', loggingError);
+      if (isLogin) {
+        await onLogin(email, password);
+      } else {
+        await onSignup(email, password, name);
+      }
+    } catch (err) {
+      setLocalError('Authentication failed. Please try again.');
     }
-  }
+  };
 
-  getRecentErrors(): AppError[] {
-    return [...this.errorQueue].reverse();
-  }
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    setLocalError(null);
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          }
+        }
+      });
+      if (error) {
+        setLocalError('Google sign-in failed. Please try again.');
+      }
+    } catch (err) {
+      setLocalError('Google sign-in failed. Please try again.');
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
 
-  clearErrors(): void {
-    this.errorQueue = [];
-  }
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 flex items-center justify-center p-4">
+      <div className="absolute top-4 left-4 lg:hidden">
+        <button
+          onClick={onToggleSidebar}
+          className="p-2 text-white hover:bg-slate-700/50 rounded-lg transition-colors"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+      </div>
+
+      <div className="absolute top-4 right-4 flex items-center gap-4">
+        <div className="text-center mb-6">
+          <h2 className="text-xl font-bold text-white mb-2">Sign In to Continue</h2>
+          <p className="text-slate-400 text-sm">Use your Google account to access all features</p>
+        </div>
+        <h1 className="text-lg font-bold gradient-text-primary">Sign In</h1>
+        <div className="w-10"></div>
+      </div>
+      
+      <div className="bg-slate-800/80 backdrop-blur-sm p-6 lg:p-8 rounded-2xl shadow-2xl w-full max-w-md border border-indigo-500/30">
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center mb-4">
+            <div className="flex items-center gap-3">
+              <img 
+                src="/An_AI_chef_with_a_spoon_and_a_fork_in_the_background-removebg-preview.png" 
+                alt="Nutriloom AI Chef" 
+                className="w-10 lg:w-12 h-10 lg:h-12 object-contain"
+              />
+              <h1 className="text-xl lg:text-2xl font-bold text-white">Nutriloom AI</h1>
+            </div>
+          </div>
+          <p className="text-slate-300 text-sm">Weaving nutrition into every meal</p>
+        </div>
+
+        <div className="text-center mb-6">
+          <h2 className="text-xl font-bold text-white mb-2">Sign In to Continue</h2>
+          <p className="text-slate-400 text-sm">Use your Google account to access all features</p>
+        </div>
+
+        {(error || localError || !isSupabaseConfigured) && (
+          <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
+            <div className="mb-2">{localError || error}</div>
+            {(error?.includes('Email authentication is not enabled') || localError?.includes('Email authentication is not enabled')) && (
+              <div className="text-xs text-red-300 mt-2 p-2 bg-red-500/10 rounded border-l-2 border-red-400">
+                <strong>Note:</strong> Email authentication needs to be enabled in the Supabase project settings. 
+                You can try signing in with Google instead, or contact support for assistance.
+              </div>
+            )}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {!isLogin && (
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Full Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm lg:text-base"
+                required
+              />
+            </div>
+          )}
+
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm lg:text-base"
+              required
+            />
+          </div>
+
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full pl-10 pr-12 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm lg:text-base"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-300"
+            >
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
+          </div>
+
+          <button
+            type="submit"
+            disabled={!isSupabaseConfigured || isLoading}
+            className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm lg:text-base"
+          >
+            {isLoading ? 'Please wait...' : isLogin ? 'Sign In' : 'Create Account'}
+          </button>
+        </form>
+
+        <div className="mt-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-600"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-slate-800 text-slate-400">Or continue with</span>
+            </div>
+          </div>
+
+          <button
+            onClick={handleGoogleSignIn}
+            disabled={!isSupabaseConfigured || googleLoading}
+            className="w-full mt-4 bg-white text-gray-900 py-3 rounded-lg font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm lg:text-base flex items-center justify-center gap-3"
+          >
+            <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            {googleLoading ? 'Signing in...' : 'Continue with Google'}
+          </button>
+        </div>
+
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => setIsLogin(!isLogin)}
+            className="text-indigo-400 hover:text-indigo-300 text-sm"
+          >
+            {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+          </button>
+        </div>
+
+        {isLogin && (
+          <div className="mt-4 text-center">
+            <a href="#" className="text-indigo-400 hover:text-indigo-300 text-sm">
+              Forgot your password?
+            </a>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
-
-// Error factory functions
-export const createNetworkError = (message: string, context?: Record<string, any>): AppError => {
-  return ErrorHandler.getInstance().createError(
-    ErrorType.NETWORK,
-    message,
-    "We're having trouble connecting to our servers. Please check your internet connection and try again.",
-    ErrorSeverity.MEDIUM,
-    context,
-    true
-  );
-};
-
-export const createAPIError = (message: string, statusCode?: number, context?: Record<string, any>): AppError => {
-  let userMessage = "Something went wrong on our end. Please try again in a moment.";
-  let severity = ErrorSeverity.MEDIUM;
-  
-  if (statusCode === 429) {
-    userMessage = "You're making requests too quickly. Please wait a moment and try again.";
-  } else if (statusCode === 401) {
-    userMessage = "Your session has expired. Please sign in again.";
-    severity = ErrorSeverity.HIGH;
-  } else if (statusCode === 403) {
-    userMessage = "You don't have permission to perform this action.";
-    severity = ErrorSeverity.HIGH;
-  } else if (statusCode === 404) {
-    userMessage = "The requested resource was not found.";
-  } else if (statusCode && statusCode >= 500) {
-    userMessage = "Our servers are experiencing issues. Please try again later.";
-    severity = ErrorSeverity.HIGH;
-  }
-
-  return ErrorHandler.getInstance().createError(
-    ErrorType.API,
-    message,
-    userMessage,
-    severity,
-    { statusCode, ...context },
-    statusCode !== 401 && statusCode !== 403
-  );
-};
-
-export const createValidationError = (field: string, message: string): AppError => {
-  return ErrorHandler.getInstance().createError(
-    ErrorType.VALIDATION,
-    `Validation failed for ${field}: ${message}`,
-    message,
-    ErrorSeverity.LOW,
-    { field },
-    false
-  );
-};
-
-export const createAuthError = (message: string, code?: string, context?: any): AppError => {
-  const errorHandler = ErrorHandler.getInstance();
-  
-  // Handle specific Supabase authentication errors
-  if (code === 'SUPABASE_NOT_CONFIGURED') {
-    return errorHandler.createError(
-      ErrorType.AUTH,
-      'Database not connected. Please connect to Supabase to enable authentication.',
-      'Database not connected. Please connect to Supabase to enable authentication.',
-      ErrorSeverity.HIGH,
-      context,
-      true
-    );
-  }
-  
-  if (message?.includes('Email logins are disabled') || code === 'email_provider_disabled') {
-    return errorHandler.createError(
-      ErrorType.AUTH,
-      'Email authentication is not enabled. Please contact support or try signing in with Google.',
-      'Email authentication is not enabled. Please contact support or try signing in with Google.',
-      ErrorSeverity.HIGH,
-      context,
-      true
-    );
-  }
-
-  return errorHandler.createError(
-    ErrorType.AUTH,
-    message,
-    "Authentication failed. Please check your credentials and try again.",
-    ErrorSeverity.HIGH,
-    context,
-    true
-  );
-};
-
-// Global error handler
-export const handleGlobalError = (error: Error | AppError): void => {
-  const errorHandler = ErrorHandler.getInstance();
-  
-  if ('type' in error) {
-    // Already an AppError
-    errorHandler.logError(error);
-  } else {
-    // Convert regular Error to AppError
-    const appError = errorHandler.createError(
-      ErrorType.UNKNOWN,
-      error.message,
-      "An unexpected error occurred. Please try again.",
-      ErrorSeverity.MEDIUM,
-      { originalError: error.name },
-      true
-    );
-    errorHandler.logError(appError);
-  }
-};
