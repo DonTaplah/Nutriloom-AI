@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, BookOpen, Menu } from 'lucide-react';
-import { supabase } from '../lib/supabase';
-import { isSupabaseConfigured } from '../lib/supabase';
+import { supabase } from './lib/supabase';
+import { isSupabaseConfigured } from './lib/supabase';
 
 interface AuthPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
