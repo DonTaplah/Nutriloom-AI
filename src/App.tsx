@@ -1,578 +1,213 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
-import { Instagram, Twitter, Mail, Heart, Menu, X } from 'lucide-react';
-import { useAuth } from './hooks/useAuth';
-import { useRecipes } from './hooks/useRecipes';
-import { useErrorHandler } from './hooks/useErrorHandler';
-import ErrorBoundary from './components/ErrorBoundary';
-import ErrorToastContainer from './components/ErrorToastContainer';
-import OfflineIndicator from './components/OfflineIndicator';
-import NetworkStatus from './components/NetworkStatus';
-import LoadingFallback from './components/LoadingFallback';
-import Sidebar from './components/Sidebar';
-import LocalBusinessSchema from './components/SEO/LocalBusinessSchema';
-import LocalSEOHead from './components/SEO/LocalSEOHead';
-import { Recipe } from './types/Recipe';
+import React, { useState } from 'react';
+import { Mail, Lock, User, Eye, EyeOff, BookOpen, Menu } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { isSupabaseConfigured } from '../lib/supabase';
 
-// Lazy load route components for better initial load performance
-const HomePage = lazy(() => import('./components/HomePage'));
-const AuthPage = lazy(() => import('./components/AuthPage'));
-const PricingPage = lazy(() => import('./components/PricingPage'));
-const RecipeGenerator = lazy(() => import('./components/RecipeGenerator'));
-const RecipeList = lazy(() => import('./components/RecipeList'));
-const RecipeDetail = lazy(() => import('./components/RecipeDetail'));
-const ScanYourDishPage = lazy(() => import('./components/VideoUploadPage'));
-const ContactPage = lazy(() => import('./components/ContactPage'));
-const PrivacyPolicyPage = lazy(() => import('./components/PrivacyPolicyPage'));
+interface AuthPageProps {
+  onLogin: (email: string, password: string) => Promise<void>;
+  onSignup: (email: string, password: string, name: string) => Promise<void>;
+  isLoading: boolean;
+  error: string | null;
+  onToggleSidebar: () => void;
+}
 
-type View = 'auth' | 'home' | 'recipes' | 'detail' | 'pricing' | 'scan-dish' | 'generator' | 'my-recipes' | 'contact' | 'privacy';
+export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggleSidebar }: AuthPageProps) {
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null);
 
-function App() {
-  const [currentView, setCurrentView] = useState<View>('home');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { user, loading: authLoading, error: authError, signIn, signUp, signOut, updateUsageStats, upgradeToPro, setError: setAuthError } = useAuth();
-  const { savedRecipes, saveRecipe, removeRecipe, isRecipeSaved } = useRecipes(user);
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
-  const [searchIngredients, setSearchIngredients] = useState<string[]>([]);
-  const [selectedCuisine, setSelectedCuisine] = useState<string>('all');
-  const { errorState, removeError, retryAction } = useErrorHandler();
-
-  // Redirect authenticated users away from auth page
-  useEffect(() => {
-    if (user && user.isAuthenticated && currentView === 'auth') {
-      console.log('Redirecting authenticated user to home');
-      setCurrentView('home');
-    }
-  }, [user]);
-
-  // Authentication handlers
-  const handleLogin = async (email: string, password: string) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLocalError(null);
+    
     try {
-      setAuthError(null);
-      const result = await signIn(email, password);
-      console.log('Sign in result:', result);
-      if (result?.success) {
-        console.log('Sign in successful, redirecting to home');
-        setCurrentView('home');
+      if (isLogin) {
+        await onLogin(email, password);
+      } else {
+        await onSignup(email, password, name);
       }
     } catch (err) {
-      console.error('Login error:', err);
+      setLocalError('Authentication failed. Please try again.');
     }
   };
 
-  const handleSignup = async (email: string, password: string, name: string) => {
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    setLocalError(null);
     try {
-      setAuthError(null);
-      const result = await signUp(email, password, name);
-      // If auto-signed in (email confirmation disabled), redirect to home
-      if (result?.success && result.autoSignedIn) {
-        setCurrentView('home');
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          }
+        }
+      });
+      if (error) {
+        setLocalError('Google sign-in failed. Please try again.');
       }
-      // Otherwise, user needs to confirm email or switch to login
     } catch (err) {
-      console.error('Signup error:', err);
+      setLocalError('Google sign-in failed. Please try again.');
+    } finally {
+      setGoogleLoading(false);
     }
-  };
-
-  const handleSelectPlan = (plan: 'free' | 'pro') => {
-    if (plan === 'pro') {
-      upgradeToPro();
-    }
-    setCurrentView('home');
-  };
-
-  const handleLogout = async () => {
-    await signOut();
-    setCurrentView('home');
-  };
-
-  const handleSetUser = (newUser: any) => {
-    if (newUser === null || !newUser.isAuthenticated) {
-      signOut();
-    }
-  };
-
-  // Create a user object that matches the expected interface
-  const appUser = user || {
-    id: '',
-    email: '',
-    name: '',
-    plan: 'free' as const,
-    createdAt: new Date(),
-    isAuthenticated: false,
-    usageStats: {
-      recipesGeneratedThisMonth: 0,
-      lastResetDate: new Date()
-    }
-  };
-
-  const handleGeneratedRecipes = async (ingredients: string[], cuisine: string, aiRecipes: Recipe[]) => {
-    setSearchIngredients(ingredients);
-    setSelectedCuisine(cuisine);
-    setRecipes(aiRecipes);
-    
-    // Update usage stats for free users
-    if (user && user.plan === 'free') {
-      await updateUsageStats(user.usageStats.recipesGeneratedThisMonth + 1);
-    }
-    
-    setCurrentView('recipes');
-  };
-
-  const handleLikeRecipe = async (recipe: Recipe) => {
-    if (!user?.isAuthenticated) return;
-    
-    const isAlreadySaved = isRecipeSaved(recipe.id);
-    
-    if (isAlreadySaved) {
-      await removeRecipe(recipe.id);
-    } else {
-      await saveRecipe(recipe);
-    }
-  };
-
-  const isRecipeLiked = (recipeId: string) => {
-    return isRecipeSaved(recipeId);
-  };
-
-  // Don't block rendering on auth check - let the app load immediately
-
-  const handleHomePageSearch = (ingredients: string[], cuisine: string) => {
-    setSearchIngredients(ingredients);
-    setSelectedCuisine(cuisine);
-    const generatedRecipes = generateRecipes(ingredients, cuisine);
-    setRecipes(generatedRecipes);
-    setCurrentView('recipes');
-  };
-
-  const handleRecipeSelect = (recipe: Recipe) => {
-    setSelectedRecipe(recipe);
-    setCurrentView('detail');
-  };
-
-  const handleBack = () => {
-    if (currentView === 'detail') {
-      setCurrentView('recipes');
-    } else if (currentView === 'recipes') {
-      setCurrentView('generator');
-    } else if (currentView === 'generator') {
-      setCurrentView('home');
-    } else if (currentView === 'pricing') {
-      setCurrentView('home');
-    } else if (currentView === 'scan-dish') {
-      setCurrentView('home');
-    } else if (currentView === 'my-recipes') {
-      setCurrentView('home');
-    } else if (currentView === 'contact') {
-      setCurrentView('home');
-    }
-  };
-
-  const handleMyRecipes = () => {
-    setCurrentView('my-recipes');
-  };
-
-  // Mock AI recipe generation (keeping existing logic)
-  const generateRecipes = (ingredients: string[], cuisine: string): Recipe[] => {
-    const mockRecipes: Recipe[] = [
-      {
-        id: '1',
-        name: 'Mediterranean Herb Chicken',
-        cookingTime: 25,
-        prepTime: 10,
-        servings: 4,
-        cuisine: 'Mediterranean',
-        difficulty: 'Easy',
-        image: 'https://images.pexels.com/photos/2374946/pexels-photo-2374946.jpeg?auto=compress&cs=tinysrgb&w=800',
-        ingredients: [
-          '4 chicken breasts',
-          '2 tbsp olive oil',
-          '1 lemon (juiced)',
-          '2 cloves garlic (minced)',
-          '1 tsp oregano',
-          '1 tsp thyme',
-          'Salt and pepper to taste'
-        ],
-        instructions: [
-          'Preheat oven to 400°F (200°C).',
-          'In a bowl, mix olive oil, lemon juice, garlic, oregano, and thyme.',
-          'Season chicken breasts with salt and pepper.',
-          'Place chicken in a baking dish and pour the herb mixture over it.',
-          'Bake for 20-25 minutes until internal temperature reaches 165°F.',
-          'Let rest for 5 minutes before serving.'
-        ],
-        nutrition: {
-          calories: 285,
-          protein: 42,
-          carbs: 3,
-          fat: 11,
-          fiber: 1
-        },
-        tags: ['High Protein', 'Low Carb', 'Gluten Free']
-      },
-      {
-        id: '2',
-        name: 'Spicy Thai Basil Stir Fry',
-        cookingTime: 15,
-        prepTime: 10,
-        servings: 2,
-        cuisine: 'Thai',
-        difficulty: 'Medium',
-        image: 'https://images.pexels.com/photos/1410235/pexels-photo-1410235.jpeg?auto=compress&cs=tinysrgb&w=800',
-        ingredients: [
-          '1 lb ground chicken',
-          '3 cloves garlic (minced)',
-          '2 Thai chilies (minced)',
-          '1 cup Thai basil leaves',
-          '2 tbsp fish sauce',
-          '1 tbsp soy sauce',
-          '1 tsp sugar',
-          '2 tbsp vegetable oil'
-        ],
-        instructions: [
-          'Heat oil in a large wok or skillet over high heat.',
-          'Add garlic and chilies, stir-fry for 30 seconds until fragrant.',
-          'Add ground chicken and break it up with a spatula.',
-          'Cook for 5-7 minutes until chicken is almost cooked through.',
-          'Add fish sauce, soy sauce, and sugar. Stir well.',
-          'Add Thai basil and stir-fry for 1-2 minutes until wilted.',
-          'Serve immediately over jasmine rice.'
-        ],
-        nutrition: {
-          calories: 320,
-          protein: 35,
-          carbs: 8,
-          fat: 16,
-          fiber: 2
-        },
-        tags: ['Spicy', 'Quick & Easy', 'Asian']
-      },
-      {
-        id: '3',
-        name: 'Creamy Mushroom Risotto',
-        cookingTime: 30,
-        prepTime: 15,
-        servings: 4,
-        cuisine: 'Italian',
-        difficulty: 'Medium',
-        image: 'https://images.pexels.com/photos/1437267/pexels-photo-1437267.jpeg?auto=compress&cs=tinysrgb&w=800',
-        ingredients: [
-          '1½ cups Arborio rice',
-          '4 cups warm chicken broth',
-          '1 cup mixed mushrooms (sliced)',
-          '½ cup white wine',
-          '1 medium onion (diced)',
-          '3 cloves garlic (minced)',
-          '½ cup Parmesan cheese',
-          '2 tbsp butter',
-          '2 tbsp olive oil'
-        ],
-        instructions: [
-          'Heat olive oil in a large pan and sauté mushrooms until golden. Set aside.',
-          'In the same pan, melt 1 tbsp butter and sauté onion until translucent.',
-          'Add garlic and rice, stirring for 2 minutes until rice is lightly toasted.',
-          'Pour in wine and stir until absorbed.',
-          'Add warm broth one ladle at a time, stirring constantly until absorbed.',
-          'Continue for 18-20 minutes until rice is creamy and al dente.',
-          'Stir in mushrooms, remaining butter, and Parmesan cheese.',
-          'Season with salt and pepper, serve immediately.'
-        ],
-        nutrition: {
-          calories: 380,
-          protein: 12,
-          carbs: 58,
-          fat: 12,
-          fiber: 2
-        },
-        tags: ['Comfort Food', 'Vegetarian', 'Creamy']
-      }
-    ];
-
-    // Filter by cuisine if not 'all'
-    if (cuisine !== 'all') {
-      return mockRecipes.filter(recipe => 
-        recipe.cuisine.toLowerCase() === cuisine.toLowerCase()
-      );
-    }
-
-    return mockRecipes;
   };
 
   return (
-    <ErrorBoundary>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900">
-        {/* Global SEO and Schema Markup */}
-        <LocalSEOHead />
-        <LocalBusinessSchema />
-        
-        {/* Network Status Indicator */}
-        <NetworkStatus />
-        
-        {/* Offline Indicator */}
-        <OfflineIndicator />
-        
-        {/* Error Toast Container */}
-        <ErrorToastContainer
-          errors={errorState.errors}
-          onDismiss={removeError}
-          onRetry={(errorId) => {
-            const error = errorState.errors.find(e => e.id === errorId);
-            if (error?.retryable) {
-              retryAction(async () => {
-                // Implement retry logic based on error context
-                if (error.context?.action === 'generateRecipes') {
-                  // Retry recipe generation
-                  window.location.reload();
-                }
-              }, errorId);
-            }
-          }}
-        />
-        
-        {/* Sidebar */}
-        <Sidebar
-          currentView={currentView}
-          onHome={() => setCurrentView('home')}
-          onRecipeGenerator={() => setCurrentView('generator')}
-          onMyRecipes={handleMyRecipes}
-          onPricing={() => setCurrentView('pricing')}
-          onScanDish={() => setCurrentView('scan-dish')}
-          onContact={() => setCurrentView('contact')}
-          user={appUser}
-          onAuth={() => setCurrentView('auth')}
-          isOpen={sidebarOpen}
-          onToggle={() => setSidebarOpen(!sidebarOpen)}
-        />
-        
-        {/* Main Content */}
-        <main className="lg:ml-64 min-h-screen">
-          <ErrorBoundary fallback={
-            <LoadingFallback
-              message="Something went wrong loading this page. Please try refreshing."
-              fullScreen
-            />
-          }>
-            <Suspense fallback={<LoadingFallback message="Loading..." size="lg" fullScreen />}>
-            {currentView === 'home' && (
-              <HomePage 
-                onSearch={handleHomePageSearch} 
-                user={appUser} 
-                onRecipeGenerator={() => setCurrentView('generator')}
-                onScanDish={() => setCurrentView('scan-dish')}
-                onPricing={() => setCurrentView('pricing')}
-                onAuth={() => setCurrentView('auth')}
-                onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-              />
-            )}
-            
-            {currentView === 'generator' && (
-              <RecipeGenerator 
-                onRecipesGenerated={handleGeneratedRecipes}
-                user={appUser}
-                onPricing={() => setCurrentView('pricing')}
-                onAuth={() => setCurrentView('auth')}
-                onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-              />
-            )}
-            
-            {currentView === 'pricing' && (
-              <PricingPage 
-                onSelectPlan={handleSelectPlan}
-                currentPlan={appUser?.plan}
-                onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-              />
-            )}
-            
-            {currentView === 'recipes' && (
-              <RecipeList 
-                recipes={recipes}
-                onRecipeSelect={handleRecipeSelect}
-                searchIngredients={searchIngredients}
-                selectedCuisine={selectedCuisine}
-                onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-              />
-            )}
-            
-            {currentView === 'detail' && selectedRecipe && (
-              <div className="container mx-auto px-4 lg:px-8 py-8">
-                <button
-                  onClick={handleBack}
-                  className="flex items-center gap-2 text-slate-300 hover:text-indigo-400 transition-colors duration-200 mb-6"
-                >
-                  ← Back to Recipes
-                </button>
-                <RecipeDetail 
-                  recipe={selectedRecipe} 
-                  onLike={handleLikeRecipe}
-                  isLiked={isRecipeLiked(selectedRecipe.id)}
-                  onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-                />
-              </div>
-            )}
-            
-            {currentView === 'scan-dish' && (
-              <ScanYourDishPage 
-                onBack={handleBack} 
-                user={appUser}
-                onPricing={() => setCurrentView('pricing')}
-                onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-              />
-            )}
-            
-            {currentView === 'my-recipes' && (
-              <div className="container mx-auto px-4 lg:px-8 py-8">
-                {/* Mobile Header */}
-                <div className="lg:hidden flex items-center justify-between mb-6 bg-slate-900/95 backdrop-blur-sm border border-indigo-500/20 rounded-xl p-4">
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => setSidebarOpen(!sidebarOpen)}
-                      className="p-2 text-slate-300 hover:text-white transition-colors duration-200"
-                    >
-                      <Menu size={24} />
-                    </button>
-                  </div>
-                  <h1 className="text-lg font-bold gradient-text-primary">My Recipes</h1>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setCurrentView('home')}
-                      className="p-2 text-slate-300 hover:text-white transition-colors duration-200"
-                    >
-                      <X size={20} />
-                    </button>
-                  </div>
-                </div>
-                
-                <h1 className="text-4xl font-bold text-white mb-8">My Recipes</h1>
-                
-                {savedRecipes.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {savedRecipes.map((recipe) => (
-                      <div
-                        key={recipe.id}
-                        onClick={() => handleRecipeSelect(recipe)}
-                        className="bg-slate-800/80 backdrop-blur-sm rounded-xl overflow-hidden border border-indigo-500/30 hover:border-indigo-400/50 transition-colors duration-300 cursor-pointer"
-                      >
-                        <div className="relative">
-                          <img
-                            src={recipe.image}
-                            alt={recipe.name}
-                            className="w-full h-48 object-cover"
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.src = 'https://images.pexels.com/photos/2374946/pexels-photo-2374946.jpeg?auto=compress&cs=tinysrgb&w=800';
-                            }}
-                          />
-                          <div className="absolute top-3 right-3">
-                            <Heart size={20} className="text-red-400" fill="currentColor" />
-                          </div>
-                        </div>
-                        <div className="p-6">
-                          <h3 className="text-xl font-semibold text-white mb-2">{recipe.name}</h3>
-                          <p className="text-slate-300 text-sm mb-4">{recipe.cuisine} cuisine</p>
-                          <div className="flex items-center justify-between text-slate-400 text-sm">
-                            <span>{recipe.cookingTime + recipe.prepTime}m</span>
-                            <span>{recipe.servings} servings</span>
-                            <span>{recipe.nutrition.calories} cal</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center">
-                    <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-12 border border-slate-700/50">
-                      <div className="text-6xl mb-4">📚</div>
-                      <h3 className="text-xl font-semibold text-white mb-2">
-                        No recipes saved yet
-                      </h3>
-                      <p className="text-slate-400 mb-6">
-                        Like recipes to add them to your personal collection
-                      </p>
-                      <button
-                        onClick={() => setCurrentView('generator')}
-                        className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-colors duration-200"
-                      >
-                        Create Your First Recipe
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-            
-            {currentView === 'contact' && (
-              <ContactPage onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-            )}
-            
-            {currentView === 'privacy' && (
-              <PrivacyPolicyPage
-                onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-                onBack={() => setCurrentView('home')}
-              />
-            )}
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 flex items-center justify-center p-4">
+      <div className="absolute top-4 left-4 lg:hidden">
+        <button
+          onClick={onToggleSidebar}
+          className="p-2 text-white hover:bg-slate-700/50 rounded-lg transition-colors"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+      </div>
 
-            {currentView === 'auth' && (
-              <AuthPage
-                onLogin={handleLogin}
-                onSignup={handleSignup}
-                isLoading={authLoading}
-                error={authError}
-                onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+      <div className="absolute top-4 right-4 flex items-center gap-4">
+        <div className="text-center mb-6">
+          <h2 className="text-xl font-bold text-white mb-2">Sign In to Continue</h2>
+          <p className="text-slate-400 text-sm">Use your Google account to access all features</p>
+        </div>
+        <h1 className="text-lg font-bold gradient-text-primary">Sign In</h1>
+        <div className="w-10"></div>
+      </div>
+      
+      <div className="bg-slate-800/80 backdrop-blur-sm p-6 lg:p-8 rounded-2xl shadow-2xl w-full max-w-md border border-indigo-500/30">
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center mb-4">
+            <div className="flex items-center gap-3">
+              <img 
+                src="/An_AI_chef_with_a_spoon_and_a_fork_in_the_background-removebg-preview.png" 
+                alt="Nutriloom AI Chef" 
+                className="w-10 lg:w-12 h-10 lg:h-12 object-contain"
               />
-            )}
-            </Suspense>
-          </ErrorBoundary>
-        </main>
-
-        {/* Footer */}
-        <footer className="lg:ml-64 bg-slate-900/95 backdrop-blur-sm border-t border-indigo-500/20 py-8">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="text-center space-y-6">
-              <div className="text-white font-semibold text-lg">
-                NutriloomAI@2025 🖤🤍RT
-              </div>
-              
-              <div className="flex items-center justify-center gap-6">
-                <a href="https://www.instagram.com/nutriloomai" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-pink-400 transition-colors">
-                  <Instagram size={20} />
-                </a>
-                <a href="https://x.com/NutriloomAI" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-blue-400 transition-colors">
-                  <Twitter size={20} />
-                </a>
-                <a href="mailto:nutriloomai@gmail.com" className="text-slate-400 hover:text-indigo-400 transition-colors">
-                  <Mail size={20} />
-                </a>
-              </div>
-              
-              {/* Footer Links */}
-              <div className="flex items-center justify-center gap-6 text-sm">
-                <button
-                  onClick={() => setCurrentView('privacy')}
-                  className="text-slate-400 hover:text-indigo-400 transition-colors"
-                >
-                  Privacy Policy
-                </button>
-                <button
-                  onClick={() => setCurrentView('contact')}
-                  className="text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer"
-                >
-                  Contact Us
-                </button>
-              </div>
+              <h1 className="text-xl lg:text-2xl font-bold text-white">Nutriloom AI</h1>
             </div>
           </div>
-        </footer>
+          <p className="text-slate-300 text-sm">Weaving nutrition into every meal</p>
+        </div>
 
-        {/* Mobile Sidebar Overlay */}
-        {sidebarOpen && (
-          <div 
-            className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
-            onClick={() => setSidebarOpen(false)}
-          />
+        <div className="text-center mb-6">
+          <h2 className="text-xl font-bold text-white mb-2">Sign In to Continue</h2>
+          <p className="text-slate-400 text-sm">Use your Google account to access all features</p>
+        </div>
+
+        {(error || localError || !isSupabaseConfigured) && (
+          <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
+            <div className="mb-2">{localError || error}</div>
+            {(error?.includes('Email authentication is not enabled') || localError?.includes('Email authentication is not enabled')) && (
+              <div className="text-xs text-red-300 mt-2 p-2 bg-red-500/10 rounded border-l-2 border-red-400">
+                <strong>Note:</strong> Email authentication needs to be enabled in the Supabase project settings. 
+                You can try signing in with Google instead, or contact support for assistance.
+              </div>
+            )}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {!isLogin && (
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Full Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm lg:text-base"
+                required
+              />
+            </div>
+          )}
+
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm lg:text-base"
+              required
+            />
+          </div>
+
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full pl-10 pr-12 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm lg:text-base"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-300"
+            >
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
+          </div>
+
+          <button
+            type="submit"
+            disabled={!isSupabaseConfigured || isLoading}
+            className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm lg:text-base"
+          >
+            {isLoading ? 'Please wait...' : isLogin ? 'Sign In' : 'Create Account'}
+          </button>
+        </form>
+
+        <div className="mt-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-600"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-slate-800 text-slate-400">Or continue with</span>
+            </div>
+          </div>
+
+          <button
+            onClick={handleGoogleSignIn}
+            disabled={!isSupabaseConfigured || googleLoading}
+            className="w-full mt-4 bg-white text-gray-900 py-3 rounded-lg font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm lg:text-base flex items-center justify-center gap-3"
+          >
+            <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            {googleLoading ? 'Signing in...' : 'Continue with Google'}
+          </button>
+        </div>
+
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => setIsLogin(!isLogin)}
+            className="text-indigo-400 hover:text-indigo-300 text-sm"
+          >
+            {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+          </button>
+        </div>
+
+        {isLogin && (
+          <div className="mt-4 text-center">
+            <a href="#" className="text-indigo-400 hover:text-indigo-300 text-sm">
+              Forgot your password?
+            </a>
+          </div>
         )}
       </div>
-    </ErrorBoundary>
+    </div>
   );
 }
-
-export default App;
