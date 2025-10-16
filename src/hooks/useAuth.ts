@@ -1,417 +1,234 @@
-import { useState, useEffect } from 'react'
-import { User as SupabaseUser } from '@supabase/supabase-js'
-import { supabase } from '../lib/supabase'
-import { isSupabaseConfigured } from '../lib/supabase'
-import { User } from '../types/User'
-import { createAuthError, createAPIError, handleGlobalError } from '../utils/errorHandler'
-import { useErrorHandler } from './useErrorHandler'
+import React, { useState } from 'react';
+import { Mail, Lock, User, Eye, EyeOff, BookOpen, Menu } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { isSupabaseConfigured } from '../lib/supabase';
 
-export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const { addError } = useErrorHandler()
+interface AuthPageProps {
+  onLogin: (email: string, password: string) => Promise<void>;
+  onSignup: (email: string, password: string, name: string) => Promise<void>;
+  isLoading: boolean;
+  error: string | null;
+  onToggleSidebar: () => void;
+}
 
-  useEffect(() => {
-    let mounted = true
+export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggleSidebar }: AuthPageProps) {
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null);
 
-    // Get initial session
-    const getInitialSession = async () => {
-      // Skip session check if Supabase is not configured
-      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-        if (mounted) setLoading(false)
-        return
-      }
-
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession()
-        if (error) throw error
-
-        if (session?.user && mounted) {
-          await loadUserProfile(session.user)
-        }
-      } catch (err) {
-        console.warn('Failed to get initial session:', err)
-      } finally {
-        if (mounted) setLoading(false)
-      }
-    }
-
-    // Set loading to false immediately if no config, otherwise check session
-    if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-      setLoading(false)
-    } else {
-      getInitialSession()
-    }
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (!mounted) return
-
-      if (event === 'SIGNED_IN' && session?.user) {
-        await loadUserProfile(session.user)
-        setLoading(false)
-        setError(null)
-      } else if (event === 'TOKEN_REFRESHED' && session?.user) {
-        await loadUserProfile(session.user)
-      } else if (event === 'SIGNED_OUT') {
-        setUser(null)
-        setLoading(false)
-        setError(null)
-      } else if (event === 'INITIAL_SESSION') {
-        if (session?.user) {
-          await loadUserProfile(session.user)
-        }
-        setLoading(false)
-      }
-    })
-
-    return () => {
-      mounted = false
-      subscription.unsubscribe()
-    }
-  }, [])
-
-  const loadUserProfile = async (supabaseUser: SupabaseUser) => {
-    try {
-      // Wait for trigger to complete
-      await new Promise(resolve => setTimeout(resolve, 300));
-
-      // Try multiple times to get the profile
-      let profile = null;
-      let attempts = 0;
-      const maxAttempts = 3;
-
-      while (!profile && attempts < maxAttempts) {
-        const { data, error: profileError } = await supabase
-          .from('user_profiles')
-          .select('*')
-          .eq('id', supabaseUser.id)
-          .maybeSingle()
-
-        if (profileError && profileError.code !== 'PGRST116') {
-          throw profileError
-        }
-
-        if (data) {
-          profile = data;
-          break;
-        }
-
-        attempts++;
-        if (attempts < maxAttempts) {
-          await new Promise(resolve => setTimeout(resolve, 200));
-        }
-      }
-
-      if (!profile) {
-        // If still no profile, create it manually
-        const newProfile = {
-          id: supabaseUser.id,
-          email: supabaseUser.email || '',
-          name: supabaseUser.user_metadata?.full_name || supabaseUser.user_metadata?.name || supabaseUser.email?.split('@')[0] || 'User',
-          plan: 'pro' as const,
-          recipes_generated_this_month: 0,
-          last_reset_date: new Date().toISOString()
-        }
-
-        const { error: insertError } = await supabase
-          .from('user_profiles')
-          .insert(newProfile)
-
-        if (insertError) throw insertError
-
-        const userState = {
-          id: newProfile.id,
-          email: newProfile.email,
-          name: newProfile.name,
-          plan: newProfile.plan,
-          createdAt: new Date(newProfile.last_reset_date),
-          isAuthenticated: true,
-          usageStats: {
-            recipesGeneratedThisMonth: newProfile.recipes_generated_this_month,
-            lastResetDate: new Date(newProfile.last_reset_date)
-          }
-        };
-        setUser(userState)
-      } else {
-        // Check if we need to reset monthly usage
-        const now = new Date()
-        const lastReset = new Date(profile.last_reset_date)
-        
-        let updatedProfile = profile
-        if (now.getMonth() !== lastReset.getMonth() || now.getFullYear() !== lastReset.getFullYear()) {
-          // Reset monthly usage
-          const { data: resetProfile, error: resetError } = await supabase
-            .from('user_profiles')
-            .update({
-              recipes_generated_this_month: 0,
-              last_reset_date: now.toISOString()
-            })
-            .eq('id', profile.id)
-            .select()
-            .single()
-
-          if (resetError) throw resetError
-          updatedProfile = resetProfile
-        }
-
-        const userState = {
-          id: updatedProfile.id,
-          email: updatedProfile.email,
-          name: updatedProfile.name,
-          plan: updatedProfile.plan,
-          createdAt: new Date(updatedProfile.created_at),
-          isAuthenticated: true,
-          usageStats: {
-            recipesGeneratedThisMonth: updatedProfile.recipes_generated_this_month,
-            lastResetDate: new Date(updatedProfile.last_reset_date)
-          }
-        };
-        console.log('Setting user state to:', userState);
-        setUser(userState)
-      }
-    } catch (err) {
-      console.error('Error loading user profile:', err);
-      const profileError = createAPIError(
-        `Failed to load user profile: ${err}`,
-        500,
-        { action: 'loadUserProfile', userId: supabaseUser.id }
-      )
-      addError(profileError)
-      setError(profileError.userMessage)
-    }
-  }
-
-  const signIn = async (email: string, password: string) => {
-    // Check if Supabase is configured before attempting authentication
-    if (!isSupabaseConfigured) {
-      throw createAuthError(
-        'Supabase not configured. Please connect to Supabase to enable authentication.',
-        'SUPABASE_NOT_CONFIGURED',
-        { action: 'signIn', email }
-      )
-    }
-
-    setLoading(true)
-    setError(null)
-
-    try {
-      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-        setError('Please connect to Supabase to enable authentication.')
-        setLoading(false)
-        return { success: false }
-      }
-
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      })
-
-      if (error) throw error
-
-      if (data.user) {
-        await loadUserProfile(data.user)
-      }
-
-      setLoading(false)
-      return { success: true }
-    } catch (err) {
-      let userMessage = "Authentication failed. Please check your credentials and try again.";
-
-      if (err instanceof Error) {
-        if (err.message.includes('Invalid login credentials')) {
-          userMessage = "Invalid email or password. Please try again.";
-        } else if (err.message.includes('Email logins are disabled') || err.message.includes('email_provider_disabled')) {
-          userMessage = "Email authentication is not enabled. Please contact support or try signing in with Google.";
-        }
-      }
-      
-      // Check for Supabase API error response
-      if (typeof err === 'object' && err !== null && 'code' in err) {
-        const supabaseError = err as any;
-        if (supabaseError.code === 'email_provider_disabled') {
-          userMessage = "Email authentication is not enabled. Please contact support or try signing in with Google.";
-        }
-      }
-      
-      // Check for fetch response errors
-      if (err instanceof Error && err.message.includes('email_provider_disabled')) {
-        userMessage = "Invalid email or password. Please try again.";
-      }
-
-      const signInError = createAuthError(
-        `Sign in failed: ${err instanceof Error ? err.message : String(err)}`,
-        { action: 'signIn', email },
-        userMessage
-      )
-      addError(signInError)
-      setError(signInError.userMessage)
-      setLoading(false)
-      return { success: false }
-    }
-  }
-
-  const signUp = async (email: string, password: string, name: string) => {
-    // Check if Supabase is configured before attempting authentication
-    if (!isSupabaseConfigured) {
-      throw createAuthError(
-        'Supabase not configured. Please connect to Supabase to enable authentication.',
-        'SUPABASE_NOT_CONFIGURED',
-        { action: 'signUp', email }
-      )
-    }
-
-    setLoading(true)
-    setError(null)
-
-    try {
-      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-        setError('Please connect to Supabase to enable authentication.')
-        setLoading(false)
-        return { success: false }
-      }
-
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            name: name,
-            full_name: name
-          }
-        }
-      })
-
-      if (error) throw error
-
-      if (data.user && data.session) {
-        await loadUserProfile(data.user)
-        setLoading(false)
-        return { success: true, autoSignedIn: true }
-      }
-
-      setError('Account created! Check email for confirmation.')
-      setLoading(false)
-      return { success: true, autoSignedIn: false }
-    } catch (err) {
-      let userMessage = "Sign up failed. Please try again.";
-
-      if (err instanceof Error) {
-        if (err.message.includes('Password should contain')) {
-          userMessage = err.message;
-        } else if (err.message.includes('User already registered')) {
-          userMessage = "This email is already registered. Please sign in instead.";
-        } else if (err.message.includes('Email logins are disabled') || err.message.includes('email_provider_disabled')) {
-          userMessage = "Email authentication is not enabled. Please contact support or try signing in with Google.";
-        }
-      }
-      
-      // Check for Supabase API error response
-      if (typeof err === 'object' && err !== null && 'code' in err) {
-        const supabaseError = err as any;
-        if (supabaseError.code === 'email_provider_disabled') {
-          userMessage = "Email authentication is not enabled. Please contact support or try signing in with Google.";
-        }
-      }
-
-      const signUpError = createAuthError(
-        `Sign up failed: ${err}`,
-        { action: 'signUp', email },
-        userMessage
-      )
-      addError(signUpError)
-      setError(signUpError.userMessage)
-      setLoading(false)
-      return { success: false }
-    }
-  }
-
-  const signOut = async () => {
-    setLoading(true)
-    setError(null)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLocalError(null);
     
     try {
-      const { error } = await supabase.auth.signOut()
-      if (error) throw error
-      setUser(null)
+      if (isLogin) {
+        await onLogin(email, password);
+      } else {
+        await onSignup(email, password, name);
+      }
     } catch (err) {
-      const signOutError = createAuthError(
-        `Sign out failed: ${err instanceof Error ? err.message : String(err)}`,
-        { action: 'signOut' }
-      )
-      addError(signOutError)
-      setError(signOutError.userMessage)
-    } finally {
-      setLoading(false)
+      // Error is handled by parent component
     }
-  }
+  };
 
-  const updateUsageStats = async (recipesGenerated: number) => {
-    if (!user) return
-
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    setLocalError(null);
     try {
-      const { error } = await supabase
-        .from('user_profiles')
-        .update({
-          recipes_generated_this_month: recipesGenerated
-        })
-        .eq('id', user.id)
-
-      if (error) throw error
-
-      setUser({
-        ...user,
-        usageStats: {
-          ...user.usageStats,
-          recipesGeneratedThisMonth: recipesGenerated
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+          skipBrowserRedirect: true
         }
-      })
+      });
+      
+      if (error) {
+        setLocalError('Google sign-in failed. Please try again.');
+        setGoogleLoading(false);
+      } else if (data?.url) {
+        window.location.href = data.url;
+      }
     } catch (err) {
-      const usageError = createAPIError(
-        `Failed to update usage stats: ${err}`,
-        500,
-        { action: 'updateUsageStats', userId: user.id, recipesGenerated }
-      )
-      addError(usageError)
+      setLocalError('Google sign-in failed. Please try again.');
+      setGoogleLoading(false);
     }
-  }
+  };
 
-  const upgradeToPro = async () => {
-    if (!user) return
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-900 flex items-center justify-center p-4">
+      {/* Mobile Header */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-slate-900/95 backdrop-blur-sm border-b border-indigo-500/20">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onToggleSidebar}
+            className="p-2 text-slate-300 hover:text-white transition-colors duration-200"
+          >
+            <Menu size={24} />
+          </button>
+        </div>
+        <h1 className="text-lg font-bold gradient-text-primary">Sign In</h1>
+        <div className="w-10"></div>
+      </div>
+      
+      <div className="bg-slate-800/80 backdrop-blur-sm p-6 lg:p-8 rounded-2xl shadow-2xl w-full max-w-md border border-indigo-500/30">
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center mb-4">
+            <div className="flex items-center gap-3">
+              <img 
+                src="/An_AI_chef_with_a_spoon_and_a_fork_in_the_background-removebg-preview.png" 
+                alt="Nutriloom AI Chef" 
+                className="w-10 lg:w-12 h-10 lg:h-12 object-contain"
+              />
+              <h1 className="text-xl lg:text-2xl font-bold text-white">Nutriloom AI</h1>
+            </div>
+          </div>
+          <p className="text-slate-300 text-sm">Weaving nutrition into every meal</p>
+        </div>
 
-    try {
-      const { error } = await supabase
-        .from('user_profiles')
-        .update({ plan: 'pro' })
-        .eq('id', user.id)
+        <div className="text-center mb-6">
+          <h2 className="text-xl font-bold text-white mb-2">Sign In to Continue</h2>
+          <p className="text-slate-400 text-sm">Use your Google account to access all features</p>
+        </div>
 
-      if (error) throw error
+        {(error || localError || !isSupabaseConfigured) && (
+          <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
+            <div className="mb-2">{localError || error}</div>
+            {(error?.includes('Email authentication is not enabled') || localError?.includes('Email authentication is not enabled')) && (
+              <div className="text-xs text-red-300 mt-2 p-2 bg-red-500/10 rounded border-l-2 border-red-400">
+                <strong>Note:</strong> Email authentication needs to be enabled in the Supabase project settings. 
+                You can try signing in with Google instead, or contact support for assistance.
+              </div>
+            )}
+          </div>
+        )}
 
-      setUser({
-        ...user,
-        plan: 'pro'
-      })
-    } catch (err) {
-      const upgradeError = createAPIError(
-        `Failed to upgrade to pro: ${err}`,
-        500,
-        { action: 'upgradeToPro', userId: user.id }
-      )
-      addError(upgradeError)
-      setError(upgradeError.userMessage)
-    }
-  }
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {!isLogin && (
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Full Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm lg:text-base"
+                required
+              />
+            </div>
+          )}
 
-  return {
-    user,
-    loading,
-    error,
-    signIn,
-    signUp,
-    signOut,
-    updateUsageStats,
-    upgradeToPro,
-    setError
-  }
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm lg:text-base"
+              required
+            />
+          </div>
+
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full pl-10 pr-12 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm lg:text-base"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-300"
+            >
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
+          </div>
+
+          <button
+            type="submit"
+            disabled={!isSupabaseConfigured || isLoading}
+            className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm lg:text-base"
+          >
+            {isLoading ? 'Please wait...' : isLogin ? 'Sign In' : 'Create Account'}
+          </button>
+        </form>
+
+        <div className="mt-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-600"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-slate-800 text-slate-400">Or continue with</span>
+            </div>
+          </div>
+
+          <button
+            onClick={handleGoogleSignIn}
+            disabled={!isSupabaseConfigured || googleLoading}
+            className="mt-4 w-full flex items-center justify-center px-4 py-3 border border-slate-600 rounded-lg bg-slate-700/50 hover:bg-slate-600/50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-800 transition-colors text-sm lg:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {googleLoading ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
+                <span className="text-white font-medium">Connecting...</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
+                  <path
+                    fill="#4285F4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  />
+                </svg>
+                <span className="text-white font-medium">{googleLoading ? 'Please wait...' : (!isSupabaseConfigured ? 'Database not connected' : 'Continue with Google')}</span>
+              </>
+            )}
+          </button>
+        </div>
+
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => setIsLogin(!isLogin)}
+            className="text-indigo-400 hover:text-indigo-300 text-sm"
+          >
+            {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+          </button>
+        </div>
+
+        {isLogin && (
+          <div className="mt-4 text-center">
+            <a href="#" className="text-indigo-400 hover:text-indigo-300 text-sm">
+              Forgot your password?
+            </a>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
