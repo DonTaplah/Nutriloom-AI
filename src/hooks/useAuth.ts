@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { User as SupabaseUser } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
+import { isSupabaseConfigured } from '../lib/supabase'
 import { User } from '../types/User'
 import { createAuthError, createAPIError, handleGlobalError } from '../utils/errorHandler'
 import { useErrorHandler } from './useErrorHandler'
@@ -183,6 +184,15 @@ export const useAuth = () => {
   }
 
   const signIn = async (email: string, password: string) => {
+    // Check if Supabase is configured before attempting authentication
+    if (!isSupabaseConfigured) {
+      throw createAuthError(
+        'Supabase not configured. Please connect to Supabase to enable authentication.',
+        'SUPABASE_NOT_CONFIGURED',
+        { action: 'signIn', email }
+      )
+    }
+
     setLoading(true)
     setError(null)
 
@@ -209,7 +219,24 @@ export const useAuth = () => {
     } catch (err) {
       let userMessage = "Authentication failed. Please check your credentials and try again.";
 
-      if (err instanceof Error && err.message.includes('Invalid login credentials')) {
+      if (err instanceof Error) {
+        if (err.message.includes('Invalid login credentials')) {
+          userMessage = "Invalid email or password. Please try again.";
+        } else if (err.message.includes('Email logins are disabled') || err.message.includes('email_provider_disabled')) {
+          userMessage = "Email authentication is not enabled. Please contact support or try signing in with Google.";
+        }
+      }
+      
+      // Check for Supabase API error response
+      if (typeof err === 'object' && err !== null && 'code' in err) {
+        const supabaseError = err as any;
+        if (supabaseError.code === 'email_provider_disabled') {
+          userMessage = "Email authentication is not enabled. Please contact support or try signing in with Google.";
+        }
+      }
+      
+      // Check for fetch response errors
+      if (err instanceof Error && err.message.includes('email_provider_disabled')) {
         userMessage = "Invalid email or password. Please try again.";
       }
 
@@ -226,6 +253,15 @@ export const useAuth = () => {
   }
 
   const signUp = async (email: string, password: string, name: string) => {
+    // Check if Supabase is configured before attempting authentication
+    if (!isSupabaseConfigured) {
+      throw createAuthError(
+        'Supabase not configured. Please connect to Supabase to enable authentication.',
+        'SUPABASE_NOT_CONFIGURED',
+        { action: 'signUp', email }
+      )
+    }
+
     setLoading(true)
     setError(null)
 
@@ -266,6 +302,16 @@ export const useAuth = () => {
           userMessage = err.message;
         } else if (err.message.includes('User already registered')) {
           userMessage = "This email is already registered. Please sign in instead.";
+        } else if (err.message.includes('Email logins are disabled') || err.message.includes('email_provider_disabled')) {
+          userMessage = "Email authentication is not enabled. Please contact support or try signing in with Google.";
+        }
+      }
+      
+      // Check for Supabase API error response
+      if (typeof err === 'object' && err !== null && 'code' in err) {
+        const supabaseError = err as any;
+        if (supabaseError.code === 'email_provider_disabled') {
+          userMessage = "Email authentication is not enabled. Please contact support or try signing in with Google.";
         }
       }
 
