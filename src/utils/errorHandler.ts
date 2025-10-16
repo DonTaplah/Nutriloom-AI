@@ -159,11 +159,36 @@ export const createValidationError = (field: string, message: string): AppError 
   );
 };
 
-export const createAuthError = (message: string, context?: Record<string, any>, userMessage?: string): AppError => {
-  return ErrorHandler.getInstance().createError(
+export const createAuthError = (message: string, code?: string, context?: any): AppError => {
+  const errorHandler = ErrorHandler.getInstance();
+  
+  // Handle specific Supabase authentication errors
+  if (code === 'SUPABASE_NOT_CONFIGURED') {
+    return errorHandler.createError(
+      ErrorType.AUTH,
+      'Database not connected. Please connect to Supabase to enable authentication.',
+      'Database not connected. Please connect to Supabase to enable authentication.',
+      ErrorSeverity.HIGH,
+      context,
+      true
+    );
+  }
+  
+  if (message?.includes('Email logins are disabled') || code === 'email_provider_disabled') {
+    return errorHandler.createError(
+      ErrorType.AUTH,
+      'Email authentication is not enabled. Please contact support or try signing in with Google.',
+      'Email authentication is not enabled. Please contact support or try signing in with Google.',
+      ErrorSeverity.HIGH,
+      context,
+      true
+    );
+  }
+
+  return errorHandler.createError(
     ErrorType.AUTH,
     message,
-    userMessage || "Authentication failed. Please check your credentials and try again.",
+    "Authentication failed. Please check your credentials and try again.",
     ErrorSeverity.HIGH,
     context,
     true

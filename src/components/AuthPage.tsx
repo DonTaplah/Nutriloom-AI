@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, BookOpen, Menu } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { isSupabaseConfigured } from '../lib/supabase';
 
 interface AuthPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -102,6 +103,13 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
             </div>
           </div>
           <p className="text-slate-300 text-sm">Weaving nutrition into every meal</p>
+          {!isSupabaseConfigured && (
+            <div className="mt-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+              <p className="text-amber-400 text-sm">
+                ⚠️ Database not connected. Please connect to Supabase to enable authentication.
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="flex mb-6">
@@ -129,7 +137,13 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
 
         {(error || localError) && (
           <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
-            {localError || error}
+            <div className="mb-2">{localError || error}</div>
+            {(error?.includes('Email authentication is not enabled') || localError?.includes('Email authentication is not enabled')) && (
+              <div className="text-xs text-red-300 mt-2 p-2 bg-red-500/10 rounded border-l-2 border-red-400">
+                <strong>Note:</strong> Email authentication needs to be enabled in the Supabase project settings. 
+                You can try signing in with Google instead, or contact support for assistance.
+              </div>
+            )}
           </div>
         )}
 
@@ -181,7 +195,7 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
 
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={!isSupabaseConfigured || isLoading}
             className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm lg:text-base"
           >
             {isLoading ? 'Please wait...' : isLogin ? 'Sign In' : 'Create Account'}
@@ -200,7 +214,7 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
 
           <button
             onClick={handleGoogleSignIn}
-            disabled={googleLoading}
+            disabled={!isSupabaseConfigured || googleLoading}
             className="mt-4 w-full flex items-center justify-center px-4 py-3 border border-slate-600 rounded-lg bg-slate-700/50 hover:bg-slate-600/50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-800 transition-colors text-sm lg:text-base disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {googleLoading ? (
@@ -228,7 +242,7 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   />
                 </svg>
-                <span className="text-white font-medium">Continue with Google</span>
+                <span className="text-white font-medium">{googleLoading ? 'Please wait...' : (!isSupabaseConfigured ? 'Database not connected' : 'Continue with Google')}</span>
               </>
             )}
           </button>
