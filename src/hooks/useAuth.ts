@@ -73,28 +73,38 @@ export const useAuth = () => {
 
   const loadUserProfile = async (supabaseUser: SupabaseUser) => {
     try {
-      console.log('Loading user profile for:', supabaseUser.id);
+      // Wait for trigger to complete
+      await new Promise(resolve => setTimeout(resolve, 300));
 
-      // Small delay to ensure trigger has completed for new users
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Try multiple times to get the profile
+      let profile = null;
+      let attempts = 0;
+      const maxAttempts = 3;
 
-      // Check if user profile exists
-      const { data: profile, error: profileError } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('id', supabaseUser.id)
-        .maybeSingle()
+      while (!profile && attempts < maxAttempts) {
+        const { data, error: profileError } = await supabase
+          .from('user_profiles')
+          .select('*')
+          .eq('id', supabaseUser.id)
+          .maybeSingle()
 
-      console.log('Profile query result:', { profile, profileError });
+        if (profileError && profileError.code !== 'PGRST116') {
+          throw profileError
+        }
 
-      if (profileError && profileError.code !== 'PGRST116') {
-        throw profileError
+        if (data) {
+          profile = data;
+          break;
+        }
+
+        attempts++;
+        if (attempts < maxAttempts) {
+          await new Promise(resolve => setTimeout(resolve, 200));
+        }
       }
 
       if (!profile) {
-        console.log('Profile not found, creating manually as fallback...');
-        // Fallback: Create new user profile with Pro plan by default
-        // (trigger should have created this, but just in case)
+        // If still no profile, create it manually
         const newProfile = {
           id: supabaseUser.id,
           email: supabaseUser.email || '',
@@ -108,12 +118,7 @@ export const useAuth = () => {
           .from('user_profiles')
           .insert(newProfile)
 
-        console.log('Profile insert result:', { insertError });
-
-        if (insertError) {
-          console.error('Failed to create profile:', insertError);
-          throw insertError
-        }
+        if (insertError) throw insertError
 
         const userState = {
           id: newProfile.id,
@@ -127,7 +132,6 @@ export const useAuth = () => {
             lastResetDate: new Date(newProfile.last_reset_date)
           }
         };
-        console.log('Setting user state to:', userState);
         setUser(userState)
       } else {
         // Check if we need to reset monthly usage
@@ -183,11 +187,8 @@ export const useAuth = () => {
     setError(null)
 
     try {
-      console.log('Attempting sign in for:', email);
-
-      // Check if Supabase is configured
       if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-        setError('Please connect to Supabase to enable authentication. Click the settings button to configure.')
+        setError('Please connect to Supabase to enable authentication.')
         setLoading(false)
         return { success: false }
       }
@@ -197,19 +198,13 @@ export const useAuth = () => {
         password
       })
 
-      console.log('Sign in response:', { userId: data?.user?.id, hasSession: !!data?.session, error });
-
       if (error) throw error
 
-      // Load user profile immediately after sign in
       if (data.user) {
-        console.log('User authenticated, loading profile...');
         await loadUserProfile(data.user)
-        console.log('Profile loaded successfully');
       }
 
       setLoading(false)
-      console.log('Sign in completed successfully');
       return { success: true }
     } catch (err) {
       let userMessage = "Authentication failed. Please check your credentials and try again.";
@@ -235,9 +230,8 @@ export const useAuth = () => {
     setError(null)
 
     try {
-      // Check if Supabase is configured
       if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-        setError('Please connect to Supabase to enable authentication. Click the settings button to configure.')
+        setError('Please connect to Supabase to enable authentication.')
         setLoading(false)
         return { success: false }
       }
@@ -246,7 +240,6 @@ export const useAuth = () => {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: {
             name: name,
             full_name: name
@@ -256,16 +249,13 @@ export const useAuth = () => {
 
       if (error) throw error
 
-      // Check if user was created and signed in automatically (email confirmation disabled)
       if (data.user && data.session) {
-        // User is signed in immediately - email confirmation is disabled
         await loadUserProfile(data.user)
         setLoading(false)
         return { success: true, autoSignedIn: true }
       }
 
-      // Email confirmation required
-      setError('Account created successfully! Please check your email for confirmation, then sign in.')
+      setError('Account created! Check email for confirmation.')
       setLoading(false)
       return { success: true, autoSignedIn: false }
     } catch (err) {
