@@ -20,6 +20,10 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
   const [googleLoading, setGoogleLoading] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
 
+  // Check if email authentication is disabled
+  const isEmailAuthDisabled = error?.includes('Email logins are disabled') || 
+                              localError?.includes('Email logins are disabled');
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLocalError(null);
@@ -123,9 +127,9 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
         {(error || localError || !isSupabaseConfigured) && (
           <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
             <div className="mb-2">{localError || error}</div>
-            {(error?.includes('Email authentication is not enabled') || localError?.includes('Email authentication is not enabled')) && (
+            {(error?.includes('Email authentication is not enabled') || localError?.includes('Email authentication is not enabled') || isEmailAuthDisabled) && (
               <div className="text-xs text-red-300 mt-2 p-2 bg-red-500/10 rounded border-l-2 border-red-400">
-                <strong>Note:</strong> Email authentication needs to be enabled in the Supabase project settings. 
+                <strong>Note:</strong> Email authentication is not available in this Supabase project. 
                 You can try signing in with Google instead, or contact support for assistance.
               </div>
             )}
@@ -180,10 +184,10 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
 
           <button
             type="submit"
-            disabled={!isSupabaseConfigured || isLoading}
+            disabled={!isSupabaseConfigured || isLoading || isEmailAuthDisabled}
             className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm lg:text-base"
           >
-            {isLoading ? 'Please wait...' : isLogin ? 'Sign In' : 'Create Account'}
+            {isEmailAuthDisabled ? 'Email Auth Disabled' : isLoading ? 'Please wait...' : isLogin ? 'Sign In' : 'Create Account'}
           </button>
         </form>
 
