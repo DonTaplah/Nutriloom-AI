@@ -174,6 +174,8 @@ export const useAuth = () => {
     setError(null)
 
     try {
+      console.log('Attempting sign in for:', email);
+
       // Check if Supabase is configured
       if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
         setError('Please connect to Supabase to enable authentication. Click the settings button to configure.')
@@ -186,14 +188,19 @@ export const useAuth = () => {
         password
       })
 
+      console.log('Sign in response:', { userId: data?.user?.id, hasSession: !!data?.session, error });
+
       if (error) throw error
 
       // Load user profile immediately after sign in
       if (data.user) {
+        console.log('User authenticated, loading profile...');
         await loadUserProfile(data.user)
+        console.log('Profile loaded successfully');
       }
 
       setLoading(false)
+      console.log('Sign in completed successfully');
       return { success: true }
     } catch (err) {
       let userMessage = "Authentication failed. Please check your credentials and try again.";
