@@ -23,15 +23,36 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLocalError(null);
-    
+
+    if (!password) {
+      setLocalError('Please enter a password');
+      return;
+    }
+
+    if (!isLogin && !name) {
+      setLocalError('Please enter your name');
+      return;
+    }
+
     try {
       if (isLogin) {
-        await onLogin(email, password);
+        const result = await onLogin('', password); // Email not needed for password-only auth
+        if (result?.success) {
+          // User will be redirected by parent component
+        }
       } else {
-        await onSignup(email, password, name);
+        const result = await onSignup('', password, name);
+        if (result?.success) {
+          // User will be redirected by parent component
+        }
       }
     } catch (err) {
-      setLocalError('Authentication failed. Please try again.');
+      console.error('Auth submit error:', err);
+      if (err && typeof err === 'object' && 'userMessage' in err) {
+        setLocalError(err.userMessage as string);
+      } else {
+        setLocalError('An error occurred. Please try again.');
+      }
     }
   };
 
