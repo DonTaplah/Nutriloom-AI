@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, BookOpen, Menu } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { isSupabaseConfigured } from '../lib/supabase';
+import { AuthError } from '../types/User';
 
 interface AuthPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
   onSignup: (email: string, password: string, name: string) => Promise<void>;
   isLoading: boolean;
-  error: string | null;
+  error: AuthError | null;
   onToggleSidebar: () => void;
 }
 
@@ -21,8 +22,9 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
   const [localError, setLocalError] = useState<string | null>(null);
 
   // Check if email authentication is disabled
-  const isEmailAuthDisabled = error?.includes('Email logins are disabled') || 
-                              localError?.includes('Email logins are disabled');
+  const isEmailAuthDisabled = error?.message?.includes('Email logins are disabled') || 
+                              localError?.includes('Email logins are disabled') ||
+                              error?.code === 'email_provider_disabled';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,8 +128,8 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
 
         {(error || localError || !isSupabaseConfigured) && (
           <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
-            <div className="mb-2">{localError || error}</div>
-            {(error?.includes('Email authentication is not enabled') || localError?.includes('Email authentication is not enabled') || isEmailAuthDisabled) && (
+            <div className="mb-2">{localError || error?.message}</div>
+            {(error?.message?.includes('Email authentication is not enabled') || localError?.includes('Email authentication is not enabled') || isEmailAuthDisabled) && (
               <div className="text-xs text-red-300 mt-2 p-2 bg-red-500/10 rounded border-l-2 border-red-400">
                 <strong>Note:</strong> Email authentication is not available in this Supabase project. 
                 You can try signing in with Google instead, or contact support for assistance.
