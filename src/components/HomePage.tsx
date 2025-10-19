@@ -5,16 +5,36 @@ import LocationContent from './SEO/LocationContent';
 import LocalSEOHead from './SEO/LocalSEOHead';
 
 interface HomePageProps {
-  onSearch: (ingredients: string[], cuisine: string) => void;
-  user: User;
-  onRecipeGenerator: () => void;
-  onScanDish: () => void;
-  onPricing: () => void;
-  onAuth: () => void;
-  onToggleSidebar: () => void;
+  user: User | null;
+  onSignOut: () => void;
 }
 
-const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, onScanDish, onPricing, onAuth, onToggleSidebar }) => {
+const HomePage: React.FC<HomePageProps> = ({ user, onSignOut }) => {
+  const [showSidebar, setShowSidebar] = useState(false);
+  const isAuthenticated = !!user;
+
+  const handleRecipeGenerator = () => {
+    // Navigate to recipe generator
+    window.location.hash = 'recipe-generator';
+  };
+
+  const handleScanDish = () => {
+    if (isAuthenticated) {
+      window.location.hash = 'scan-dish';
+    }
+  };
+
+  const handlePricing = () => {
+    window.location.hash = 'pricing';
+  };
+
+  const handleAuth = () => {
+    window.location.hash = 'auth';
+  };
+
+  const handleToggleSidebar = () => {
+    setShowSidebar(!showSidebar);
+  };
   return (
     <>
       <LocalSEOHead
@@ -34,7 +54,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
       <div className="lg:hidden flex items-center justify-between p-4 bg-slate-900/95 backdrop-blur-sm border-b border-indigo-500/20">
         <div className="flex items-center gap-3">
           <button
-            onClick={onToggleSidebar}
+            onClick={handleToggleSidebar}
             className="p-2 text-slate-300 hover:text-white transition-colors duration-200"
           >
             <Menu size={24} />
@@ -87,7 +107,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               <button
-                onClick={onRecipeGenerator}
+                onClick={handleRecipeGenerator}
                 className="flex items-center justify-center gap-3 px-6 lg:px-8 py-3 lg:py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 <Edit3 size={20} />
@@ -95,21 +115,21 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
               </button>
               
               <button
-                onClick={onScanDish}
+                onClick={handleScanDish}
                 className={`flex items-center justify-center gap-3 px-6 lg:px-8 py-3 lg:py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm lg:text-base ${
-                  user.isAuthenticated
+                  isAuthenticated
                     ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700'
                     : 'bg-slate-600 gradient-text-slate cursor-not-allowed'
                 }`}
-                disabled={!user.isAuthenticated}
+                disabled={!isAuthenticated}
               >
                 <Scan size={20} />
-                <span className="hidden sm:inline">{user.isAuthenticated ? 'SYD - Scan Your Dish' : 'SYD - Login Required'}</span>
-                <span className="sm:hidden">SYD {!user.isAuthenticated && '(Login)'}</span>
+                <span className="hidden sm:inline">{isAuthenticated ? 'SYD - Scan Your Dish' : 'SYD - Login Required'}</span>
+                <span className="sm:hidden">SYD {!isAuthenticated && '(Login)'}</span>
               </button>
               
               <button
-                onClick={onPricing}
+                onClick={handlePricing}
                 className="flex items-center justify-center gap-3 px-6 lg:px-8 py-3 lg:py-4 bg-slate-800/60 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-700/60 hover:text-white transition-all duration-200"
               >
                 <Crown size={20} />
@@ -292,7 +312,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
-                    onClick={onPricing}
+                    onClick={handlePricing}
                     className="flex items-center justify-center gap-2 px-6 lg:px-8 py-3 lg:py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
                     <Crown size={20} />
@@ -300,7 +320,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSearch, user, onRecipeGenerator, 
                     <span className="sm:hidden">Get Premium</span>
                   </button>
                   <button
-                    onClick={onRecipeGenerator}
+                    onClick={handleRecipeGenerator}
                     className="px-6 lg:px-8 py-3 lg:py-4 bg-slate-700/60 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-600/60 hover:text-white transition-all duration-200"
                   >
                     <span className="hidden sm:inline">Try Free Version</span>
