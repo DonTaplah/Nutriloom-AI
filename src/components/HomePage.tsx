@@ -7,9 +7,10 @@ import LocalSEOHead from './SEO/LocalSEOHead';
 interface HomePageProps {
   user: User | null;
   onSignOut: () => void;
+  onShowAuth: () => void;
 }
 
-const HomePage: React.FC<HomePageProps> = ({ user, onSignOut }) => {
+const HomePage: React.FC<HomePageProps> = ({ user, onSignOut, onShowAuth }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const isAuthenticated = !!user;
 
@@ -21,6 +22,8 @@ const HomePage: React.FC<HomePageProps> = ({ user, onSignOut }) => {
   const handleScanDish = () => {
     if (isAuthenticated) {
       window.location.hash = 'scan-dish';
+    } else {
+      onShowAuth();
     }
   };
 
@@ -28,9 +31,6 @@ const HomePage: React.FC<HomePageProps> = ({ user, onSignOut }) => {
     window.location.hash = 'pricing';
   };
 
-  const handleAuth = () => {
-    window.location.hash = 'auth';
-  };
 
   const handleToggleSidebar = () => {
     setShowSidebar(!showSidebar);
@@ -61,14 +61,64 @@ const HomePage: React.FC<HomePageProps> = ({ user, onSignOut }) => {
           </button>
         </div>
         <div className="flex items-center gap-2">
-          <img 
-            src="/An_AI_chef_with_a_spoon_and_a_fork_in_the_background-removebg-preview.png" 
-            alt="Nutriloom AI" 
+          <img
+            src="/An_AI_chef_with_a_spoon_and_a_fork_in_the_background-removebg-preview.png"
+            alt="Nutriloom AI"
             className="w-6 h-6 object-contain"
           />
           <h1 className="text-lg font-bold gradient-text-primary">NUTRILOOM AI</h1>
         </div>
-        <div className="w-10"></div>
+        <div className="flex items-center gap-2">
+          {isAuthenticated ? (
+            <button
+              onClick={onSignOut}
+              className="px-3 py-1.5 text-sm bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors"
+            >
+              Sign Out
+            </button>
+          ) : (
+            <button
+              onClick={onShowAuth}
+              className="px-3 py-1.5 text-sm bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all"
+            >
+              Sign In
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Desktop Header */}
+      <div className="hidden lg:flex items-center justify-between px-8 py-6">
+        <div className="flex items-center gap-3">
+          <img
+            src="/An_AI_chef_with_a_spoon_and_a_fork_in_the_background-removebg-preview.png"
+            alt="Nutriloom AI"
+            className="w-10 h-10 object-contain"
+          />
+          <h1 className="text-2xl font-bold gradient-text-primary">NUTRILOOM AI</h1>
+        </div>
+        <div className="flex items-center gap-4">
+          {isAuthenticated ? (
+            <>
+              <span className="text-slate-300 text-sm">
+                Welcome, {user?.name || user?.email}
+              </span>
+              <button
+                onClick={onSignOut}
+                className="px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={onShowAuth}
+              className="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all font-semibold"
+            >
+              Sign In
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Decorative dots */}

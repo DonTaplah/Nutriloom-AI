@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Lock, User, Eye, EyeOff, Menu } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { isSupabaseConfigured } from '../lib/supabase';
 import { AuthError } from '../types/User';
 
@@ -29,12 +29,13 @@ export default function AuthPage({ onLogin, onSignup, isLoading, error, onToggle
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
-      <div className="absolute top-4 left-4 lg:hidden">
+      <div className="absolute top-4 left-4">
         <button
           onClick={onToggleSidebar}
-          className="p-2 text-white hover:bg-slate-700/50 rounded-lg transition-colors"
+          className="flex items-center gap-2 px-4 py-2 text-white hover:bg-slate-700/50 rounded-lg transition-colors"
         >
-          <Menu className="w-6 h-6" />
+          <ArrowLeft className="w-5 h-5" />
+          <span className="hidden sm:inline">Back to Home</span>
         </button>
       </div>
 
